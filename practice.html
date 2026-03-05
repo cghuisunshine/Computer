@@ -36,6 +36,27 @@
     .feedback.ok { color: var(--ok); }
     .feedback.bad { color: var(--bad); }
     .feedback.warn { color: var(--warn); }
+    .inline-run-output {
+      margin-top: 10px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #0b1020;
+      overflow: hidden;
+    }
+    .inline-run-output .head {
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--line);
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .inline-run-output pre {
+      margin: 0;
+      border: 0;
+      border-radius: 0;
+      border-left: 4px solid var(--ok);
+      min-height: 56px;
+    }
+    .inline-run-output pre.err { border-left-color: var(--bad); }
     details { margin-top: 10px; }
     summary { cursor:pointer; color: var(--ink); font-weight: 700; }
     pre { margin: 10px 0 0; padding: 10px; border-radius: 12px; border:1px solid var(--line); background: #0b1020; overflow:auto; color: var(--ink); }
@@ -788,6 +809,25 @@ print("Try changing this code and click Run.")
       }, 700);
     }
 
+    function getInlineRunOutputNodes(qEl) {
+      if (!qEl) return {};
+      const wrap = qEl.querySelector(".inline-run-output");
+      return {
+        wrap,
+        head: wrap?.querySelector(".head"),
+        pre: wrap?.querySelector("pre")
+      };
+    }
+
+    function setInlineRunOutput(qEl, text, statusText, isErr) {
+      const { wrap, head, pre } = getInlineRunOutputNodes(qEl);
+      if (!wrap || !head || !pre) return;
+      wrap.hidden = false;
+      head.textContent = statusText ? `Playground output (${statusText})` : "Playground output";
+      pre.textContent = text || "(no output)";
+      pre.classList.toggle("err", !!isErr);
+    }
+
     async function fetchJsonWithTimeout(url, options, timeoutMs) {
       const controller = new AbortController();
       const timer = setTimeout(() => controller.abort(), timeoutMs);
@@ -1106,6 +1146,14 @@ print("Hi", user_name)`
         else row.appendChild(runBtn);
       }
 
+      if (row && !qEl.querySelector(".inline-run-output")) {
+        const outWrap = document.createElement("div");
+        outWrap.className = "inline-run-output";
+        outWrap.hidden = true;
+        outWrap.innerHTML = '<div class="head">Playground output</div><pre></pre>';
+        row.insertAdjacentElement("afterend", outWrap);
+      }
+
       const textarea = qEl.querySelector("textarea");
       if (textarea) {
         textarea.addEventListener("focus", () => { activeQuestionEl = qEl; });
@@ -1120,7 +1168,14 @@ print("Hi", user_name)`
         if (btn.dataset.action === "hint") showHint(qEl);
         if (btn.dataset.action === "run") {
           const loaded = await loadQuestionIntoPlayground(qEl, true);
-          if (!loaded) setFeedback(qEl, "Nothing to run yet. Add code or use the sample solution.", "warn", false);
+          if (!loaded) {
+            setFeedback(qEl, "Nothing to run yet. Add code or use the sample solution.", "warn", false);
+            return;
+          }
+          const runStatus = pgRunStatusEl?.textContent?.trim() || "";
+          const runText = pgOutputEl?.textContent || "";
+          const isErr = !!pgOutputEl?.classList.contains("err");
+          setInlineRunOutput(qEl, runText, runStatus, isErr);
         }
       });
     });
@@ -1136,6 +1191,12 @@ print("Hi", user_name)`
       qs.forEach(qEl => {
         qEl.querySelector("textarea").value = "";
         setFeedback(qEl, "", "", false);
+        const { wrap, pre } = getInlineRunOutputNodes(qEl);
+        if (wrap) wrap.hidden = true;
+        if (pre) {
+          pre.textContent = "";
+          pre.classList.remove("err");
+        }
       });
       document.querySelectorAll(".q details").forEach(d => d.open = false);
       allOpen = false;
