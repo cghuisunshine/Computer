@@ -19,6 +19,7 @@
     .btn:hover { border-color: color-mix(in oklab, var(--line) 50%, white 50%); }
     .btn.secondary { background: transparent; }
     .btn:active { transform: translateY(1px); }
+    .btn:disabled { opacity: .55; cursor: not-allowed; }
     .grid { display:grid; grid-template-columns: 1fr; gap: 14px; }
     @media (min-width: 900px) { .grid { grid-template-columns: 1fr 1fr; } }
     .card { border: 1px solid var(--line); background: color-mix(in oklab, var(--card) 92%, black 8%); border-radius: 16px; padding: 14px; }
@@ -47,16 +48,41 @@
     .settings-row label { min-width: 120px; color: var(--muted); }
     .settings-row input { flex: 1 1 320px; min-width: 240px; border-radius: 10px; border: 1px solid var(--line); background: #0b1020; color: var(--ink); padding: 8px 10px; }
     .settings-hint { margin-top: 8px; color: var(--muted); font-size: 12px; line-height: 1.5; }
+    .playground .play-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+    @media (min-width: 900px) { .playground .play-grid { grid-template-columns: 1.2fr .8fr; } }
+    .playground .pg-pane { border: 1px solid var(--line); border-radius: 14px; background: #0f1630; overflow: hidden; }
+    .playground .pg-toolbar { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px; border-bottom: 1px solid var(--line); align-items: center; }
+    .playground .pg-spacer { flex: 1; }
+    .playground .pg-code {
+      width: 100%;
+      min-height: 260px;
+      border: 0;
+      border-radius: 0;
+      resize: vertical;
+      outline: none;
+    }
+    .playground .pg-output {
+      margin: 0;
+      min-height: 180px;
+      border: 0;
+      border-radius: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      border-left: 4px solid var(--ok);
+    }
+    .playground .pg-output.err { border-left-color: var(--bad); }
+    .playground .pg-foot { padding: 10px; border-top: 1px solid var(--line); }
   </style>
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.25.1/full/pyodide.js"></script>
 </head>
 
 <body>
   <header>
     <h1>Python Practice — Interactive Page</h1>
     <p>
-      Paste your Python answers below. This page can’t run Python (it’s just HTML),
-      but it can <b>check answers with AI</b> and show <b>sample solutions</b>.
-      Tip: run your code in PyTwiddle, Thonny, or VS Code.
+      Paste your Python answers below. This page can <b>run Python in-browser</b> (Pyodide),
+      <b>check answers with AI</b>, and show <b>sample solutions</b>.
+      You can send any question answer to the integrated playground.
     </p>
   </header>
 
@@ -85,6 +111,46 @@
         If AI grading fails, the page falls back to a simple overlap check against the sample solution.
       </div>
     </details>
+
+    <section class="card playground">
+      <h2>0) Live Python Playground</h2>
+      <p class="tiny">Integrated from <span class="kbd">preview.html</span>. Use "Run in playground" on any question, or type directly below.</p>
+      <div class="play-grid">
+        <div class="pg-pane">
+          <div class="pg-toolbar">
+            <button class="btn" id="pg-run-btn" type="button" disabled>Run</button>
+            <button class="btn secondary" id="pg-stop-btn" type="button" disabled>Stop</button>
+            <button class="btn secondary" id="pg-clear-btn" type="button">Clear output</button>
+            <button class="btn secondary" id="pg-load-focused" type="button">Load selected answer</button>
+            <span class="pg-spacer"></span>
+            <label class="tiny">
+              <input type="checkbox" id="pg-auto-run" />
+              Auto-run (0.7s)
+            </label>
+            <select class="btn secondary" id="pg-examples">
+              <option value="">Examples...</option>
+              <option value="hello">Hello + f-string</option>
+              <option value="loops">Loops</option>
+              <option value="list">Lists</option>
+              <option value="function">Functions</option>
+              <option value="error1">Common Error: missing quote</option>
+              <option value="error2">Common Error: NameError</option>
+              <option value="input">Input demo (simulated)</option>
+            </select>
+          </div>
+          <textarea id="pg-code" class="pg-code" spellcheck="false"></textarea>
+          <div class="pg-foot tiny" id="pg-hint-line">Tip: Use <span class="kbd">print(...)</span> and press <span class="kbd">Ctrl/Cmd</span> + <span class="kbd">Enter</span>.</div>
+        </div>
+        <div class="pg-pane">
+          <div class="pg-toolbar">
+            <span class="pill" id="pg-run-status">Idle</span>
+            <span class="pill" id="pg-python-status">Loading Python...</span>
+          </div>
+          <pre id="pg-output" class="pg-output"></pre>
+          <div class="pg-foot tiny" id="pg-friendly-hint">When you hit Run, output shows here.</div>
+        </div>
+      </div>
+    </section>
 
     <div class="grid">
       <!-- =========================
@@ -503,6 +569,22 @@ for a in animals:
     const gradeApiUrlEl = document.getElementById("grade-api-url");
     const btnTestApi = document.getElementById("btn-test-api");
     const apiStatusEl = document.getElementById("api-status");
+    const pgRunBtn = document.getElementById("pg-run-btn");
+    const pgStopBtn = document.getElementById("pg-stop-btn");
+    const pgClearBtn = document.getElementById("pg-clear-btn");
+    const pgLoadFocusedBtn = document.getElementById("pg-load-focused");
+    const pgCodeEl = document.getElementById("pg-code");
+    const pgOutputEl = document.getElementById("pg-output");
+    const pgRunStatusEl = document.getElementById("pg-run-status");
+    const pgPythonStatusEl = document.getElementById("pg-python-status");
+    const pgFriendlyHintEl = document.getElementById("pg-friendly-hint");
+    const pgHintLineEl = document.getElementById("pg-hint-line");
+    const pgExamplesEl = document.getElementById("pg-examples");
+    const pgAutoRunEl = document.getElementById("pg-auto-run");
+    let activeQuestionEl = null;
+    let pgPyodide = null;
+    let pgRunning = false;
+    let pgAutoRunTimer = null;
 
     function setApiStatus(text, kind) {
       if (!apiStatusEl) return;
@@ -524,6 +606,186 @@ for a in animals:
       } catch {
         // ignore
       }
+    }
+
+    function pgSetOutput(text, kind) {
+      if (!pgOutputEl) return;
+      pgOutputEl.textContent = text || "";
+      pgOutputEl.classList.toggle("err", kind === "err");
+    }
+
+    function pgSetRunStatus(text) {
+      if (pgRunStatusEl) pgRunStatusEl.textContent = text || "";
+    }
+
+    function pgSetPythonStatus(text) {
+      if (pgPythonStatusEl) pgPythonStatusEl.textContent = text || "";
+    }
+
+    function pgSetFriendlyHint(text) {
+      if (pgFriendlyHintEl) pgFriendlyHintEl.textContent = text || "";
+    }
+
+    function pgSetHintLine(text) {
+      if (pgHintLineEl) pgHintLineEl.textContent = text || "";
+    }
+
+    function pgFriendlyErrorHint(errText) {
+      const t = errText || "";
+      const lineMatch = t.match(/line\s+(\d+)/);
+      const lineNum = lineMatch ? Number(lineMatch[1]) : null;
+      let headline = "";
+      let hint = "Something went wrong. Read the last line of the error for details.";
+
+      if (t.includes("SyntaxError: EOL while scanning string literal") || t.includes("SyntaxError: unterminated string literal")) {
+        headline = "Missing quote";
+        hint = "A string is missing an ending quote. Make sure quotes are paired.";
+      } else if (t.includes("SyntaxError: invalid syntax")) {
+        headline = "Syntax error";
+        hint = "Check for missing colons, parentheses, quotes, or typos.";
+      } else if (t.includes("IndentationError")) {
+        headline = "Indentation error";
+        hint = "Inside blocks (if/for/while/def), use consistent indentation (usually 4 spaces).";
+      } else if (t.includes("NameError: name")) {
+        headline = "Name not defined";
+        hint = "You used a variable that wasn't defined yet or has a typo.";
+      } else if (t.includes("TypeError")) {
+        headline = "Type error";
+        hint = "Check value types, such as text + number combinations.";
+      } else if (t.includes("ZeroDivisionError")) {
+        headline = "Divide by zero";
+        hint = "The denominator is zero. Check values before dividing.";
+      } else if (t.includes("IndexError")) {
+        headline = "Index out of range";
+        hint = "A list index was outside the valid range.";
+      } else if (t.includes("KeyError")) {
+        headline = "Missing dictionary key";
+        hint = "That key was not found in the dictionary.";
+      } else if (t.includes("ModuleNotFoundError")) {
+        headline = "Module not found";
+        hint = "That import may not be available in this browser environment.";
+      }
+
+      return { headline, hint, lineNum };
+    }
+
+    async function pgSetupPythonIO() {
+      if (!pgPyodide) return;
+      const py = `
+import sys, io
+
+class _BrowserIO(io.StringIO):
+    pass
+
+_stdout = _BrowserIO()
+_stderr = _BrowserIO()
+sys.stdout = _stdout
+sys.stderr = _stderr
+
+def _clear_io():
+    _stdout.seek(0); _stdout.truncate(0)
+    _stderr.seek(0); _stderr.truncate(0)
+
+def _get_stdout():
+    return _stdout.getvalue()
+
+def _get_stderr():
+    return _stderr.getvalue()
+`;
+      await pgPyodide.runPythonAsync(py);
+    }
+
+    async function pgHardStopAndReset() {
+      pgSetPythonStatus("Resetting Python...");
+      if (pgRunBtn) pgRunBtn.disabled = true;
+      if (pgStopBtn) pgStopBtn.disabled = true;
+      try {
+        if (typeof loadPyodide !== "function") throw new Error("loadPyodide is not available.");
+        pgPyodide = await loadPyodide({ indexURL: "https://cdn.jsdelivr.net/pyodide/v0.25.1/full/" });
+        await pgSetupPythonIO();
+        pgSetPythonStatus("Python ready");
+      } catch (err) {
+        pgSetPythonStatus("Python failed to load");
+        pgSetOutput(String(err), "err");
+        pgSetFriendlyHint("Pyodide couldn't load. Check internet/CDN access.");
+      } finally {
+        if (pgRunBtn) pgRunBtn.disabled = false;
+        if (pgStopBtn) pgStopBtn.disabled = true;
+        pgRunning = false;
+        pgSetRunStatus("Idle");
+      }
+    }
+
+    async function pgInit() {
+      if (!pgCodeEl) return;
+      try {
+        pgSetPythonStatus("Loading Python...");
+        if (typeof loadPyodide !== "function") throw new Error("Pyodide script not loaded.");
+        pgPyodide = await loadPyodide({ indexURL: "https://cdn.jsdelivr.net/pyodide/v0.25.1/full/" });
+        await pgSetupPythonIO();
+        pgSetPythonStatus("Python ready");
+        if (pgRunBtn) pgRunBtn.disabled = false;
+
+        pgCodeEl.value = `print("Welcome to Python!")
+print("Try changing this code and click Run.")
+`;
+        pgSetOutput("");
+        pgSetFriendlyHint("Ready. Click Run.");
+        pgSetHintLine("Tip: Use print(...) to show output.");
+      } catch (err) {
+        pgSetPythonStatus("Python failed to load");
+        pgSetOutput(String(err), "err");
+        pgSetFriendlyHint("Pyodide couldn't load. Check internet/CDN access.");
+      }
+    }
+
+    async function pgRunCode() {
+      if (!pgCodeEl || !pgPyodide || pgRunning) return;
+      pgRunning = true;
+      if (pgRunBtn) pgRunBtn.disabled = true;
+      if (pgStopBtn) pgStopBtn.disabled = false;
+      pgSetRunStatus("Running...");
+      pgSetHintLine("");
+      pgSetFriendlyHint("Running your code...");
+      pgSetOutput("");
+
+      try {
+        pgPyodide.runPython("_clear_io()");
+        await pgPyodide.runPythonAsync(pgCodeEl.value || "");
+        const out = pgPyodide.runPython("_get_stdout()");
+        const err = pgPyodide.runPython("_get_stderr()");
+        if (err && String(err).trim().length) {
+          const txt = String(err);
+          const { headline, hint, lineNum } = pgFriendlyErrorHint(txt);
+          pgSetOutput(txt, "err");
+          pgSetFriendlyHint((headline ? `${headline}: ` : "") + hint);
+          if (lineNum) pgSetHintLine(`Check line ${lineNum}.`);
+          pgSetRunStatus("Error");
+        } else {
+          pgSetOutput(out || "(no output) - try print(...)", "ok");
+          pgSetFriendlyHint("Looks good.");
+          pgSetRunStatus("Done");
+        }
+      } catch (err) {
+        const txt = String(err);
+        const { headline, hint, lineNum } = pgFriendlyErrorHint(txt);
+        pgSetOutput(txt, "err");
+        pgSetFriendlyHint((headline ? `${headline}: ` : "") + hint);
+        if (lineNum) pgSetHintLine(`Check line ${lineNum}.`);
+        pgSetRunStatus("Error");
+      } finally {
+        pgRunning = false;
+        if (pgRunBtn) pgRunBtn.disabled = false;
+        if (pgStopBtn) pgStopBtn.disabled = true;
+      }
+    }
+
+    function pgScheduleAutoRun(force) {
+      if (!pgAutoRunEl || (!pgAutoRunEl.checked && !force)) return;
+      if (pgAutoRunTimer) clearTimeout(pgAutoRunTimer);
+      pgAutoRunTimer = setTimeout(() => {
+        if (pgPyodide && !pgRunning) pgRunCode();
+      }, 700);
     }
 
     async function fetchJsonWithTimeout(url, options, timeoutMs) {
@@ -693,6 +955,21 @@ for a in animals:
       return qEl.querySelector("details pre code")?.textContent?.trim() || "";
     }
 
+    async function loadQuestionIntoPlayground(qEl, runNow) {
+      if (!qEl || !pgCodeEl) return false;
+      const textarea = qEl.querySelector("textarea");
+      const fromAnswer = textarea ? textarea.value.trim() : "";
+      const model = getModelAnswer(qEl);
+      const code = fromAnswer || model;
+      if (!code) return false;
+      pgCodeEl.value = code;
+      pgSetRunStatus("Ready");
+      pgSetFriendlyHint(`Loaded ${qEl.dataset.qid?.toUpperCase() || "question"} into playground.`);
+      pgSetHintLine("Tip: Ctrl/Cmd + Enter runs code.");
+      if (runNow) await pgRunCode();
+      return true;
+    }
+
     function showHint(qEl) {
       const qid = qEl.dataset.qid;
       const r = rubric[qid];
@@ -753,13 +1030,98 @@ for a in animals:
       btnTestApi.addEventListener("click", testApi);
     }
 
+    if (pgExamplesEl) {
+      const pgExamples = {
+        hello: `name = "Jake"
+age = 15
+print(f"{name} is {age} years old")`,
+        loops: `for i in range(1, 6):
+    print("i =", i)`,
+        list: `nums = [3, 1, 4, 1, 5]
+print("max =", max(nums))
+print("sorted =", sorted(nums))`,
+        function: `def greet(name):
+    return "Hello, " + name + "!"
+
+print(greet("Peter"))`,
+        error1: `print("Hello)`,
+        error2: `print(score)  # score was never defined`,
+        input: `# In browser playgrounds, stdin may not be available.
+user_name = "Alice"  # pretend this came from input()
+print("Hi", user_name)`
+      };
+      pgExamplesEl.addEventListener("change", () => {
+        const key = pgExamplesEl.value;
+        if (!key || !pgCodeEl) return;
+        pgCodeEl.value = pgExamples[key] || "";
+        pgExamplesEl.value = "";
+        pgScheduleAutoRun(true);
+      });
+    }
+
+    if (pgRunBtn) pgRunBtn.addEventListener("click", pgRunCode);
+    if (pgStopBtn) {
+      pgStopBtn.addEventListener("click", async () => {
+        pgSetFriendlyHint("Stopping... resetting Python.");
+        pgSetRunStatus("Stopping...");
+        await pgHardStopAndReset();
+      });
+    }
+    if (pgClearBtn) {
+      pgClearBtn.addEventListener("click", () => {
+        pgSetOutput("");
+        pgSetFriendlyHint("Output cleared.");
+        pgSetRunStatus("Idle");
+        pgSetHintLine("");
+      });
+    }
+    if (pgCodeEl) {
+      pgCodeEl.addEventListener("input", () => pgScheduleAutoRun(false));
+      pgCodeEl.addEventListener("keydown", (e) => {
+        const isMac = navigator.platform.toUpperCase().includes("MAC");
+        const runCombo = (isMac && e.metaKey && e.key === "Enter") || (!isMac && e.ctrlKey && e.key === "Enter");
+        if (!runCombo) return;
+        e.preventDefault();
+        pgRunCode();
+      });
+    }
+    if (pgAutoRunEl) pgAutoRunEl.addEventListener("change", () => pgScheduleAutoRun(true));
+    if (pgLoadFocusedBtn) {
+      pgLoadFocusedBtn.addEventListener("click", async () => {
+        const source = activeQuestionEl || qs.find((q) => q.querySelector("textarea")?.value.trim()) || qs[0];
+        await loadQuestionIntoPlayground(source, false);
+      });
+    }
+
     qs.forEach(qEl => {
+      const row = qEl.querySelector(".row");
+      if (row && !row.querySelector('[data-action="run"]')) {
+        const runBtn = document.createElement("button");
+        runBtn.type = "button";
+        runBtn.className = "btn secondary";
+        runBtn.dataset.action = "run";
+        runBtn.textContent = "Run in playground";
+        const feedback = row.querySelector(".feedback");
+        if (feedback) row.insertBefore(runBtn, feedback);
+        else row.appendChild(runBtn);
+      }
+
+      const textarea = qEl.querySelector("textarea");
+      if (textarea) {
+        textarea.addEventListener("focus", () => { activeQuestionEl = qEl; });
+        textarea.addEventListener("input", () => { activeQuestionEl = qEl; });
+      }
+
       qEl.dataset.passed = "false";
       qEl.addEventListener("click", async (e) => {
         const btn = e.target.closest("button[data-action]");
         if (!btn) return;
         if (btn.dataset.action === "check") await checkAnswer(qEl, btn);
         if (btn.dataset.action === "hint") showHint(qEl);
+        if (btn.dataset.action === "run") {
+          const loaded = await loadQuestionIntoPlayground(qEl, true);
+          if (!loaded) setFeedback(qEl, "Nothing to run yet. Add code or use the sample solution.", "warn", false);
+        }
       });
     });
 
@@ -779,9 +1141,14 @@ for a in animals:
       allOpen = false;
       toggleAllBtn.textContent = "Show all solutions";
       setApiStatus("", "");
+      pgSetOutput("");
+      pgSetRunStatus("Idle");
+      pgSetFriendlyHint("Output cleared.");
+      pgSetHintLine("");
       updateScore();
     });
 
+    pgInit();
     updateScore();
   </script>
 </body>
