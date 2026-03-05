@@ -1,0 +1,788 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Python Practice (Interactive) — Grade 6 Friendly</title>
+  <style>
+    :root { --bg:#0b1020; --card:#121a33; --ink:#e9ecff; --muted:#b7bce6; --line:#2a3563; --ok:#39d98a; --bad:#ff5c7a; --warn:#ffd166; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; background: radial-gradient(1200px 700px at 15% 10%, #1a2a6c33, transparent 60%), radial-gradient(900px 600px at 85% 25%, #b21f1f22, transparent 60%), radial-gradient(1000px 700px at 60% 90%, #fdbb2d22, transparent 60%), var(--bg); color: var(--ink); }
+    header { padding: 28px 16px 14px; max-width: 1100px; margin: 0 auto; }
+    h1 { margin: 0 0 6px; font-size: clamp(22px, 2.6vw, 34px); letter-spacing: .2px; }
+    p { margin: 0; color: var(--muted); line-height: 1.55; }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 14px 16px 48px; display: grid; grid-template-columns: 1fr; gap: 14px; }
+    .bar { display:flex; gap:10px; flex-wrap: wrap; align-items: center; justify-content: space-between; padding: 12px 14px; border: 1px solid var(--line); background: color-mix(in oklab, var(--card) 92%, black 8%); border-radius: 14px; }
+    .bar .left, .bar .right { display:flex; gap:10px; flex-wrap: wrap; align-items: center; }
+    .pill { padding: 7px 10px; border:1px solid var(--line); border-radius: 999px; background: #0f1630; color: var(--muted); font-size: 13px; }
+    .btn { cursor:pointer; padding: 9px 12px; border:1px solid var(--line); border-radius: 12px; background: #0f1630; color: var(--ink); font-weight: 600; }
+    .btn:hover { border-color: color-mix(in oklab, var(--line) 50%, white 50%); }
+    .btn.secondary { background: transparent; }
+    .btn:active { transform: translateY(1px); }
+    .grid { display:grid; grid-template-columns: 1fr; gap: 14px; }
+    @media (min-width: 900px) { .grid { grid-template-columns: 1fr 1fr; } }
+    .card { border: 1px solid var(--line); background: color-mix(in oklab, var(--card) 92%, black 8%); border-radius: 16px; padding: 14px; }
+    .card h2 { margin: 0 0 10px; font-size: 18px; }
+    .q { border:1px solid var(--line); border-radius: 14px; padding: 12px; background: #0f1630; margin-bottom: 10px; }
+    .q:last-child { margin-bottom: 0; }
+    .qhead { display:flex; gap:10px; justify-content: space-between; align-items: flex-start; }
+    .qtitle { font-weight: 800; }
+    .qmeta { color: var(--muted); font-size: 12px; }
+    .prompt { color: var(--muted); margin: 8px 0 10px; line-height: 1.55; }
+    textarea { width:100%; min-height: 110px; resize: vertical; border-radius: 12px; padding: 10px 10px; border:1px solid var(--line); background: #0b1020; color: var(--ink); font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; font-size: 13px; line-height: 1.5; }
+    .row { display:flex; gap:10px; flex-wrap: wrap; margin-top: 10px; align-items: center; }
+    .feedback { font-size: 13px; color: var(--muted); }
+    .feedback.ok { color: var(--ok); }
+    .feedback.bad { color: var(--bad); }
+    .feedback.warn { color: var(--warn); }
+    details { margin-top: 10px; }
+    summary { cursor:pointer; color: var(--ink); font-weight: 700; }
+    pre { margin: 10px 0 0; padding: 10px; border-radius: 12px; border:1px solid var(--line); background: #0b1020; overflow:auto; color: var(--ink); }
+    .tiny { font-size: 12px; color: var(--muted); }
+    .footer { text-align:center; color: var(--muted); font-size: 12px; margin-top: 8px; }
+    .kbd { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; padding: 2px 6px; border:1px solid var(--line); border-radius: 8px; background:#0b1020; }
+    .checklist { margin: 8px 0 0; padding-left: 18px; color: var(--muted); }
+    details.settings { margin-top: 0; border: 1px solid var(--line); border-radius: 14px; padding: 10px 12px; background: color-mix(in oklab, var(--card) 92%, black 8%); }
+    .settings-row { margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    .settings-row label { min-width: 120px; color: var(--muted); }
+    .settings-row input { flex: 1 1 320px; min-width: 240px; border-radius: 10px; border: 1px solid var(--line); background: #0b1020; color: var(--ink); padding: 8px 10px; }
+    .settings-hint { margin-top: 8px; color: var(--muted); font-size: 12px; line-height: 1.5; }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Python Practice — Interactive Page</h1>
+    <p>
+      Paste your Python answers below. This page can’t run Python (it’s just HTML),
+      but it can <b>check answers with AI</b> and show <b>sample solutions</b>.
+      Tip: run your code in PyTwiddle, Thonny, or VS Code.
+    </p>
+  </header>
+
+  <div class="wrap">
+    <div class="bar">
+      <div class="left">
+        <span class="pill">Auto-check: AI grader + overlap fallback</span>
+        <span class="pill">Shortcut: <span class="kbd">Ctrl</span> + <span class="kbd">F</span> to find</span>
+      </div>
+      <div class="right">
+        <button class="btn secondary" id="toggleAll">Show all solutions</button>
+        <button class="btn" id="resetAll">Reset all</button>
+        <span class="pill" id="scorePill">Score: 0 / 12</span>
+      </div>
+    </div>
+
+    <details class="settings">
+      <summary>AI grading (optional)</summary>
+      <div class="settings-row">
+        <label for="grade-api-url">Grade API URL</label>
+        <input id="grade-api-url" type="text" placeholder="https://example.com/grade">
+        <button class="btn secondary" type="button" id="btn-test-api">Test</button>
+        <span id="api-status" class="feedback"></span>
+      </div>
+      <div class="settings-hint">
+        If AI grading fails, the page falls back to a simple overlap check against the sample solution.
+      </div>
+    </details>
+
+    <div class="grid">
+      <!-- =========================
+           CARD 1: Variables & Print
+           ========================= -->
+      <section class="card">
+        <h2>1) Variables & print</h2>
+
+        <div class="q" data-qid="q1">
+          <div class="qhead">
+            <div>
+              <div class="qtitle">Q1. Hello with a variable</div>
+              <div class="qmeta">Goal: store a name and print a sentence</div>
+            </div>
+            <div class="qmeta">Easy</div>
+          </div>
+          <div class="prompt">
+            Make a variable called <b>name</b> and store your name. Print:
+            <br><span class="kbd">Hello, my name is ____</span>
+          </div>
+
+          <textarea placeholder="Type your Python code here..."></textarea>
+
+          <div class="row">
+            <button class="btn" data-action="check">Check</button>
+            <button class="btn secondary" data-action="hint">Hint</button>
+            <span class="feedback"></span>
+          </div>
+
+          <details>
+            <summary>Sample solution</summary>
+            <pre><code>name = "Avi"
+print(f"Hello, my name is {name}")</code></pre>
+          </details>
+        </div>
+
+        <div class="q" data-qid="q2">
+          <div class="qhead">
+            <div>
+              <div class="qtitle">Q2. Add two numbers</div>
+              <div class="qmeta">Goal: variables + math + print</div>
+            </div>
+            <div class="qmeta">Easy</div>
+          </div>
+          <div class="prompt">
+            Create <b>a = 5</b> and <b>b = 8</b>. Print their sum.
+          </div>
+
+          <textarea placeholder="Type your Python code here..."></textarea>
+
+          <div class="row">
+            <button class="btn" data-action="check">Check</button>
+            <button class="btn secondary" data-action="hint">Hint</button>
+            <span class="feedback"></span>
+          </div>
+
+          <details>
+            <summary>Sample solution</summary>
+            <pre><code>a = 5
+b = 8
+print(a + b)</code></pre>
+          </details>
+        </div>
+
+        <div class="q" data-qid="q3">
+          <div class="qhead">
+            <div>
+              <div class="qtitle">Q3. Update a variable</div>
+              <div class="qmeta">Goal: change a variable value</div>
+            </div>
+            <div class="qmeta">Easy</div>
+          </div>
+          <div class="prompt">
+            Create a variable <b>score</b> with any number, print it, then change it and print again.
+          </div>
+
+          <textarea placeholder="Type your Python code here..."></textarea>
+
+          <div class="row">
+            <button class="btn" data-action="check">Check</button>
+            <button class="btn secondary" data-action="hint">Hint</button>
+            <span class="feedback"></span>
+          </div>
+
+          <details>
+            <summary>Sample solution</summary>
+            <pre><code>score = 10
+print(score)
+score = 15
+print(score)</code></pre>
+          </details>
+        </div>
+      </section>
+
+      <!-- =========================
+           CARD 2: Strings & Formatting
+           ========================= -->
+      <section class="card">
+        <h2>2) Strings & formatting</h2>
+
+        <div class="q" data-qid="q4">
+          <div class="qhead">
+            <div>
+              <div class="qtitle">Q4. Favorite animal</div>
+              <div class="qmeta">Goal: string variable + print</div>
+            </div>
+            <div class="qmeta">Easy</div>
+          </div>
+          <div class="prompt">
+            Create <b>animal = "dog"</b>. Print: <span class="kbd">My favorite animal is dog</span>
+          </div>
+
+          <textarea placeholder="Type your Python code here..."></textarea>
+
+          <div class="row">
+            <button class="btn" data-action="check">Check</button>
+            <button class="btn secondary" data-action="hint">Hint</button>
+            <span class="feedback"></span>
+          </div>
+
+          <details>
+            <summary>Sample solution</summary>
+            <pre><code>animal = "dog"
+print("My favorite animal is " + animal)</code></pre>
+          </details>
+        </div>
+
+        <div class="q" data-qid="q5">
+          <div class="qhead">
+            <div>
+              <div class="qtitle">Q5. f-string age sentence</div>
+              <div class="qmeta">Goal: use an f-string</div>
+            </div>
+            <div class="qmeta">Easy</div>
+          </div>
+          <div class="prompt">
+            Use an <b>f-string</b> to print: <span class="kbd">Tom is 12 years old</span>
+            (You can store <b>name</b> and <b>age</b> first.)
+          </div>
+
+          <textarea placeholder="Type your Python code here..."></textarea>
+
+          <div class="row">
+            <button class="btn" data-action="check">Check</button>
+            <button class="btn secondary" data-action="hint">Hint</button>
+            <span class="feedback"></span>
+          </div>
+
+          <details>
+            <summary>Sample solution</summary>
+            <pre><code>name = "Tom"
+age = 12
+print(f"{name} is {age} years old")</code></pre>
+          </details>
+        </div>
+
+        <div class="q" data-qid="q6">
+          <div class="qhead">
+            <div>
+              <div class="qtitle">Q6. Join strings</div>
+              <div class="qmeta">Goal: combine two strings</div>
+            </div>
+            <div class="qmeta">Easy</div>
+          </div>
+          <div class="prompt">
+            Combine <span class="kbd">"Hello"</span> and <span class="kbd">"World"</span> into one line:
+            <span class="kbd">Hello World</span>
+          </div>
+
+          <textarea placeholder="Type your Python code here..."></textarea>
+
+          <div class="row">
+            <button class="btn" data-action="check">Check</button>
+            <button class="btn secondary" data-action="hint">Hint</button>
+            <span class="feedback"></span>
+          </div>
+
+          <details>
+            <summary>Sample solution</summary>
+            <pre><code>print("Hello" + " " + "World")</code></pre>
+          </details>
+        </div>
+      </section>
+
+      <!-- =========================
+           CARD 3: If Statements
+           ========================= -->
+      <section class="card">
+        <h2>3) If statements</h2>
+
+        <div class="q" data-qid="q7">
+          <div class="qhead">
+            <div>
+              <div class="qtitle">Q7. Teenager check</div>
+              <div class="qmeta">Goal: if statement</div>
+            </div>
+            <div class="qmeta">Medium</div>
+          </div>
+          <div class="prompt">
+            Given <span class="kbd">age = 15</span>, if age is greater than 12, print <span class="kbd">Teenager</span>.
+          </div>
+
+          <textarea placeholder="Type your Python code here..."></textarea>
+
+          <div class="row">
+            <button class="btn" data-action="check">Check</button>
+            <button class="btn secondary" data-action="hint">Hint</button>
+            <span class="feedback"></span>
+          </div>
+
+          <details>
+            <summary>Sample solution</summary>
+            <pre><code>age = 15
+if age &gt; 12:
+    print("Teenager")</code></pre>
+          </details>
+        </div>
+
+        <div class="q" data-qid="q8">
+          <div class="qhead">
+            <div>
+              <div class="qtitle">Q8. Even or odd</div>
+              <div class="qmeta">Goal: input + modulo</div>
+            </div>
+            <div class="qmeta">Medium</div>
+          </div>
+          <div class="prompt">
+            Ask the user for a number. Print <span class="kbd">Even</span> if it is divisible by 2, else print <span class="kbd">Odd</span>.
+          </div>
+
+          <textarea placeholder="Type your Python code here..."></textarea>
+
+          <div class="row">
+            <button class="btn" data-action="check">Check</button>
+            <button class="btn secondary" data-action="hint">Hint</button>
+            <span class="feedback"></span>
+          </div>
+
+          <details>
+            <summary>Sample solution</summary>
+            <pre><code>n = int(input("Number: "))
+if n % 2 == 0:
+    print("Even")
+else:
+    print("Odd")</code></pre>
+          </details>
+        </div>
+      </section>
+
+      <!-- =========================
+           CARD 4: Loops
+           ========================= -->
+      <section class="card">
+        <h2>4) Loops</h2>
+
+        <div class="q" data-qid="q9">
+          <div class="qhead">
+            <div>
+              <div class="qtitle">Q9. Count 1 to 10</div>
+              <div class="qmeta">Goal: for loop + range</div>
+            </div>
+            <div class="qmeta">Medium</div>
+          </div>
+          <div class="prompt">
+            Print numbers from 1 to 10 using a loop.
+          </div>
+
+          <textarea placeholder="Type your Python code here..."></textarea>
+
+          <div class="row">
+            <button class="btn" data-action="check">Check</button>
+            <button class="btn secondary" data-action="hint">Hint</button>
+            <span class="feedback"></span>
+          </div>
+
+          <details>
+            <summary>Sample solution</summary>
+            <pre><code>for i in range(1, 11):
+    print(i)</code></pre>
+          </details>
+        </div>
+
+        <div class="q" data-qid="q10">
+          <div class="qhead">
+            <div>
+              <div class="qtitle">Q10. Star pattern</div>
+              <div class="qmeta">Goal: nested idea / string repeat</div>
+            </div>
+            <div class="qmeta">Medium</div>
+          </div>
+          <div class="prompt">
+            Print:
+            <pre><code>*
+**
+***
+****
+*****</code></pre>
+            Use a loop.
+          </div>
+
+          <textarea placeholder="Type your Python code here..."></textarea>
+
+          <div class="row">
+            <button class="btn" data-action="check">Check</button>
+            <button class="btn secondary" data-action="hint">Hint</button>
+            <span class="feedback"></span>
+          </div>
+
+          <details>
+            <summary>Sample solution</summary>
+            <pre><code>for i in range(1, 6):
+    print("*" * i)</code></pre>
+          </details>
+        </div>
+
+        <div class="q" data-qid="q11">
+          <div class="qhead">
+            <div>
+              <div class="qtitle">Q11. Even numbers 2 to 20</div>
+              <div class="qmeta">Goal: step in range</div>
+            </div>
+            <div class="qmeta">Medium</div>
+          </div>
+          <div class="prompt">
+            Print even numbers from 2 to 20.
+          </div>
+
+          <textarea placeholder="Type your Python code here..."></textarea>
+
+          <div class="row">
+            <button class="btn" data-action="check">Check</button>
+            <button class="btn secondary" data-action="hint">Hint</button>
+            <span class="feedback"></span>
+          </div>
+
+          <details>
+            <summary>Sample solution</summary>
+            <pre><code>for n in range(2, 21, 2):
+    print(n)</code></pre>
+          </details>
+        </div>
+      </section>
+
+      <!-- =========================
+           CARD 5: Lists & Functions
+           ========================= -->
+      <section class="card">
+        <h2>5) Lists & functions</h2>
+
+        <div class="q" data-qid="q12">
+          <div class="qhead">
+            <div>
+              <div class="qtitle">Q12. List + loop</div>
+              <div class="qmeta">Goal: list + for loop</div>
+            </div>
+            <div class="qmeta">Medium</div>
+          </div>
+          <div class="prompt">
+            Create a list called <b>animals</b> with 3 animals. Print each one using a loop.
+          </div>
+
+          <textarea placeholder="Type your Python code here..."></textarea>
+
+          <div class="row">
+            <button class="btn" data-action="check">Check</button>
+            <button class="btn secondary" data-action="hint">Hint</button>
+            <span class="feedback"></span>
+          </div>
+
+          <details>
+            <summary>Sample solution</summary>
+            <pre><code>animals = ["dog", "cat", "rabbit"]
+for a in animals:
+    print(a)</code></pre>
+          </details>
+        </div>
+
+        <div class="tiny">
+          Want more? Easy add-ons:
+          <ul class="checklist">
+            <li>Write <span class="kbd">greet()</span> that prints a welcome message.</li>
+            <li>Write <span class="kbd">add(x, y)</span> that returns a sum.</li>
+            <li>Challenge: number guessing game.</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+
+    <div class="footer">
+      Save this file as <span class="kbd">python_practice.html</span> and open it in your browser.
+    </div>
+  </div>
+
+  <script>
+    const DEFAULT_GRADE_API_URL = "https://lakesideart.gochatus.org/grade-service/grade";
+
+    const rubric = {
+      q1: { hint: "Try:\nname = \"Tom\"\nprint(f\"Hello, my name is {name}\")" },
+      q2: { hint: "Try:\na = 5\nb = 8\nprint(a + b)" },
+      q3: { hint: "Make score twice:\nscore = 10\nprint(score)\nscore = 15\nprint(score)" },
+      q4: { hint: "Try:\nanimal = \"dog\"\nprint(\"My favorite animal is \" + animal)" },
+      q5: { hint: "Try:\nname = \"Tom\"\nage = 12\nprint(f\"{name} is {age} years old\")" },
+      q6: { hint: "Try:\nprint(\"Hello\" + \" \" + \"World\")" },
+      q7: { hint: "Try:\nage = 15\nif age > 12:\n    print(\"Teenager\")" },
+      q8: { hint: "Try:\nn = int(input(\"Number: \"))\nif n % 2 == 0:\n    print(\"Even\")\nelse:\n    print(\"Odd\")" },
+      q9: { hint: "Try:\nfor i in range(1, 11):\n    print(i)" },
+      q10: { hint: "Try:\nfor i in range(1, 6):\n    print(\"*\" * i)" },
+      q11: { hint: "Try:\nfor n in range(2, 21, 2):\n    print(n)" },
+      q12: { hint: "Try:\nanimals = [\"dog\", \"cat\", \"rabbit\"]\nfor a in animals:\n    print(a)" }
+    };
+
+    const qs = Array.from(document.querySelectorAll(".q"));
+    const scorePill = document.getElementById("scorePill");
+    const toggleAllBtn = document.getElementById("toggleAll");
+    const resetAllBtn = document.getElementById("resetAll");
+    const gradeApiUrlEl = document.getElementById("grade-api-url");
+    const btnTestApi = document.getElementById("btn-test-api");
+    const apiStatusEl = document.getElementById("api-status");
+
+    function setApiStatus(text, kind) {
+      if (!apiStatusEl) return;
+      apiStatusEl.textContent = text || "";
+      apiStatusEl.className = "feedback" + (kind ? " " + kind : "");
+    }
+
+    function getGradeApiUrl() {
+      if (!gradeApiUrlEl) return null;
+      const url = (gradeApiUrlEl.value || "").trim();
+      return url || null;
+    }
+
+    function saveGradeApiUrl() {
+      if (!gradeApiUrlEl) return;
+      const url = (gradeApiUrlEl.value || "").trim();
+      try {
+        localStorage.setItem("gradeApiUrl", url);
+      } catch {
+        // ignore
+      }
+    }
+
+    async function fetchJsonWithTimeout(url, options, timeoutMs) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeoutMs);
+      try {
+        const resp = await fetch(url, { ...options, signal: controller.signal });
+        const text = await resp.text().catch(() => "");
+        let data = null;
+        try { data = text ? JSON.parse(text) : null; } catch { data = null; }
+        return { ok: resp.ok, status: resp.status, data, text };
+      } catch (err) {
+        if (err && err.name === "AbortError") return { ok: false, status: 0, data: null, text: "", aborted: true };
+        throw err;
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+
+    function extractFirstGradeResult(data) {
+      if (!data) return null;
+      if (Array.isArray(data.results) && data.results[0]) return data.results[0];
+      if (data.result && Array.isArray(data.result.results) && data.result.results[0]) return data.result.results[0];
+      if (data.model_result && Array.isArray(data.model_result.results) && data.model_result.results[0]) return data.model_result.results[0];
+      return null;
+    }
+
+    function deriveHealthUrl(gradeUrl) {
+      try {
+        const u = new URL(gradeUrl);
+        u.search = "";
+        u.hash = "";
+        if (u.pathname.endsWith("/grade")) {
+          u.pathname = u.pathname.replace(/\/grade$/, "/health");
+        } else {
+          u.pathname = u.pathname.replace(/\/+$/, "") + "/health";
+        }
+        return u.toString();
+      } catch {
+        return null;
+      }
+    }
+
+    async function testApi() {
+      const gradeUrl = getGradeApiUrl();
+      if (!gradeUrl) {
+        setApiStatus("Set a URL first.", "bad");
+        return;
+      }
+
+      setApiStatus("Testing...");
+      try {
+        const healthUrl = deriveHealthUrl(gradeUrl);
+        if (!healthUrl) {
+          setApiStatus("Invalid URL.", "bad");
+          return;
+        }
+        const { ok, status, data, aborted } = await fetchJsonWithTimeout(healthUrl, { method: "GET" }, 4000);
+        if (aborted) {
+          setApiStatus("Health check timed out.", "bad");
+          return;
+        }
+        if (!ok) {
+          setApiStatus(`Health check failed (${status}).`, "bad");
+          return;
+        }
+        const looksHealthy = !!(data && (data.status === "ok" || data.ok === true));
+        setApiStatus(looksHealthy ? "OK" : "OK (nonstandard response)", looksHealthy ? "ok" : "");
+      } catch {
+        setApiStatus("Health check failed.", "bad");
+      }
+    }
+
+    function normalizeText(str) {
+      return String(str || "")
+        .toLowerCase()
+        .replace(/[^a-z0-9\s]/g, " ")
+        .split(/\s+/)
+        .filter(Boolean);
+    }
+
+    function similarityScore(userText, targetText) {
+      const uWords = normalizeText(userText);
+      const tWords = normalizeText(targetText);
+      if (uWords.length === 0 || tWords.length === 0) return 0;
+
+      const uSet = new Set(uWords);
+      const tSet = new Set(tWords);
+      let intersection = 0;
+      tSet.forEach(w => { if (uSet.has(w)) intersection++; });
+      const union = uSet.size + tSet.size - intersection;
+      return union === 0 ? 0 : intersection / union;
+    }
+
+    function localOverlapCheck(userText, correctText) {
+      if (!correctText) {
+        return { verdict: "unknown", explanation: "No model answer provided; enable AI grading to validate." };
+      }
+      const score = similarityScore(userText, correctText);
+      const percent = Math.round(score * 100);
+      if (percent >= 70) return { verdict: "correct", explanation: `Overlap about ${percent}% with the sample solution.` };
+      if (percent >= 40) return { verdict: "wrong", explanation: `Partial overlap (${percent}%). Compare with the sample solution and refine.` };
+      return { verdict: "wrong", explanation: `Low overlap (~${percent}%). Compare with the sample solution and try again.` };
+    }
+
+    async function gradeOne({ questionText, userText, correctText }) {
+      const gradeUrl = getGradeApiUrl();
+      const aiTimeoutMs = 60000;
+
+      if (gradeUrl) {
+        const pair = { question: questionText, answer: userText };
+        if (correctText) pair.reference_answer = correctText;
+        const payload = { pairs: [pair] };
+
+        const { ok, status, data, text, aborted } = await fetchJsonWithTimeout(
+          gradeUrl,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          },
+          aiTimeoutMs
+        );
+
+        if (aborted) throw new Error(`timeout_after_${Math.round(aiTimeoutMs / 1000)}s`);
+
+        const first = extractFirstGradeResult(data);
+        if (!ok || !first) {
+          const reason = data && data.error ? data.error : `bad_response_${status}`;
+          const detail = text ? ` (${text.slice(0, 160)})` : "";
+          throw new Error(reason + detail);
+        }
+
+        const verdict = first.verdict === "correct" ? "correct" : "wrong";
+        const explanation = (first.explanation || "").trim();
+        return { verdict, explanation, mode: "ai" };
+      }
+
+      const local = localOverlapCheck(userText, correctText);
+      if (local.verdict === "unknown") return { verdict: "unknown", explanation: local.explanation, mode: "local" };
+      return { verdict: local.verdict, explanation: local.explanation, mode: "local" };
+    }
+
+    function updateScore() {
+      const passed = qs.filter(q => q.dataset.passed === "true").length;
+      const total = qs.length;
+      scorePill.textContent = `Score: ${passed} / ${total}`;
+    }
+
+    function setFeedback(qEl, text, kind, passed) {
+      const fb = qEl.querySelector(".feedback");
+      fb.className = "feedback" + (kind ? " " + kind : "");
+      fb.textContent = text || "";
+      if (typeof passed === "boolean") {
+        qEl.dataset.passed = passed ? "true" : "false";
+        updateScore();
+      }
+    }
+
+    function getQuestionText(qEl) {
+      const title = qEl.querySelector(".qtitle")?.textContent?.trim() || "";
+      const prompt = qEl.querySelector(".prompt")?.textContent?.trim() || "";
+      return [title, prompt].filter(Boolean).join("\n");
+    }
+
+    function getModelAnswer(qEl) {
+      return qEl.querySelector("details pre code")?.textContent?.trim() || "";
+    }
+
+    function showHint(qEl) {
+      const qid = qEl.dataset.qid;
+      const r = rubric[qid];
+      setFeedback(qEl, "Hint:\n" + (r?.hint || "No hint available."), "warn");
+    }
+
+    async function checkAnswer(qEl, btn) {
+      const textarea = qEl.querySelector("textarea");
+      const userText = textarea ? textarea.value.trim() : "";
+
+      if (!userText) {
+        setFeedback(qEl, "Type your code first 🙂", "warn", false);
+        return;
+      }
+
+      const questionText = getQuestionText(qEl);
+      const correctText = getModelAnswer(qEl);
+      const gradeUrl = getGradeApiUrl();
+
+      if (btn) btn.disabled = true;
+      setFeedback(qEl, gradeUrl ? "Checking with AI grader..." : "Checking...", "", false);
+
+      try {
+        const result = await gradeOne({ questionText, userText, correctText });
+        const isCorrect = result.verdict === "correct";
+        const prefix = result.verdict === "unknown" ? "" : (isCorrect ? "Correct. " : "Wrong. ");
+        const kind = result.verdict === "unknown" ? "warn" : (isCorrect ? "ok" : "bad");
+        setFeedback(qEl, prefix + (result.explanation || ""), kind, isCorrect);
+      } catch (err) {
+        console.warn("Grading failed:", err);
+        const local = localOverlapCheck(userText, correctText);
+        if (local.verdict === "unknown") {
+          setFeedback(qEl, "AI grading unavailable; also no sample solution to compare against.", "bad", false);
+        } else {
+          setFeedback(
+            qEl,
+            `AI grading unavailable; using overlap check. ${local.verdict === "correct" ? "Correct." : "Wrong."} ${local.explanation}`,
+            local.verdict === "correct" ? "ok" : "bad",
+            local.verdict === "correct"
+          );
+        }
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+    }
+
+    if (gradeApiUrlEl) {
+      let savedGradeApiUrl = null;
+      try { savedGradeApiUrl = localStorage.getItem("gradeApiUrl"); } catch { savedGradeApiUrl = null; }
+      gradeApiUrlEl.value = savedGradeApiUrl === null ? DEFAULT_GRADE_API_URL : savedGradeApiUrl;
+      gradeApiUrlEl.addEventListener("change", () => {
+        saveGradeApiUrl();
+        setApiStatus("", "");
+      });
+    }
+
+    if (btnTestApi) {
+      btnTestApi.addEventListener("click", testApi);
+    }
+
+    qs.forEach(qEl => {
+      qEl.dataset.passed = "false";
+      qEl.addEventListener("click", async (e) => {
+        const btn = e.target.closest("button[data-action]");
+        if (!btn) return;
+        if (btn.dataset.action === "check") await checkAnswer(qEl, btn);
+        if (btn.dataset.action === "hint") showHint(qEl);
+      });
+    });
+
+    let allOpen = false;
+    toggleAllBtn.addEventListener("click", () => {
+      allOpen = !allOpen;
+      document.querySelectorAll(".q details").forEach(d => d.open = allOpen);
+      toggleAllBtn.textContent = allOpen ? "Hide all solutions" : "Show all solutions";
+    });
+
+    resetAllBtn.addEventListener("click", () => {
+      qs.forEach(qEl => {
+        qEl.querySelector("textarea").value = "";
+        setFeedback(qEl, "", "", false);
+      });
+      document.querySelectorAll(".q details").forEach(d => d.open = false);
+      allOpen = false;
+      toggleAllBtn.textContent = "Show all solutions";
+      setApiStatus("", "");
+      updateScore();
+    });
+
+    updateScore();
+  </script>
+</body>
+</html>
