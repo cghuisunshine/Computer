@@ -116,7 +116,7 @@
       <div class="right">
         <button class="btn secondary" id="toggleAll">Show all solutions</button>
         <button class="btn" id="resetAll">Reset all</button>
-        <span class="pill" id="scorePill">Score: 0 / 12</span>
+        <span class="pill" id="scorePill">Score: 0 / 26</span>
       </div>
     </div>
 
@@ -558,6 +558,461 @@ for a in animals:
           </ul>
         </div>
       </section>
+
+      <!-- =========================
+           CARD 6: PyTwiddle Matched Practice I
+           ========================= -->
+      <section class="card">
+        <h2>6) PyTwiddle matched practice I</h2>
+
+        <div class="q" data-qid="q13">
+          <div class="qhead">
+            <div>
+              <div class="qtitle">Q13. Multiple assignment scores</div>
+              <div class="qmeta">Lesson match: Variables and Multiple Assignment</div>
+            </div>
+            <div class="qmeta">Easy</div>
+          </div>
+          <div class="prompt">
+            Use <b>multiple assignment</b> to store <span class="kbd">math = 88</span>, <span class="kbd">science = 91</span>, and <span class="kbd">art = 84</span>.
+            Print each score on a new line.
+          </div>
+
+          <textarea placeholder="Type your Python code here..."></textarea>
+
+          <div class="row">
+            <button class="btn" data-action="check">Check</button>
+            <button class="btn secondary" data-action="hint">Hint</button>
+            <span class="feedback"></span>
+          </div>
+
+          <details>
+            <summary>Sample solution</summary>
+            <pre><code>math, science, art = 88, 91, 84
+print(math)
+print(science)
+print(art)</code></pre>
+          </details>
+        </div>
+
+        <div class="q" data-qid="q14">
+          <div class="qhead">
+            <div>
+              <div class="qtitle">Q14. Arithmetic and string slicing</div>
+              <div class="qmeta">Lesson match: Arithmetic Operators and Strings</div>
+            </div>
+            <div class="qmeta">Easy</div>
+          </div>
+          <div class="prompt">
+            Create <span class="kbd">word = "coding"</span>. Print the first letter, then print the first four letters.
+            After that, print <span class="kbd">7 + 5</span>.
+          </div>
+
+          <textarea placeholder="Type your Python code here..."></textarea>
+
+          <div class="row">
+            <button class="btn" data-action="check">Check</button>
+            <button class="btn secondary" data-action="hint">Hint</button>
+            <span class="feedback"></span>
+          </div>
+
+          <details>
+            <summary>Sample solution</summary>
+            <pre><code>word = "coding"
+print(word[0])
+print(word[0:4])
+print(7 + 5)</code></pre>
+          </details>
+        </div>
+
+        <div class="q" data-qid="q15">
+          <div class="qhead">
+            <div>
+              <div class="qtitle">Q15. Percent placeholder sentence</div>
+              <div class="qmeta">Lesson match: Placeholders in Strings</div>
+            </div>
+            <div class="qmeta">Easy</div>
+          </div>
+          <div class="prompt">
+            Use the old-style <span class="kbd">%s</span> and <span class="kbd">%d</span> placeholders to print:
+            <span class="kbd">Mia scored 19 points</span>
+          </div>
+
+          <textarea placeholder="Type your Python code here..."></textarea>
+
+          <div class="row">
+            <button class="btn" data-action="check">Check</button>
+            <button class="btn secondary" data-action="hint">Hint</button>
+            <span class="feedback"></span>
+          </div>
+
+          <details>
+            <summary>Sample solution</summary>
+            <pre><code>sentence = "%s scored %d points"
+print(sentence % ("Mia", 19))</code></pre>
+          </details>
+        </div>
+
+        <div class="q" data-qid="q16">
+          <div class="qhead">
+            <div>
+              <div class="qtitle">Q16. Edit a shopping list</div>
+              <div class="qmeta">Lesson match: Introduction to Lists</div>
+            </div>
+            <div class="qmeta">Medium</div>
+          </div>
+          <div class="prompt">
+            Create a list called <b>shopping</b> with <span class="kbd">"milk"</span>, <span class="kbd">"bread"</span>, and <span class="kbd">"eggs"</span>.
+            Append <span class="kbd">"juice"</span>, change the first item to <span class="kbd">"oat milk"</span>, then print the list length.
+          </div>
+
+          <textarea placeholder="Type your Python code here..."></textarea>
+
+          <div class="row">
+            <button class="btn" data-action="check">Check</button>
+            <button class="btn secondary" data-action="hint">Hint</button>
+            <span class="feedback"></span>
+          </div>
+
+          <details>
+            <summary>Sample solution</summary>
+            <pre><code>shopping = ["milk", "bread", "eggs"]
+shopping.append("juice")
+shopping[0] = "oat milk"
+print(len(shopping))</code></pre>
+          </details>
+        </div>
+
+        <div class="q" data-qid="q17">
+          <div class="qhead">
+            <div>
+              <div class="qtitle">Q17. Dictionary update</div>
+              <div class="qmeta">Lesson match: Welcome to Dictionaries!</div>
+            </div>
+            <div class="qmeta">Medium</div>
+          </div>
+          <div class="prompt">
+            Create a dictionary called <b>students</b> with <span class="kbd">"Lina": 12</span> and <span class="kbd">"Omar": 14</span>.
+            Print Omar's age, change Lina's age to 13, then print the whole dictionary.
+          </div>
+
+          <textarea placeholder="Type your Python code here..."></textarea>
+
+          <div class="row">
+            <button class="btn" data-action="check">Check</button>
+            <button class="btn secondary" data-action="hint">Hint</button>
+            <span class="feedback"></span>
+          </div>
+
+          <details>
+            <summary>Sample solution</summary>
+            <pre><code>students = {"Lina": 12, "Omar": 14}
+print(students["Omar"])
+students["Lina"] = 13
+print(students)</code></pre>
+          </details>
+        </div>
+      </section>
+
+      <!-- =========================
+           CARD 7: PyTwiddle Matched Practice II
+           ========================= -->
+      <section class="card">
+        <h2>7) PyTwiddle matched practice II</h2>
+
+        <div class="q" data-qid="q18">
+          <div class="qhead">
+            <div>
+              <div class="qtitle">Q18. Tuple combine</div>
+              <div class="qmeta">Lesson match: Introduction to Tuples</div>
+            </div>
+            <div class="qmeta">Medium</div>
+          </div>
+          <div class="prompt">
+            Create <span class="kbd">colors = ("red", "blue", "green")</span>.
+            Print the first two items, then combine it with <span class="kbd">(1, 2)</span> and print the new tuple.
+          </div>
+
+          <textarea placeholder="Type your Python code here..."></textarea>
+
+          <div class="row">
+            <button class="btn" data-action="check">Check</button>
+            <button class="btn secondary" data-action="hint">Hint</button>
+            <span class="feedback"></span>
+          </div>
+
+          <details>
+            <summary>Sample solution</summary>
+            <pre><code>colors = ("red", "blue", "green")
+print(colors[0:2])
+new_tuple = colors + (1, 2)
+print(new_tuple)</code></pre>
+          </details>
+        </div>
+
+        <div class="q" data-qid="q19">
+          <div class="qhead">
+            <div>
+              <div class="qtitle">Q19. Age group with elif</div>
+              <div class="qmeta">Lesson match: Conditional Statements</div>
+            </div>
+            <div class="qmeta">Medium</div>
+          </div>
+          <div class="prompt">
+            Given <span class="kbd">age = 17</span>, use <b>if / elif / else</b> to print:
+            <span class="kbd">Child</span> if age is less than 13,
+            <span class="kbd">Teenager</span> if age is from 13 to 17,
+            otherwise print <span class="kbd">Adult</span>.
+          </div>
+
+          <textarea placeholder="Type your Python code here..."></textarea>
+
+          <div class="row">
+            <button class="btn" data-action="check">Check</button>
+            <button class="btn secondary" data-action="hint">Hint</button>
+            <span class="feedback"></span>
+          </div>
+
+          <details>
+            <summary>Sample solution</summary>
+            <pre><code>age = 17
+if age &lt; 13:
+    print("Child")
+elif age &gt;= 13 and age &lt; 18:
+    print("Teenager")
+else:
+    print("Adult")</code></pre>
+          </details>
+        </div>
+
+        <div class="q" data-qid="q20">
+          <div class="qhead">
+            <div>
+              <div class="qtitle">Q20. Multiples of 5</div>
+              <div class="qmeta">Lesson match: Introduction to For Loops</div>
+            </div>
+            <div class="qmeta">Medium</div>
+          </div>
+          <div class="prompt">
+            Use <b>range</b> to print multiples of 5 from 5 to 25.
+          </div>
+
+          <textarea placeholder="Type your Python code here..."></textarea>
+
+          <div class="row">
+            <button class="btn" data-action="check">Check</button>
+            <button class="btn secondary" data-action="hint">Hint</button>
+            <span class="feedback"></span>
+          </div>
+
+          <details>
+            <summary>Sample solution</summary>
+            <pre><code>for i in range(5, 26, 5):
+    print(i)</code></pre>
+          </details>
+        </div>
+
+        <div class="q" data-qid="q21">
+          <div class="qhead">
+            <div>
+              <div class="qtitle">Q21. While loop skip 3</div>
+              <div class="qmeta">Lesson match: Introduction to While Loops</div>
+            </div>
+            <div class="qmeta">Medium</div>
+          </div>
+          <div class="prompt">
+            Use a <b>while</b> loop to print numbers 1 to 5, but skip printing 3.
+          </div>
+
+          <textarea placeholder="Type your Python code here..."></textarea>
+
+          <div class="row">
+            <button class="btn" data-action="check">Check</button>
+            <button class="btn secondary" data-action="hint">Hint</button>
+            <span class="feedback"></span>
+          </div>
+
+          <details>
+            <summary>Sample solution</summary>
+            <pre><code>c = 0
+while c &lt; 5:
+    c = c + 1
+    if c == 3:
+        continue
+    print(c)</code></pre>
+          </details>
+        </div>
+
+        <div class="q" data-qid="q22">
+          <div class="qhead">
+            <div>
+              <div class="qtitle">Q22. Catch a NameError</div>
+              <div class="qmeta">Lesson match: Try and Except</div>
+            </div>
+            <div class="qmeta">Medium</div>
+          </div>
+          <div class="prompt">
+            Write a <b>try / except</b> block that tries to print an undefined variable called <span class="kbd">score</span>.
+            If there is an error, print <span class="kbd">There was an error</span>.
+          </div>
+
+          <textarea placeholder="Type your Python code here..."></textarea>
+
+          <div class="row">
+            <button class="btn" data-action="check">Check</button>
+            <button class="btn secondary" data-action="hint">Hint</button>
+            <span class="feedback"></span>
+          </div>
+
+          <details>
+            <summary>Sample solution</summary>
+            <pre><code>try:
+    print(score)
+except:
+    print("There was an error")</code></pre>
+          </details>
+        </div>
+      </section>
+
+      <!-- =========================
+           CARD 8: PyTwiddle Matched Practice III
+           ========================= -->
+      <section class="card">
+        <h2>8) PyTwiddle matched practice III</h2>
+
+        <div class="q" data-qid="q23">
+          <div class="qhead">
+            <div>
+              <div class="qtitle">Q23. Return from a function</div>
+              <div class="qmeta">Lesson match: Welcome to Functions!</div>
+            </div>
+            <div class="qmeta">Medium</div>
+          </div>
+          <div class="prompt">
+            Write a function called <span class="kbd">multiply(a, b)</span> that <b>returns</b> the product.
+            Store the result of <span class="kbd">multiply(4, 5)</span> in a variable and print it.
+          </div>
+
+          <textarea placeholder="Type your Python code here..."></textarea>
+
+          <div class="row">
+            <button class="btn" data-action="check">Check</button>
+            <button class="btn secondary" data-action="hint">Hint</button>
+            <span class="feedback"></span>
+          </div>
+
+          <details>
+            <summary>Sample solution</summary>
+            <pre><code>def multiply(a, b):
+    return a * b
+
+answer = multiply(4, 5)
+print(answer)</code></pre>
+          </details>
+        </div>
+
+        <div class="q" data-qid="q24">
+          <div class="qhead">
+            <div>
+              <div class="qtitle">Q24. Built-in conversions</div>
+              <div class="qmeta">Lesson match: Built-in Python Functions</div>
+            </div>
+            <div class="qmeta">Medium</div>
+          </div>
+          <div class="prompt">
+            Use built-in functions to print the absolute value of <span class="kbd">-9</span>,
+            then convert <span class="kbd">"25"</span> to an integer and add 5.
+          </div>
+
+          <textarea placeholder="Type your Python code here..."></textarea>
+
+          <div class="row">
+            <button class="btn" data-action="check">Check</button>
+            <button class="btn secondary" data-action="hint">Hint</button>
+            <span class="feedback"></span>
+          </div>
+
+          <details>
+            <summary>Sample solution</summary>
+            <pre><code>print(abs(-9))
+print(int("25") + 5)</code></pre>
+          </details>
+        </div>
+
+        <div class="q" data-qid="q25">
+          <div class="qhead">
+            <div>
+              <div class="qtitle">Q25. Make a Student class</div>
+              <div class="qmeta">Lesson match: OOP - Classes and Objects</div>
+            </div>
+            <div class="qmeta">Hard</div>
+          </div>
+          <div class="prompt">
+            Define a class <b>Student</b> with <span class="kbd">name</span> and <span class="kbd">grade</span> in <span class="kbd">__init__</span>.
+            Add a method <span class="kbd">get_name()</span> that returns the name.
+            Create <span class="kbd">Student("Noah", 7)</span> and print the student's name.
+          </div>
+
+          <textarea placeholder="Type your Python code here..."></textarea>
+
+          <div class="row">
+            <button class="btn" data-action="check">Check</button>
+            <button class="btn secondary" data-action="hint">Hint</button>
+            <span class="feedback"></span>
+          </div>
+
+          <details>
+            <summary>Sample solution</summary>
+            <pre><code>class Student:
+    def __init__(self, name, grade):
+        self.name = name
+        self.grade = grade
+
+    def get_name(self):
+        return self.name
+
+s1 = Student("Noah", 7)
+print(s1.get_name())</code></pre>
+          </details>
+        </div>
+
+        <div class="q" data-qid="q26">
+          <div class="qhead">
+            <div>
+              <div class="qtitle">Q26. Inheritance with speak()</div>
+              <div class="qmeta">Lesson match: OOP - Class Inheritance</div>
+            </div>
+            <div class="qmeta">Hard</div>
+          </div>
+          <div class="prompt">
+            Create a class <b>Animal</b> with a method <span class="kbd">speak()</span> that prints <span class="kbd">Animal sound</span>.
+            Then create a subclass <b>Dog</b> that overrides <span class="kbd">speak()</span> to print <span class="kbd">Woof!</span>.
+            Make a <span class="kbd">Dog</span> object and call <span class="kbd">speak()</span>.
+          </div>
+
+          <textarea placeholder="Type your Python code here..."></textarea>
+
+          <div class="row">
+            <button class="btn" data-action="check">Check</button>
+            <button class="btn secondary" data-action="hint">Hint</button>
+            <span class="feedback"></span>
+          </div>
+
+          <details>
+            <summary>Sample solution</summary>
+            <pre><code>class Animal:
+    def speak(self):
+        print("Animal sound")
+
+class Dog(Animal):
+    def speak(self):
+        print("Woof!")
+
+pet = Dog()
+pet.speak()</code></pre>
+          </details>
+        </div>
+      </section>
     </div>
 
     <div class="footer">
@@ -580,7 +1035,21 @@ for a in animals:
       q9: { hint: "Try:\nfor i in range(1, 11):\n    print(i)" },
       q10: { hint: "Try:\nfor i in range(1, 6):\n    print(\"*\" * i)" },
       q11: { hint: "Try:\nfor n in range(2, 21, 2):\n    print(n)" },
-      q12: { hint: "Try:\nanimals = [\"dog\", \"cat\", \"rabbit\"]\nfor a in animals:\n    print(a)" }
+      q12: { hint: "Try:\nanimals = [\"dog\", \"cat\", \"rabbit\"]\nfor a in animals:\n    print(a)" },
+      q13: { hint: "Try:\nmath, science, art = 88, 91, 84\nprint(math)\nprint(science)\nprint(art)" },
+      q14: { hint: "Try:\nword = \"coding\"\nprint(word[0])\nprint(word[0:4])\nprint(7 + 5)" },
+      q15: { hint: "Try:\nsentence = \"%s scored %d points\"\nprint(sentence % (\"Mia\", 19))" },
+      q16: { hint: "Try:\nshopping = [\"milk\", \"bread\", \"eggs\"]\nshopping.append(\"juice\")\nshopping[0] = \"oat milk\"\nprint(len(shopping))" },
+      q17: { hint: "Try:\nstudents = {\"Lina\": 12, \"Omar\": 14}\nprint(students[\"Omar\"])\nstudents[\"Lina\"] = 13\nprint(students)" },
+      q18: { hint: "Try:\ncolors = (\"red\", \"blue\", \"green\")\nprint(colors[0:2])\nnew_tuple = colors + (1, 2)\nprint(new_tuple)" },
+      q19: { hint: "Try:\nage = 17\nif age < 13:\n    print(\"Child\")\nelif age >= 13 and age < 18:\n    print(\"Teenager\")\nelse:\n    print(\"Adult\")" },
+      q20: { hint: "Try:\nfor i in range(5, 26, 5):\n    print(i)" },
+      q21: { hint: "Try:\nc = 0\nwhile c < 5:\n    c = c + 1\n    if c == 3:\n        continue\n    print(c)" },
+      q22: { hint: "Try:\ntry:\n    print(score)\nexcept:\n    print(\"There was an error\")" },
+      q23: { hint: "Try:\ndef multiply(a, b):\n    return a * b\n\nanswer = multiply(4, 5)\nprint(answer)" },
+      q24: { hint: "Try:\nprint(abs(-9))\nprint(int(\"25\") + 5)" },
+      q25: { hint: "Try:\nclass Student:\n    def __init__(self, name, grade):\n        self.name = name\n        self.grade = grade\n\n    def get_name(self):\n        return self.name\n\ns1 = Student(\"Noah\", 7)\nprint(s1.get_name())" },
+      q26: { hint: "Try:\nclass Animal:\n    def speak(self):\n        print(\"Animal sound\")\n\nclass Dog(Animal):\n    def speak(self):\n        print(\"Woof!\")\n\npet = Dog()\npet.speak()" }
     };
 
     const qs = Array.from(document.querySelectorAll(".q"));
