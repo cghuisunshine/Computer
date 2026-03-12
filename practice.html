@@ -116,7 +116,7 @@
       <div class="right">
         <button class="btn secondary" id="toggleAll">Show all solutions</button>
         <button class="btn" id="resetAll">Reset all</button>
-        <span class="pill" id="scorePill">Score: 0 / 26</span>
+        <span class="pill" id="scorePill">Score: 0 / 27</span>
       </div>
     </div>
 
@@ -846,7 +846,38 @@ while c &lt; 5:
         <div class="q" data-qid="q22">
           <div class="qhead">
             <div>
-              <div class="qtitle">Q22. Catch a NameError</div>
+              <div class="qtitle">Q22. Echo input until quit</div>
+              <div class="qmeta">Lesson match: Introduction to While Loops</div>
+            </div>
+            <div class="qmeta">Medium</div>
+          </div>
+          <div class="prompt">
+            Use a <b>while</b> loop to keep asking the user for input.
+            Print the user's input each time, and stop the loop when the user types <span class="kbd">quit</span>.
+          </div>
+
+          <textarea placeholder="Type your Python code here..."></textarea>
+
+          <div class="row">
+            <button class="btn" data-action="check">Check</button>
+            <button class="btn secondary" data-action="hint">Hint</button>
+            <span class="feedback"></span>
+          </div>
+
+          <details>
+            <summary>Sample solution</summary>
+            <pre><code>while True:
+    text = input("Say something: ")
+    if text == "quit":
+        break
+    print(text)</code></pre>
+          </details>
+        </div>
+
+        <div class="q" data-qid="q23">
+          <div class="qhead">
+            <div>
+              <div class="qtitle">Q23. Catch a NameError</div>
               <div class="qmeta">Lesson match: Try and Except</div>
             </div>
             <div class="qmeta">Medium</div>
@@ -880,10 +911,10 @@ except:
       <section class="card">
         <h2>8) PyTwiddle matched practice III</h2>
 
-        <div class="q" data-qid="q23">
+        <div class="q" data-qid="q24">
           <div class="qhead">
             <div>
-              <div class="qtitle">Q23. Return from a function</div>
+              <div class="qtitle">Q24. Return from a function</div>
               <div class="qmeta">Lesson match: Welcome to Functions!</div>
             </div>
             <div class="qmeta">Medium</div>
@@ -911,10 +942,10 @@ print(answer)</code></pre>
           </details>
         </div>
 
-        <div class="q" data-qid="q24">
+        <div class="q" data-qid="q25">
           <div class="qhead">
             <div>
-              <div class="qtitle">Q24. Built-in conversions</div>
+              <div class="qtitle">Q25. Built-in conversions</div>
               <div class="qmeta">Lesson match: Built-in Python Functions</div>
             </div>
             <div class="qmeta">Medium</div>
@@ -939,10 +970,10 @@ print(int("25") + 5)</code></pre>
           </details>
         </div>
 
-        <div class="q" data-qid="q25">
+        <div class="q" data-qid="q26">
           <div class="qhead">
             <div>
-              <div class="qtitle">Q25. Make a Student class</div>
+              <div class="qtitle">Q26. Make a Student class</div>
               <div class="qmeta">Lesson match: OOP - Classes and Objects</div>
             </div>
             <div class="qmeta">Hard</div>
@@ -976,10 +1007,10 @@ print(s1.get_name())</code></pre>
           </details>
         </div>
 
-        <div class="q" data-qid="q26">
+        <div class="q" data-qid="q27">
           <div class="qhead">
             <div>
-              <div class="qtitle">Q26. Inheritance with speak()</div>
+              <div class="qtitle">Q27. Inheritance with speak()</div>
               <div class="qmeta">Lesson match: OOP - Class Inheritance</div>
             </div>
             <div class="qmeta">Hard</div>
@@ -1045,11 +1076,12 @@ pet.speak()</code></pre>
       q19: { hint: "Try:\nage = 17\nif age < 13:\n    print(\"Child\")\nelif age >= 13 and age < 18:\n    print(\"Teenager\")\nelse:\n    print(\"Adult\")" },
       q20: { hint: "Try:\nfor i in range(5, 26, 5):\n    print(i)" },
       q21: { hint: "Try:\nc = 0\nwhile c < 5:\n    c = c + 1\n    if c == 3:\n        continue\n    print(c)" },
-      q22: { hint: "Try:\ntry:\n    print(score)\nexcept:\n    print(\"There was an error\")" },
-      q23: { hint: "Try:\ndef multiply(a, b):\n    return a * b\n\nanswer = multiply(4, 5)\nprint(answer)" },
-      q24: { hint: "Try:\nprint(abs(-9))\nprint(int(\"25\") + 5)" },
-      q25: { hint: "Try:\nclass Student:\n    def __init__(self, name, grade):\n        self.name = name\n        self.grade = grade\n\n    def get_name(self):\n        return self.name\n\ns1 = Student(\"Noah\", 7)\nprint(s1.get_name())" },
-      q26: { hint: "Try:\nclass Animal:\n    def speak(self):\n        print(\"Animal sound\")\n\nclass Dog(Animal):\n    def speak(self):\n        print(\"Woof!\")\n\npet = Dog()\npet.speak()" }
+      q22: { hint: "Try:\nwhile True:\n    text = input(\"Say something: \")\n    if text == \"quit\":\n        break\n    print(text)" },
+      q23: { hint: "Try:\ntry:\n    print(score)\nexcept:\n    print(\"There was an error\")" },
+      q24: { hint: "Try:\ndef multiply(a, b):\n    return a * b\n\nanswer = multiply(4, 5)\nprint(answer)" },
+      q25: { hint: "Try:\nprint(abs(-9))\nprint(int(\"25\") + 5)" },
+      q26: { hint: "Try:\nclass Student:\n    def __init__(self, name, grade):\n        self.name = name\n        self.grade = grade\n\n    def get_name(self):\n        return self.name\n\ns1 = Student(\"Noah\", 7)\nprint(s1.get_name())" },
+      q27: { hint: "Try:\nclass Animal:\n    def speak(self):\n        print(\"Animal sound\")\n\nclass Dog(Animal):\n    def speak(self):\n        print(\"Woof!\")\n\npet = Dog()\npet.speak()" }
     };
 
     const qs = Array.from(document.querySelectorAll(".q"));
