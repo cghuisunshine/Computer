@@ -494,6 +494,18 @@
             </div>
           </div>
           <p class="muted">Key conversions: <code class="inline">False → false</code>, <code class="inline">True → true</code>, <code class="inline">None → null</code>.</p>
+          <div class="box" style="margin-top:16px;">
+            <div class="hd">Example with a list of dictionaries</div>
+            <pre>import json
+
+students = [
+    {"name": "Ava", "grade": 7},
+    {"name": "Noah", "grade": 8},
+    {"name": "Mia", "grade": 7}
+]
+
+print(json.dumps(students, indent=2))</pre>
+          </div>
         </section>
 
         <section class="panel playground" id="playground">
