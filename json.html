@@ -687,7 +687,7 @@ print(loaded_student["name"])</textarea>
             <div class="right">
               <button class="action" id="practiceToggleAll" type="button">Show all solutions</button>
               <button class="action" id="practiceResetAll" type="button">Reset all</button>
-              <span class="pill" id="practiceScorePill">Score: 0 / 5</span>
+              <span class="pill" id="practiceScorePill">Score: 0 / 10</span>
             </div>
           </div>
 
@@ -862,6 +862,182 @@ with open("user.json", "r", encoding="utf-8") as f:
 print(loaded["name"])</code></pre>
             </details>
           </div>
+
+          <div class="q practice-question" data-qid="jq6">
+            <div class="qhead">
+              <div>
+                <div class="qtitle">Q6. Convert Python booleans and null values</div>
+                <div class="qmeta">Goal: see how <code class="inline">True</code> and <code class="inline">None</code> become JSON</div>
+              </div>
+              <div class="qmeta">Easy</div>
+            </div>
+            <div class="prompt">
+              Create a dictionary with keys <code class="inline">active</code> and <code class="inline">address</code>.
+              Give them values <code class="inline">True</code> and <code class="inline">None</code>, then print the JSON text.
+            </div>
+            <textarea placeholder="Type your Python code here..." spellcheck="false"></textarea>
+            <div class="row">
+              <button class="action primary" data-action="check" type="button">Check</button>
+              <button class="action" data-action="hint" type="button">Hint</button>
+              <button class="action" data-action="run" type="button">Run in playground</button>
+              <span class="feedback"></span>
+            </div>
+            <div class="inline-run-output" data-inline-output="jq6" hidden>
+              <div class="head">Playground output</div>
+              <pre></pre>
+            </div>
+            <details>
+              <summary>Sample solution</summary>
+              <pre><code>import json
+
+data = {"active": True, "address": None}
+print(json.dumps(data, indent=2))</code></pre>
+            </details>
+          </div>
+
+          <div class="q practice-question" data-qid="jq7">
+            <div class="qhead">
+              <div>
+                <div class="qtitle">Q7. Parse a JSON list</div>
+                <div class="qmeta">Goal: use <code class="inline">json.loads()</code> with arrays</div>
+              </div>
+              <div class="qmeta">Easy</div>
+            </div>
+            <div class="prompt">
+              Convert this JSON text into Python:
+              <code class="inline">'["red", "blue", "green"]'</code>
+              Then print the last item in the list.
+            </div>
+            <textarea placeholder="Type your Python code here..." spellcheck="false"></textarea>
+            <div class="row">
+              <button class="action primary" data-action="check" type="button">Check</button>
+              <button class="action" data-action="hint" type="button">Hint</button>
+              <button class="action" data-action="run" type="button">Run in playground</button>
+              <span class="feedback"></span>
+            </div>
+            <div class="inline-run-output" data-inline-output="jq7" hidden>
+              <div class="head">Playground output</div>
+              <pre></pre>
+            </div>
+            <details>
+              <summary>Sample solution</summary>
+              <pre><code>import json
+
+json_text = '["red", "blue", "green"]'
+colors = json.loads(json_text)
+print(colors[-1])</code></pre>
+            </details>
+          </div>
+
+          <div class="q practice-question" data-qid="jq8">
+            <div class="qhead">
+              <div>
+                <div class="qtitle">Q8. Add a new key before dumping</div>
+                <div class="qmeta">Goal: edit Python data, then convert back to JSON</div>
+              </div>
+              <div class="qmeta">Medium</div>
+            </div>
+            <div class="prompt">
+              Start with a dictionary <code class="inline">{"name": "Liam"}</code>.
+              Add a new key <code class="inline">city</code> with value <code class="inline">"Vancouver"</code>,
+              then print the JSON text with indentation.
+            </div>
+            <textarea placeholder="Type your Python code here..." spellcheck="false"></textarea>
+            <div class="row">
+              <button class="action primary" data-action="check" type="button">Check</button>
+              <button class="action" data-action="hint" type="button">Hint</button>
+              <button class="action" data-action="run" type="button">Run in playground</button>
+              <span class="feedback"></span>
+            </div>
+            <div class="inline-run-output" data-inline-output="jq8" hidden>
+              <div class="head">Playground output</div>
+              <pre></pre>
+            </div>
+            <details>
+              <summary>Sample solution</summary>
+              <pre><code>import json
+
+data = {"name": "Liam"}
+data["city"] = "Vancouver"
+print(json.dumps(data, indent=2))</code></pre>
+            </details>
+          </div>
+
+          <div class="q practice-question" data-qid="jq9">
+            <div class="qhead">
+              <div>
+                <div class="qtitle">Q9. Read numbers from nested JSON</div>
+                <div class="qmeta">Goal: combine parsing and arithmetic</div>
+              </div>
+              <div class="qmeta">Medium</div>
+            </div>
+            <div class="prompt">
+              Convert this JSON text into Python:
+              <code class="inline">'{"scores": {"math": 88, "science": 92}}'</code>
+              Then print the sum of the two scores.
+            </div>
+            <textarea placeholder="Type your Python code here..." spellcheck="false"></textarea>
+            <div class="row">
+              <button class="action primary" data-action="check" type="button">Check</button>
+              <button class="action" data-action="hint" type="button">Hint</button>
+              <button class="action" data-action="run" type="button">Run in playground</button>
+              <span class="feedback"></span>
+            </div>
+            <div class="inline-run-output" data-inline-output="jq9" hidden>
+              <div class="head">Playground output</div>
+              <pre></pre>
+            </div>
+            <details>
+              <summary>Sample solution</summary>
+              <pre><code>import json
+
+json_text = '{"scores": {"math": 88, "science": 92}}'
+data = json.loads(json_text)
+print(data["scores"]["math"] + data["scores"]["science"])</code></pre>
+            </details>
+          </div>
+
+          <div class="q practice-question" data-qid="jq10">
+            <div class="qhead">
+              <div>
+                <div class="qtitle">Q10. Save a list of dictionaries to JSON</div>
+                <div class="qmeta">Goal: write more complex JSON to a file</div>
+              </div>
+              <div class="qmeta">Hard</div>
+            </div>
+            <div class="prompt">
+              Make a list of two dictionaries representing students, save it to <code class="inline">students.json</code>,
+              then read the file back and print the name of the first student.
+            </div>
+            <textarea placeholder="Type your Python code here..." spellcheck="false"></textarea>
+            <div class="row">
+              <button class="action primary" data-action="check" type="button">Check</button>
+              <button class="action" data-action="hint" type="button">Hint</button>
+              <button class="action" data-action="run" type="button">Run in playground</button>
+              <span class="feedback"></span>
+            </div>
+            <div class="inline-run-output" data-inline-output="jq10" hidden>
+              <div class="head">Playground output</div>
+              <pre></pre>
+            </div>
+            <details>
+              <summary>Sample solution</summary>
+              <pre><code>import json
+
+students = [
+    {"name": "Ava", "grade": 7},
+    {"name": "Noah", "grade": 8}
+]
+
+with open("students.json", "w", encoding="utf-8") as f:
+    json.dump(students, f, indent=2)
+
+with open("students.json", "r", encoding="utf-8") as f:
+    loaded = json.load(f)
+
+print(loaded[0]["name"])</code></pre>
+            </details>
+          </div>
         </section>
 
         <section class="panel" id="quiz">
@@ -942,7 +1118,12 @@ print(loaded["name"])</code></pre>
       jq2: { hint: 'Try:\nimport json\n\njson_text = \'{"city": "Vancouver", "temp": 12}\'\ndata = json.loads(json_text)\nprint(data["city"])' },
       jq3: { hint: 'Try:\nimport json\n\njson_text = \'{"user": {"name": "Ava", "skills": ["Python", "SQL", "Pandas"]}}\'\ndata = json.loads(json_text)\nprint(data["user"]["skills"][1])' },
       jq4: { hint: 'Try:\nimport json\n\nbroken = \'{"name": "Ava", age: 12}\'\n\ntry:\n    json.loads(broken)\nexcept json.JSONDecodeError:\n    print("Invalid JSON")' },
-      jq5: { hint: 'Try:\nimport json\n\nuser = {"name": "Noah", "city": "Vancouver"}\nwith open("user.json", "w", encoding="utf-8") as f:\n    json.dump(user, f, indent=2)\nwith open("user.json", "r", encoding="utf-8") as f:\n    loaded = json.load(f)\nprint(loaded["name"])' }
+      jq5: { hint: 'Try:\nimport json\n\nuser = {"name": "Noah", "city": "Vancouver"}\nwith open("user.json", "w", encoding="utf-8") as f:\n    json.dump(user, f, indent=2)\nwith open("user.json", "r", encoding="utf-8") as f:\n    loaded = json.load(f)\nprint(loaded["name"])' },
+      jq6: { hint: 'Try:\nimport json\n\ndata = {"active": True, "address": None}\nprint(json.dumps(data, indent=2))' },
+      jq7: { hint: 'Try:\nimport json\n\njson_text = \'["red", "blue", "green"]\'\ncolors = json.loads(json_text)\nprint(colors[-1])' },
+      jq8: { hint: 'Try:\nimport json\n\ndata = {"name": "Liam"}\ndata["city"] = "Vancouver"\nprint(json.dumps(data, indent=2))' },
+      jq9: { hint: 'Try:\nimport json\n\njson_text = \'{"scores": {"math": 88, "science": 92}}\'\ndata = json.loads(json_text)\nprint(data["scores"]["math"] + data["scores"]["science"])' },
+      jq10: { hint: 'Try:\nimport json\n\nstudents = [\n    {"name": "Ava", "grade": 7},\n    {"name": "Noah", "grade": 8}\n]\nwith open("students.json", "w", encoding="utf-8") as f:\n    json.dump(students, f, indent=2)\nwith open("students.json", "r", encoding="utf-8") as f:\n    loaded = json.load(f)\nprint(loaded[0]["name"])' }
     };
 
     function showStatus(message, type){
