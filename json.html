@@ -1,0 +1,1507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interactive JSON with Python Tutorial</title>
+  <style>
+    :root{
+      --bg:#f6f8fc;
+      --card:#ffffff;
+      --ink:#1f2937;
+      --muted:#6b7280;
+      --accent:#2563eb;
+      --accent-2:#1d4ed8;
+      --line:#dbe3f0;
+      --ok:#15803d;
+      --warn:#b45309;
+      --shadow:0 12px 30px rgba(15,23,42,.08);
+      --radius:18px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      font-family:Inter,Arial,"Segoe UI",sans-serif;
+      background:linear-gradient(180deg,#f8fbff 0%, #f4f7fb 100%);
+      color:var(--ink);
+      line-height:1.55;
+    }
+
+    .wrap{
+      max-width:1100px;
+      margin:0 auto;
+      padding:24px;
+    }
+
+    .hero{
+      background:linear-gradient(135deg,#2563eb 0%, #1e40af 100%);
+      color:#fff;
+      border-radius:24px;
+      padding:28px;
+      box-shadow:var(--shadow);
+      margin-bottom:24px;
+    }
+
+    .hero h1{
+      margin:0 0 10px;
+      font-size:2rem;
+    }
+
+    .hero p{
+      margin:0;
+      max-width:820px;
+      opacity:.96;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:280px 1fr;
+      gap:20px;
+    }
+
+    .sidebar, .panel{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+    }
+
+    .sidebar{
+      position:sticky;
+      top:16px;
+      align-self:start;
+      padding:18px;
+    }
+
+    .sidebar h2{
+      font-size:1rem;
+      margin:0 0 12px;
+    }
+
+    .nav-btn{
+      width:100%;
+      text-align:left;
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius:12px;
+      padding:10px 12px;
+      margin:0 0 8px;
+      cursor:pointer;
+      font-size:.95rem;
+      color:var(--ink);
+      transition:.18s ease;
+    }
+
+    .nav-btn:hover{border-color:var(--accent); transform:translateY(-1px)}
+    .nav-btn.active{background:#eff6ff;border-color:var(--accent);color:var(--accent-2);font-weight:600}
+
+    .content{
+      display:flex;
+      flex-direction:column;
+      gap:20px;
+    }
+
+    .panel{
+      padding:22px;
+    }
+
+    .panel h2{
+      margin-top:0;
+      font-size:1.35rem;
+    }
+
+    .muted{color:var(--muted)}
+
+    .example-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px;
+      margin-top:16px;
+    }
+
+    .box{
+      border:1px solid var(--line);
+      border-radius:14px;
+      overflow:hidden;
+      background:#fff;
+    }
+
+    .box .hd{
+      padding:10px 14px;
+      font-weight:700;
+      background:#f8fafc;
+      border-bottom:1px solid var(--line);
+    }
+
+    textarea, pre, .output{
+      width:100%;
+      min-height:200px;
+      margin:0;
+      padding:14px;
+      border:0;
+      font:14px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      background:#fbfdff;
+      color:#102033;
+      resize:vertical;
+      white-space:pre-wrap;
+      overflow:auto;
+    }
+
+    .code-editor{
+      min-height:180px;
+      border-top:0;
+      border-left:0;
+      border-right:0;
+      border-bottom:0;
+      border-radius:0;
+      resize:vertical;
+      outline:none;
+      white-space:pre;
+      overflow:auto;
+      overflow-wrap:normal;
+      word-break:normal;
+      tab-size:4;
+      line-height:1.5;
+    }
+
+    .controls{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin:14px 0;
+    }
+
+    button.action, select{
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--ink);
+      border-radius:12px;
+      padding:10px 14px;
+      font-size:.95rem;
+    }
+
+    button.action{
+      cursor:pointer;
+      font-weight:600;
+    }
+
+    button.action:disabled{
+      opacity:.6;
+      cursor:not-allowed;
+    }
+
+    button.primary{
+      background:var(--accent);
+      color:#fff;
+      border-color:var(--accent);
+    }
+
+    button.primary:hover{background:var(--accent-2)}
+
+    .pill{
+      display:inline-block;
+      padding:4px 10px;
+      border-radius:999px;
+      font-size:.82rem;
+      font-weight:700;
+      background:#eff6ff;
+      color:var(--accent-2);
+      margin:0 6px 6px 0;
+    }
+
+    .status{
+      margin-top:10px;
+      padding:10px 12px;
+      border-radius:12px;
+      font-size:.95rem;
+      display:none;
+    }
+
+    .status.ok{display:block;background:#ecfdf5;color:var(--ok);border:1px solid #bbf7d0}
+    .status.warn{display:block;background:#fff7ed;color:var(--warn);border:1px solid #fed7aa}
+
+    .inline-run-output{
+      margin-top:12px;
+      border:1px solid var(--line);
+      border-radius:14px;
+      background:#fff;
+      overflow:hidden;
+    }
+
+    .inline-run-output .head{
+      padding:10px 14px;
+      border-bottom:1px solid var(--line);
+      font-size:.9rem;
+      color:var(--muted);
+      background:#f8fafc;
+    }
+
+    .inline-run-output pre{
+      margin:0;
+      border:0;
+      border-radius:0;
+      border-left:4px solid var(--ok);
+      min-height:64px;
+      background:#fbfdff;
+    }
+
+    .inline-run-output pre.err{
+      border-left-color:#b91c1c;
+      background:#fff7f7;
+    }
+
+    .practice-bar{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+      padding:12px 14px;
+      border:1px solid var(--line);
+      background:#f8fbff;
+      border-radius:14px;
+      margin-bottom:16px;
+    }
+
+    .practice-bar .left,
+    .practice-bar .right{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+
+    .q{
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:16px;
+      background:#fff;
+      margin-bottom:14px;
+    }
+
+    .q:last-child{
+      margin-bottom:0;
+    }
+
+    .qhead{
+      display:flex;
+      gap:10px;
+      justify-content:space-between;
+      align-items:flex-start;
+    }
+
+    .qtitle{
+      font-weight:800;
+    }
+
+    .qmeta{
+      color:var(--muted);
+      font-size:.85rem;
+    }
+
+    .prompt{
+      color:var(--muted);
+      margin:10px 0 12px;
+      line-height:1.6;
+    }
+
+    .q textarea{
+      min-height:120px;
+      white-space:pre;
+      overflow:auto;
+      overflow-wrap:normal;
+      word-break:normal;
+      tab-size:4;
+    }
+
+    .row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:12px;
+      align-items:center;
+    }
+
+    .feedback{
+      font-size:.92rem;
+      color:var(--muted);
+      white-space:pre-wrap;
+    }
+
+    .feedback.ok{color:var(--ok)}
+    .feedback.bad{color:#b91c1c}
+    .feedback.warn{color:var(--warn)}
+
+    .quiz-card{
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:16px;
+      margin:14px 0 0;
+      background:#fff;
+    }
+
+    .quiz-options label{
+      display:block;
+      padding:8px 10px;
+      margin:8px 0;
+      border:1px solid var(--line);
+      border-radius:10px;
+      cursor:pointer;
+    }
+
+    .quiz-result{
+      margin-top:10px;
+      font-weight:700;
+    }
+
+    .two-col{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px;
+    }
+
+    .tiny{
+      font-size:.88rem;
+      color:var(--muted);
+    }
+
+    code.inline{
+      background:#eef2ff;
+      color:#1e3a8a;
+      padding:2px 6px;
+      border-radius:6px;
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    }
+
+    .example-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      padding:12px 14px 14px;
+      border-top:1px solid var(--line);
+      background:#fff;
+    }
+
+    .playground .play-grid{
+      display:grid;
+      grid-template-columns:1.15fr .85fr;
+      gap:16px;
+      margin-top:16px;
+    }
+
+    .playground .pg-pane{
+      border:1px solid var(--line);
+      border-radius:14px;
+      background:#fff;
+      overflow:hidden;
+    }
+
+    .playground .pg-toolbar{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      padding:12px 14px;
+      border-bottom:1px solid var(--line);
+      align-items:center;
+      background:#f8fbff;
+    }
+
+    .playground .pg-spacer{flex:1}
+
+    .playground .pg-code{
+      width:100%;
+      min-height:280px;
+      border:0;
+      border-radius:0;
+      outline:none;
+      resize:vertical;
+      white-space:pre;
+      overflow:auto;
+      overflow-wrap:normal;
+      word-break:normal;
+      tab-size:4;
+    }
+
+    .playground .pg-output{
+      min-height:220px;
+      border-left:4px solid var(--ok);
+      background:#fbfdff;
+    }
+
+    .playground .pg-output.err{
+      border-left-color:#b91c1c;
+      background:#fff7f7;
+    }
+
+    .playground .pg-foot{
+      padding:12px 14px;
+      border-top:1px solid var(--line);
+      background:#fff;
+    }
+
+    @media (max-width: 900px){
+      .grid{grid-template-columns:1fr}
+      .sidebar{position:static}
+      .example-grid,.two-col,.playground .play-grid{grid-template-columns:1fr}
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.25.1/full/pyodide.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1>Interactive JSON with Python Tutorial</h1>
+      <p>Learn how Python works with JSON using editable examples, instant validation, and mini quizzes. This page focuses on the most useful tools: <span class="pill">json.loads()</span><span class="pill">json.dumps()</span><span class="pill">json.load()</span><span class="pill">json.dump()</span></p>
+    </section>
+
+    <div class="grid">
+      <aside class="sidebar">
+        <h2>Sections</h2>
+        <button class="nav-btn active" data-target="intro">1. Basics</button>
+        <button class="nav-btn" data-target="playground">2. Python playground</button>
+        <button class="nav-btn" data-target="converter">3. Interactive converter</button>
+        <button class="nav-btn" data-target="functions">4. Python functions</button>
+        <button class="nav-btn" data-target="files">5. Read & write files</button>
+        <button class="nav-btn" data-target="practice">6. Practice</button>
+        <button class="nav-btn" data-target="quiz">7. Quiz</button>
+      </aside>
+
+      <main class="content">
+        <section class="panel" id="intro">
+          <h2>1. Basics</h2>
+          <p>JSON is a text format for structured data. In Python, JSON is usually converted into normal Python objects like dictionaries and lists.</p>
+          <div class="two-col">
+            <div class="box">
+              <div class="hd">Python object</div>
+              <pre>data = {
+    "name": "Alice",
+    "age": 25,
+    "is_student": False,
+    "skills": ["Python", "SQL"],
+    "address": None
+}</pre>
+            </div>
+            <div class="box">
+              <div class="hd">Equivalent JSON</div>
+              <pre>{
+  "name": "Alice",
+  "age": 25,
+  "is_student": false,
+  "skills": ["Python", "SQL"],
+  "address": null
+}</pre>
+            </div>
+          </div>
+          <p class="muted">Key conversions: <code class="inline">False → false</code>, <code class="inline">True → true</code>, <code class="inline">None → null</code>.</p>
+        </section>
+
+        <section class="panel playground" id="playground">
+          <h2>2. Live Python playground</h2>
+          <p class="muted">This now runs Python in the browser like <code class="inline">practice.html</code>. You can type code directly, load any tutorial snippet, or send the current JSON example into Python.</p>
+
+          <div class="play-grid">
+            <div class="pg-pane">
+              <div class="pg-toolbar">
+                <button class="action primary" id="pg-run-btn" type="button" disabled>Run</button>
+                <button class="action" id="pg-stop-btn" type="button" disabled>Stop</button>
+                <button class="action" id="pg-clear-btn" type="button">Clear output</button>
+                <span class="pg-spacer"></span>
+                <label class="tiny">
+                  <input type="checkbox" id="pg-auto-run" />
+                  Auto-run (0.7s)
+                </label>
+                <select id="pg-examples">
+                  <option value="">Examples...</option>
+                  <option value="loads">json.loads()</option>
+                  <option value="dumps">json.dumps()</option>
+                  <option value="roundtrip">Round-trip JSON</option>
+                  <option value="error">Broken JSON example</option>
+                </select>
+              </div>
+              <textarea id="pg-code" class="pg-code" spellcheck="false"></textarea>
+              <div class="pg-foot tiny" id="pg-hint-line">Tip: Press <code class="inline">Ctrl/Cmd + Enter</code> to run.</div>
+            </div>
+            <div class="pg-pane">
+              <div class="pg-toolbar">
+                <span class="pill" id="pg-run-status">Idle</span>
+                <span class="pill" id="pg-python-status">Loading Python...</span>
+              </div>
+              <pre id="pg-output" class="pg-output"></pre>
+              <div class="pg-foot tiny" id="pg-friendly-hint">When you hit Run, output shows here.</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" id="converter">
+          <h2>3. Interactive converter</h2>
+          <p>Edit the JSON below, then validate it or view the equivalent Python-style result.</p>
+
+          <div class="controls">
+            <button class="action primary" id="validateBtn">Validate JSON</button>
+            <button class="action" id="prettyBtn">Pretty format</button>
+            <button class="action" id="pythonViewBtn">Show Python-style view</button>
+            <button class="action" id="runInPythonBtn">Run in Python playground</button>
+            <button class="action" id="resetBtn">Reset example</button>
+          </div>
+
+          <div class="example-grid">
+            <div class="box">
+              <div class="hd">Editable JSON</div>
+              <textarea id="jsonInput">{
+  "name": "Alice",
+  "age": 25,
+  "skills": ["Python", "SQL"],
+  "active": true,
+  "city": "Vancouver",
+  "address": null
+}</textarea>
+            </div>
+            <div class="box">
+              <div class="hd">Result</div>
+              <pre id="resultBox">Press a button to see the result.</pre>
+            </div>
+          </div>
+          <div id="statusBox" class="status"></div>
+          <div class="inline-run-output" data-inline-output="converter" hidden>
+            <div class="head">Playground output</div>
+            <pre></pre>
+          </div>
+        </section>
+
+        <section class="panel" id="functions">
+          <h2>4. Python functions</h2>
+          <div class="two-col">
+            <div class="box">
+              <div class="hd">json.loads()</div>
+              <textarea id="snippet-loads" class="code-editor" spellcheck="false">import json
+
+json_text = '{"name": "Alice", "age": 25}'
+data = json.loads(json_text)
+print(data["name"])</textarea>
+              <div class="example-actions">
+                <button class="action load-snippet" data-snippet="snippet-loads" type="button">Load in playground</button>
+                <button class="action run-snippet" data-snippet="snippet-loads" type="button">Run snippet</button>
+              </div>
+              <div class="inline-run-output" data-inline-output="snippet-loads" hidden>
+                <div class="head">Playground output</div>
+                <pre></pre>
+              </div>
+            </div>
+            <div class="box">
+              <div class="hd">json.dumps()</div>
+              <textarea id="snippet-dumps" class="code-editor" spellcheck="false">import json
+
+data = {"name": "Alice", "age": 25}
+json_text = json.dumps(data, indent=2)
+print(json_text)</textarea>
+              <div class="example-actions">
+                <button class="action load-snippet" data-snippet="snippet-dumps" type="button">Load in playground</button>
+                <button class="action run-snippet" data-snippet="snippet-dumps" type="button">Run snippet</button>
+              </div>
+              <div class="inline-run-output" data-inline-output="snippet-dumps" hidden>
+                <div class="head">Playground output</div>
+                <pre></pre>
+              </div>
+            </div>
+          </div>
+          <div class="two-col" style="margin-top:16px;">
+            <div class="box">
+              <div class="hd">json.load()</div>
+              <textarea id="snippet-load" class="code-editor" spellcheck="false">import json
+
+with open("data.json", "r", encoding="utf-8") as f:
+    data = json.load(f)
+print(data)</textarea>
+              <div class="example-actions">
+                <button class="action load-snippet" data-snippet="snippet-load" type="button">Load in playground</button>
+                <button class="action run-snippet" data-snippet="snippet-load" type="button">Run snippet</button>
+              </div>
+              <div class="inline-run-output" data-inline-output="snippet-load" hidden>
+                <div class="head">Playground output</div>
+                <pre></pre>
+              </div>
+            </div>
+            <div class="box">
+              <div class="hd">json.dump()</div>
+              <textarea id="snippet-dump" class="code-editor" spellcheck="false">import json
+
+data = {"name": "Bob", "city": "Vancouver"}
+with open("output.json", "w", encoding="utf-8") as f:
+    json.dump(data, f, indent=2, ensure_ascii=False)</textarea>
+              <div class="example-actions">
+                <button class="action load-snippet" data-snippet="snippet-dump" type="button">Load in playground</button>
+                <button class="action run-snippet" data-snippet="snippet-dump" type="button">Run snippet</button>
+              </div>
+              <div class="inline-run-output" data-inline-output="snippet-dump" hidden>
+                <div class="head">Playground output</div>
+                <pre></pre>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" id="files">
+          <h2>5. Read & write files</h2>
+          <p>When working with files in Python, use <code class="inline">json.load()</code> to read from a file and <code class="inline">json.dump()</code> to write to a file.</p>
+          <div class="box">
+            <div class="hd">Complete example</div>
+            <textarea id="snippet-files" class="code-editor" spellcheck="false">import json
+
+student = {
+    "name": "Peter",
+    "age": 16,
+    "subjects": ["Math", "Science", "English"],
+    "graduated": False
+}
+
+# Save to file
+with open("student.json", "w", encoding="utf-8") as f:
+    json.dump(student, f, indent=2, ensure_ascii=False)
+
+# Read back from file
+with open("student.json", "r", encoding="utf-8") as f:
+    loaded_student = json.load(f)
+
+print(loaded_student["name"])</textarea>
+            <div class="example-actions">
+              <button class="action load-snippet" data-snippet="snippet-files" type="button">Load in playground</button>
+              <button class="action run-snippet" data-snippet="snippet-files" type="button">Run snippet</button>
+            </div>
+            <div class="inline-run-output" data-inline-output="snippet-files" hidden>
+              <div class="head">Playground output</div>
+              <pre></pre>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" id="practice">
+          <h2>6. Practice</h2>
+          <p class="muted">These exercises work like the practice page: write Python, run it, check your answer, and compare with the sample solution.</p>
+
+          <div class="practice-bar">
+            <div class="left">
+              <span class="pill">Local answer check</span>
+              <span class="pill">Use Run in playground before Check</span>
+            </div>
+            <div class="right">
+              <button class="action" id="practiceToggleAll" type="button">Show all solutions</button>
+              <button class="action" id="practiceResetAll" type="button">Reset all</button>
+              <span class="pill" id="practiceScorePill">Score: 0 / 5</span>
+            </div>
+          </div>
+
+          <div class="q practice-question" data-qid="jq1">
+            <div class="qhead">
+              <div>
+                <div class="qtitle">Q1. Convert a dictionary to JSON</div>
+                <div class="qmeta">Goal: use <code class="inline">json.dumps()</code></div>
+              </div>
+              <div class="qmeta">Easy</div>
+            </div>
+            <div class="prompt">
+              Create a dictionary called <code class="inline">student</code> with keys <code class="inline">name</code> and <code class="inline">grade</code>.
+              Print it as formatted JSON using <code class="inline">indent=2</code>.
+            </div>
+            <textarea placeholder="Type your Python code here..." spellcheck="false"></textarea>
+            <div class="row">
+              <button class="action primary" data-action="check" type="button">Check</button>
+              <button class="action" data-action="hint" type="button">Hint</button>
+              <button class="action" data-action="run" type="button">Run in playground</button>
+              <span class="feedback"></span>
+            </div>
+            <div class="inline-run-output" data-inline-output="jq1" hidden>
+              <div class="head">Playground output</div>
+              <pre></pre>
+            </div>
+            <details>
+              <summary>Sample solution</summary>
+              <pre><code>import json
+
+student = {"name": "Mia", "grade": 8}
+print(json.dumps(student, indent=2))</code></pre>
+            </details>
+          </div>
+
+          <div class="q practice-question" data-qid="jq2">
+            <div class="qhead">
+              <div>
+                <div class="qtitle">Q2. Read a value from JSON text</div>
+                <div class="qmeta">Goal: use <code class="inline">json.loads()</code></div>
+              </div>
+              <div class="qmeta">Easy</div>
+            </div>
+            <div class="prompt">
+              Make a variable <code class="inline">json_text</code> equal to <code class="inline">'{"city": "Vancouver", "temp": 12}'</code>.
+              Convert it to Python and print the city.
+            </div>
+            <textarea placeholder="Type your Python code here..." spellcheck="false"></textarea>
+            <div class="row">
+              <button class="action primary" data-action="check" type="button">Check</button>
+              <button class="action" data-action="hint" type="button">Hint</button>
+              <button class="action" data-action="run" type="button">Run in playground</button>
+              <span class="feedback"></span>
+            </div>
+            <div class="inline-run-output" data-inline-output="jq2" hidden>
+              <div class="head">Playground output</div>
+              <pre></pre>
+            </div>
+            <details>
+              <summary>Sample solution</summary>
+              <pre><code>import json
+
+json_text = '{"city": "Vancouver", "temp": 12}'
+data = json.loads(json_text)
+print(data["city"])</code></pre>
+            </details>
+          </div>
+
+          <div class="q practice-question" data-qid="jq3">
+            <div class="qhead">
+              <div>
+                <div class="qtitle">Q3. Access nested JSON data</div>
+                <div class="qmeta">Goal: parse then index nested values</div>
+              </div>
+              <div class="qmeta">Medium</div>
+            </div>
+            <div class="prompt">
+              Convert this JSON text into Python, then print the second skill:
+              <code class="inline">'{"user": {"name": "Ava", "skills": ["Python", "SQL", "Pandas"]}}'</code>
+            </div>
+            <textarea placeholder="Type your Python code here..." spellcheck="false"></textarea>
+            <div class="row">
+              <button class="action primary" data-action="check" type="button">Check</button>
+              <button class="action" data-action="hint" type="button">Hint</button>
+              <button class="action" data-action="run" type="button">Run in playground</button>
+              <span class="feedback"></span>
+            </div>
+            <div class="inline-run-output" data-inline-output="jq3" hidden>
+              <div class="head">Playground output</div>
+              <pre></pre>
+            </div>
+            <details>
+              <summary>Sample solution</summary>
+              <pre><code>import json
+
+json_text = '{"user": {"name": "Ava", "skills": ["Python", "SQL", "Pandas"]}}'
+data = json.loads(json_text)
+print(data["user"]["skills"][1])</code></pre>
+            </details>
+          </div>
+
+          <div class="q practice-question" data-qid="jq4">
+            <div class="qhead">
+              <div>
+                <div class="qtitle">Q4. Catch invalid JSON</div>
+                <div class="qmeta">Goal: use <code class="inline">json.JSONDecodeError</code></div>
+              </div>
+              <div class="qmeta">Medium</div>
+            </div>
+            <div class="prompt">
+              Create a broken JSON string like <code class="inline">'{"name": "Ava", age: 12}'</code>.
+              Use <code class="inline">try</code>/<code class="inline">except</code> so the program prints <code class="inline">Invalid JSON</code> instead of crashing.
+            </div>
+            <textarea placeholder="Type your Python code here..." spellcheck="false"></textarea>
+            <div class="row">
+              <button class="action primary" data-action="check" type="button">Check</button>
+              <button class="action" data-action="hint" type="button">Hint</button>
+              <button class="action" data-action="run" type="button">Run in playground</button>
+              <span class="feedback"></span>
+            </div>
+            <div class="inline-run-output" data-inline-output="jq4" hidden>
+              <div class="head">Playground output</div>
+              <pre></pre>
+            </div>
+            <details>
+              <summary>Sample solution</summary>
+              <pre><code>import json
+
+broken = '{"name": "Ava", age: 12}'
+
+try:
+    json.loads(broken)
+except json.JSONDecodeError:
+    print("Invalid JSON")</code></pre>
+            </details>
+          </div>
+
+          <div class="q practice-question" data-qid="jq5">
+            <div class="qhead">
+              <div>
+                <div class="qtitle">Q5. Write JSON to a file and read it back</div>
+                <div class="qmeta">Goal: use <code class="inline">json.dump()</code> and <code class="inline">json.load()</code></div>
+              </div>
+              <div class="qmeta">Medium</div>
+            </div>
+            <div class="prompt">
+              Create a dictionary, save it to <code class="inline">user.json</code>, then read the file back and print the value of <code class="inline">name</code>.
+            </div>
+            <textarea placeholder="Type your Python code here..." spellcheck="false"></textarea>
+            <div class="row">
+              <button class="action primary" data-action="check" type="button">Check</button>
+              <button class="action" data-action="hint" type="button">Hint</button>
+              <button class="action" data-action="run" type="button">Run in playground</button>
+              <span class="feedback"></span>
+            </div>
+            <div class="inline-run-output" data-inline-output="jq5" hidden>
+              <div class="head">Playground output</div>
+              <pre></pre>
+            </div>
+            <details>
+              <summary>Sample solution</summary>
+              <pre><code>import json
+
+user = {"name": "Noah", "city": "Vancouver"}
+
+with open("user.json", "w", encoding="utf-8") as f:
+    json.dump(user, f, indent=2)
+
+with open("user.json", "r", encoding="utf-8") as f:
+    loaded = json.load(f)
+
+print(loaded["name"])</code></pre>
+            </details>
+          </div>
+        </section>
+
+        <section class="panel" id="quiz">
+          <h2>7. Quiz</h2>
+
+          <div class="quiz-card" data-answer="b">
+            <div><strong>Question 1:</strong> Which function converts JSON text into a Python object?</div>
+            <div class="quiz-options">
+              <label><input type="radio" name="q1" value="a"> json.dumps()</label>
+              <label><input type="radio" name="q1" value="b"> json.loads()</label>
+              <label><input type="radio" name="q1" value="c"> json.dump()</label>
+            </div>
+            <button class="action check-quiz">Check answer</button>
+            <div class="quiz-result"></div>
+          </div>
+
+          <div class="quiz-card" data-answer="c">
+            <div><strong>Question 2:</strong> Which JSON value matches Python <code class="inline">None</code>?</div>
+            <div class="quiz-options">
+              <label><input type="radio" name="q2" value="a"> false</label>
+              <label><input type="radio" name="q2" value="b"> empty</label>
+              <label><input type="radio" name="q2" value="c"> null</label>
+            </div>
+            <button class="action check-quiz">Check answer</button>
+            <div class="quiz-result"></div>
+          </div>
+
+          <div class="quiz-card" data-answer="a">
+            <div><strong>Question 3:</strong> Which function writes JSON to a file?</div>
+            <div class="quiz-options">
+              <label><input type="radio" name="q3" value="a"> json.dump()</label>
+              <label><input type="radio" name="q3" value="b"> json.loads()</label>
+              <label><input type="radio" name="q3" value="c"> json.load()</label>
+            </div>
+            <button class="action check-quiz">Check answer</button>
+            <div class="quiz-result"></div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    const defaultJSON = `{
+  "name": "Alice",
+  "age": 25,
+  "skills": ["Python", "SQL"],
+  "active": true,
+  "city": "Vancouver",
+  "address": null
+}`;
+
+    const jsonInput = document.getElementById('jsonInput');
+    const resultBox = document.getElementById('resultBox');
+    const statusBox = document.getElementById('statusBox');
+    const practiceQuestions = Array.from(document.querySelectorAll('.practice-question'));
+    const practiceScorePill = document.getElementById('practiceScorePill');
+    const practiceToggleAllBtn = document.getElementById('practiceToggleAll');
+    const practiceResetAllBtn = document.getElementById('practiceResetAll');
+    const pgRunBtn = document.getElementById('pg-run-btn');
+    const pgStopBtn = document.getElementById('pg-stop-btn');
+    const pgClearBtn = document.getElementById('pg-clear-btn');
+    const pgCodeEl = document.getElementById('pg-code');
+    const pgOutputEl = document.getElementById('pg-output');
+    const pgRunStatusEl = document.getElementById('pg-run-status');
+    const pgPythonStatusEl = document.getElementById('pg-python-status');
+    const pgFriendlyHintEl = document.getElementById('pg-friendly-hint');
+    const pgHintLineEl = document.getElementById('pg-hint-line');
+    const pgExamplesEl = document.getElementById('pg-examples');
+    const pgAutoRunEl = document.getElementById('pg-auto-run');
+    let pgPyodide = null;
+    let pgRunning = false;
+    let pgAutoRunTimer = null;
+    let pgActiveInlineTarget = null;
+    let practiceAllOpen = false;
+    const practiceRubric = {
+      jq1: { hint: 'Try:\nimport json\n\nstudent = {"name": "Mia", "grade": 8}\nprint(json.dumps(student, indent=2))' },
+      jq2: { hint: 'Try:\nimport json\n\njson_text = \'{"city": "Vancouver", "temp": 12}\'\ndata = json.loads(json_text)\nprint(data["city"])' },
+      jq3: { hint: 'Try:\nimport json\n\njson_text = \'{"user": {"name": "Ava", "skills": ["Python", "SQL", "Pandas"]}}\'\ndata = json.loads(json_text)\nprint(data["user"]["skills"][1])' },
+      jq4: { hint: 'Try:\nimport json\n\nbroken = \'{"name": "Ava", age: 12}\'\n\ntry:\n    json.loads(broken)\nexcept json.JSONDecodeError:\n    print("Invalid JSON")' },
+      jq5: { hint: 'Try:\nimport json\n\nuser = {"name": "Noah", "city": "Vancouver"}\nwith open("user.json", "w", encoding="utf-8") as f:\n    json.dump(user, f, indent=2)\nwith open("user.json", "r", encoding="utf-8") as f:\n    loaded = json.load(f)\nprint(loaded["name"])' }
+    };
+
+    function showStatus(message, type){
+      statusBox.textContent = message;
+      statusBox.className = `status ${type}`;
+    }
+
+    function clearStatus(){
+      statusBox.textContent = '';
+      statusBox.className = 'status';
+    }
+
+    function updatePracticeScore(){
+      const passed = practiceQuestions.filter(q => q.dataset.passed === 'true').length;
+      practiceScorePill.textContent = `Score: ${passed} / ${practiceQuestions.length}`;
+    }
+
+    function setPracticeFeedback(qEl, text, kind, passed){
+      const fb = qEl.querySelector('.feedback');
+      if (!fb) return;
+      fb.className = 'feedback' + (kind ? ' ' + kind : '');
+      fb.textContent = text || '';
+      if (typeof passed === 'boolean') {
+        qEl.dataset.passed = passed ? 'true' : 'false';
+        updatePracticeScore();
+      }
+    }
+
+    function getPracticeQuestionText(qEl){
+      const title = qEl.querySelector('.qtitle')?.textContent?.trim() || '';
+      const prompt = qEl.querySelector('.prompt')?.textContent?.trim() || '';
+      return [title, prompt].filter(Boolean).join('\n');
+    }
+
+    function getPracticeModelAnswer(qEl){
+      return qEl.querySelector('details pre code')?.textContent?.trim() || '';
+    }
+
+    function normalizeText(str){
+      return String(str || '')
+        .toLowerCase()
+        .replace(/[^a-z0-9\s]/g, ' ')
+        .split(/\s+/)
+        .filter(Boolean);
+    }
+
+    function similarityScore(userText, targetText){
+      const uWords = normalizeText(userText);
+      const tWords = normalizeText(targetText);
+      if (uWords.length === 0 || tWords.length === 0) return 0;
+
+      const uSet = new Set(uWords);
+      const tSet = new Set(tWords);
+      let intersection = 0;
+      tSet.forEach(w => {
+        if (uSet.has(w)) intersection++;
+      });
+      const union = uSet.size + tSet.size - intersection;
+      return union === 0 ? 0 : intersection / union;
+    }
+
+    function localOverlapCheck(userText, correctText){
+      if (!correctText) {
+        return { verdict: 'unknown', explanation: 'No model answer provided.' };
+      }
+      const score = similarityScore(userText, correctText);
+      const percent = Math.round(score * 100);
+      if (percent >= 70) return { verdict: 'correct', explanation: `Overlap about ${percent}% with the sample solution.` };
+      if (percent >= 40) return { verdict: 'wrong', explanation: `Partial overlap (${percent}%). Compare with the sample solution and refine.` };
+      return { verdict: 'wrong', explanation: `Low overlap (~${percent}%). Compare with the sample solution and try again.` };
+    }
+
+    function showPracticeHint(qEl){
+      const hint = practiceRubric[qEl.dataset.qid]?.hint || 'No hint available.';
+      setPracticeFeedback(qEl, 'Hint:\n' + hint, 'warn');
+    }
+
+    async function checkPracticeAnswer(qEl, btn){
+      const textarea = qEl.querySelector('textarea');
+      const userText = textarea ? textarea.value.trim() : '';
+
+      if (!userText) {
+        setPracticeFeedback(qEl, 'Type your code first.', 'warn', false);
+        return;
+      }
+
+      if (btn) btn.disabled = true;
+      setPracticeFeedback(qEl, 'Checking...', '', false);
+      try {
+        const result = localOverlapCheck(userText, getPracticeModelAnswer(qEl));
+        const isCorrect = result.verdict === 'correct';
+        const prefix = result.verdict === 'unknown' ? '' : (isCorrect ? 'Correct. ' : 'Wrong. ');
+        const kind = result.verdict === 'unknown' ? 'warn' : (isCorrect ? 'ok' : 'bad');
+        setPracticeFeedback(qEl, prefix + (result.explanation || ''), kind, isCorrect);
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+    }
+
+    async function loadPracticeIntoPlayground(qEl, runNow){
+      const textarea = qEl.querySelector('textarea');
+      const fromAnswer = textarea ? textarea.value.trim() : '';
+      const model = getPracticeModelAnswer(qEl);
+      const code = fromAnswer || model;
+      if (!code) return false;
+      await loadIntoPlayground(
+        code,
+        runNow,
+        `Loaded ${qEl.dataset.qid?.toUpperCase() || 'question'} into the playground.`,
+        qEl.dataset.qid || null,
+        false
+      );
+      return true;
+    }
+
+    function getSnippetCode(snippetId){
+      const el = document.getElementById(snippetId);
+      if (!el) return '';
+      if ('value' in el) return el.value.trim();
+      return (el.textContent || '').trim();
+    }
+
+    function pgSetOutput(text, kind){
+      pgOutputEl.textContent = text || '';
+      pgOutputEl.classList.toggle('err', kind === 'err');
+    }
+
+    function pgSetRunStatus(text){
+      pgRunStatusEl.textContent = text || '';
+    }
+
+    function pgSetPythonStatus(text){
+      pgPythonStatusEl.textContent = text || '';
+    }
+
+    function pgSetFriendlyHint(text){
+      pgFriendlyHintEl.textContent = text || '';
+    }
+
+    function pgSetHintLine(text){
+      pgHintLineEl.textContent = text || '';
+    }
+
+    function getInlineRunOutputNodes(targetKey){
+      if (!targetKey) return {};
+      const wrap = document.querySelector(`[data-inline-output="${targetKey}"]`);
+      return {
+        wrap,
+        head: wrap?.querySelector('.head'),
+        pre: wrap?.querySelector('pre')
+      };
+    }
+
+    function setInlineRunOutput(targetKey, text, statusText, isErr){
+      const { wrap, head, pre } = getInlineRunOutputNodes(targetKey);
+      if (!wrap || !head || !pre) return;
+      wrap.hidden = false;
+      head.textContent = statusText ? `Playground output (${statusText})` : 'Playground output';
+      pre.textContent = text || '(no output)';
+      pre.classList.toggle('err', !!isErr);
+    }
+
+    function pgFriendlyErrorHint(errText){
+      const t = errText || '';
+      const lineMatch = t.match(/line\s+(\d+)/);
+      const lineNum = lineMatch ? Number(lineMatch[1]) : null;
+      let headline = '';
+      let hint = 'Something went wrong. Read the last line of the error for details.';
+
+      if (t.includes('SyntaxError: EOL while scanning string literal') || t.includes('SyntaxError: unterminated string literal')) {
+        headline = 'Missing quote';
+        hint = 'A string is missing an ending quote. Make sure quotes are paired.';
+      } else if (t.includes('SyntaxError: invalid syntax')) {
+        headline = 'Syntax error';
+        hint = 'Check for missing colons, commas, quotes, or parentheses.';
+      } else if (t.includes('IndentationError')) {
+        headline = 'Indentation error';
+        hint = 'Inside blocks, use consistent indentation.';
+      } else if (t.includes('NameError: name')) {
+        headline = 'Name not defined';
+        hint = 'A variable name is missing or misspelled.';
+      } else if (t.includes('JSONDecodeError')) {
+        headline = 'Invalid JSON';
+        hint = 'Python rejected the JSON text. Check quotes, commas, and bracket pairs.';
+      } else if (t.includes('ModuleNotFoundError')) {
+        headline = 'Module not found';
+        hint = 'That import may not be available in this browser environment.';
+      }
+
+      return { headline, hint, lineNum };
+    }
+
+    async function pgSetupPythonIO(){
+      if (!pgPyodide) return;
+      await pgPyodide.runPythonAsync(`
+import sys, io
+
+class _BrowserIO(io.StringIO):
+    pass
+
+_stdout = _BrowserIO()
+_stderr = _BrowserIO()
+sys.stdout = _stdout
+sys.stderr = _stderr
+
+def _clear_io():
+    _stdout.seek(0); _stdout.truncate(0)
+    _stderr.seek(0); _stderr.truncate(0)
+
+def _get_stdout():
+    return _stdout.getvalue()
+
+def _get_stderr():
+    return _stderr.getvalue()
+`);
+    }
+
+    async function pgHardStopAndReset(){
+      pgSetPythonStatus('Resetting Python...');
+      pgRunBtn.disabled = true;
+      pgStopBtn.disabled = true;
+      try {
+        if (typeof loadPyodide !== 'function') throw new Error('loadPyodide is not available.');
+        pgPyodide = await loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.25.1/full/' });
+        await pgSetupPythonIO();
+        pgSetPythonStatus('Python ready');
+      } catch (err) {
+        pgSetPythonStatus('Python failed to load');
+        pgSetOutput(String(err), 'err');
+        pgSetFriendlyHint("Pyodide couldn't load. Check internet/CDN access.");
+      } finally {
+        pgRunBtn.disabled = false;
+        pgStopBtn.disabled = true;
+        pgRunning = false;
+        pgSetRunStatus('Idle');
+      }
+    }
+
+    async function pgInit(){
+      try {
+        pgSetPythonStatus('Loading Python...');
+        if (typeof loadPyodide !== 'function') throw new Error('Pyodide script not loaded.');
+        pgPyodide = await loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.25.1/full/' });
+        await pgSetupPythonIO();
+        pgSetPythonStatus('Python ready');
+        pgRunBtn.disabled = false;
+
+        pgCodeEl.value = `import json
+
+json_text = '{"name": "Alice", "age": 25}'
+data = json.loads(json_text)
+print(data["name"])`;
+        pgSetOutput('');
+        pgSetFriendlyHint('Ready. Click Run.');
+        pgSetHintLine('Tip: Load any tutorial snippet or write your own Python here.');
+      } catch (err) {
+        pgSetPythonStatus('Python failed to load');
+        pgSetOutput(String(err), 'err');
+        pgSetFriendlyHint("Pyodide couldn't load. Check internet/CDN access.");
+      }
+    }
+
+    async function pgRunCode(){
+      if (!pgPyodide || pgRunning) return;
+      pgRunning = true;
+      pgRunBtn.disabled = true;
+      pgStopBtn.disabled = false;
+      pgSetRunStatus('Running...');
+      pgSetHintLine('');
+      pgSetFriendlyHint('Running your code...');
+      pgSetOutput('');
+
+      try {
+        pgPyodide.runPython('_clear_io()');
+        await pgPyodide.runPythonAsync(pgCodeEl.value || '');
+        const out = pgPyodide.runPython('_get_stdout()');
+        const err = pgPyodide.runPython('_get_stderr()');
+        if (err && String(err).trim().length) {
+          const txt = String(err);
+          const { headline, hint, lineNum } = pgFriendlyErrorHint(txt);
+          pgSetOutput(txt, 'err');
+          pgSetFriendlyHint((headline ? `${headline}: ` : '') + hint);
+          if (lineNum) pgSetHintLine(`Check line ${lineNum}.`);
+          pgSetRunStatus('Error');
+          setInlineRunOutput(pgActiveInlineTarget, txt, 'Error', true);
+        } else {
+          const outputText = out || '(no output) - try print(...)';
+          pgSetOutput(outputText, 'ok');
+          pgSetFriendlyHint('Looks good.');
+          pgSetRunStatus('Done');
+          setInlineRunOutput(pgActiveInlineTarget, outputText, 'Done', false);
+        }
+      } catch (err) {
+        const txt = String(err);
+        const { headline, hint, lineNum } = pgFriendlyErrorHint(txt);
+        pgSetOutput(txt, 'err');
+        pgSetFriendlyHint((headline ? `${headline}: ` : '') + hint);
+        if (lineNum) pgSetHintLine(`Check line ${lineNum}.`);
+        pgSetRunStatus('Error');
+        setInlineRunOutput(pgActiveInlineTarget, txt, 'Error', true);
+      } finally {
+        pgRunning = false;
+        pgRunBtn.disabled = false;
+        pgStopBtn.disabled = true;
+      }
+    }
+
+    function pgScheduleAutoRun(force){
+      if (!pgAutoRunEl.checked && !force) return;
+      if (pgAutoRunTimer) clearTimeout(pgAutoRunTimer);
+      pgAutoRunTimer = setTimeout(() => {
+        if (pgPyodide && !pgRunning) pgRunCode();
+      }, 700);
+    }
+
+    async function loadIntoPlayground(code, autoRun, hintText, inlineTarget, scrollToPlayground = true){
+      pgCodeEl.value = code || '';
+      pgActiveInlineTarget = inlineTarget || null;
+      pgSetRunStatus('Ready');
+      pgSetFriendlyHint(hintText || 'Snippet loaded. Click Run.');
+      pgSetHintLine('Tip: Press Ctrl/Cmd + Enter to run.');
+      if (scrollToPlayground) {
+        document.getElementById('playground').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      if (autoRun) await pgRunCode();
+    }
+
+    function buildPythonJsonDemo(jsonText){
+      return `import json
+
+json_text = ${JSON.stringify(jsonText)}
+data = json.loads(json_text)
+
+print("Python type:", type(data).__name__)
+print("Value:")
+print(data)
+
+print("\\nPretty JSON:")
+print(json.dumps(data, indent=2, ensure_ascii=False))`;
+    }
+
+    function toPythonRepr(value, indent = 0){
+      const space = '    '.repeat(indent);
+      const nextSpace = '    '.repeat(indent + 1);
+
+      if (value === null) return 'None';
+      if (typeof value === 'boolean') return value ? 'True' : 'False';
+      if (typeof value === 'string') return JSON.stringify(value);
+      if (typeof value === 'number') return String(value);
+
+      if (Array.isArray(value)) {
+        if (value.length === 0) return '[]';
+        return '[\n' + value.map(v => nextSpace + toPythonRepr(v, indent + 1)).join(',\n') + '\n' + space + ']';
+      }
+
+      if (typeof value === 'object') {
+        const entries = Object.entries(value);
+        if (entries.length === 0) return '{}';
+        return '{\n' + entries.map(([k,v]) => `${nextSpace}${JSON.stringify(k)}: ${toPythonRepr(v, indent + 1)}`).join(',\n') + '\n' + space + '}';
+      }
+
+      return String(value);
+    }
+
+    document.getElementById('validateBtn').addEventListener('click', () => {
+      try {
+        const parsed = JSON.parse(jsonInput.value);
+        resultBox.textContent = 'Valid JSON ✅\n\nParsed value type: ' + (Array.isArray(parsed) ? 'list' : typeof parsed === 'object' && parsed !== null ? 'dict/object' : typeof parsed);
+        showStatus('Your JSON is valid.', 'ok');
+      } catch (err) {
+        resultBox.textContent = err.message;
+        showStatus('Invalid JSON. Check quotes, commas, and brackets.', 'warn');
+      }
+    });
+
+    document.getElementById('prettyBtn').addEventListener('click', () => {
+      try {
+        const parsed = JSON.parse(jsonInput.value);
+        const pretty = JSON.stringify(parsed, null, 2);
+        jsonInput.value = pretty;
+        resultBox.textContent = pretty;
+        showStatus('JSON formatted successfully.', 'ok');
+      } catch (err) {
+        resultBox.textContent = err.message;
+        showStatus('Cannot format because the JSON is invalid.', 'warn');
+      }
+    });
+
+    document.getElementById('pythonViewBtn').addEventListener('click', () => {
+      try {
+        const parsed = JSON.parse(jsonInput.value);
+        resultBox.textContent = toPythonRepr(parsed);
+        showStatus('Showing Python-style representation.', 'ok');
+      } catch (err) {
+        resultBox.textContent = err.message;
+        showStatus('Cannot convert because the JSON is invalid.', 'warn');
+      }
+    });
+
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      jsonInput.value = defaultJSON;
+      resultBox.textContent = 'Press a button to see the result.';
+      clearStatus();
+    });
+
+    document.getElementById('runInPythonBtn').addEventListener('click', async () => {
+      await loadIntoPlayground(
+        buildPythonJsonDemo(jsonInput.value),
+        true,
+        'Loaded the current JSON into Python and ran it.',
+        'converter',
+        true
+      );
+    });
+
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.target).scrollIntoView({behavior:'smooth', block:'start'});
+      });
+    });
+
+    document.querySelectorAll('.check-quiz').forEach(button => {
+      button.addEventListener('click', () => {
+        const card = button.closest('.quiz-card');
+        const answer = card.dataset.answer;
+        const checked = card.querySelector('input[type="radio"]:checked');
+        const result = card.querySelector('.quiz-result');
+
+        if (!checked) {
+          result.textContent = 'Please choose an answer first.';
+          result.style.color = '#b45309';
+          return;
+        }
+
+        if (checked.value === answer) {
+          result.textContent = 'Correct!';
+          result.style.color = '#15803d';
+        } else {
+          result.textContent = 'Not quite. Try again.';
+          result.style.color = '#b91c1c';
+        }
+      });
+    });
+
+    const pgExamples = {
+      loads: `import json
+
+json_text = '{"course": "Python", "level": "beginner"}'
+data = json.loads(json_text)
+print(data["course"])
+print(type(data).__name__)`,
+      dumps: `import json
+
+data = {"name": "Alice", "scores": [88, 91, 95], "active": True}
+print(json.dumps(data, indent=2))`,
+      roundtrip: `import json
+
+original = {"city": "Vancouver", "topics": ["JSON", "Python"], "count": 2}
+text = json.dumps(original)
+restored = json.loads(text)
+
+print("JSON text:", text)
+print("Restored object:", restored)`,
+      error: `import json
+
+broken = '{"name": "Alice", age: 25}'
+print(json.loads(broken))`
+    };
+
+    pgExamplesEl.addEventListener('change', () => {
+      const key = pgExamplesEl.value;
+      if (!key) return;
+      loadIntoPlayground(pgExamples[key] || '', false, 'Example loaded into the playground.', null, true);
+      pgExamplesEl.value = '';
+      pgScheduleAutoRun(true);
+    });
+
+    pgRunBtn.addEventListener('click', pgRunCode);
+    pgStopBtn.addEventListener('click', async () => {
+      pgSetFriendlyHint('Stopping... resetting Python.');
+      pgSetRunStatus('Stopping...');
+      await pgHardStopAndReset();
+    });
+    pgClearBtn.addEventListener('click', () => {
+      pgSetOutput('');
+      pgSetRunStatus('Idle');
+      pgSetFriendlyHint('Output cleared.');
+      pgSetHintLine('');
+    });
+    pgCodeEl.addEventListener('input', () => pgScheduleAutoRun(false));
+    pgCodeEl.addEventListener('keydown', (e) => {
+      const isMac = navigator.platform.toUpperCase().includes('MAC');
+      const runCombo = (isMac && e.metaKey && e.key === 'Enter') || (!isMac && e.ctrlKey && e.key === 'Enter');
+      if (!runCombo) return;
+      e.preventDefault();
+      pgRunCode();
+    });
+    pgAutoRunEl.addEventListener('change', () => pgScheduleAutoRun(true));
+
+    document.querySelectorAll('.load-snippet').forEach(button => {
+      button.addEventListener('click', async () => {
+        const code = getSnippetCode(button.dataset.snippet);
+        if (!code) return;
+        await loadIntoPlayground(code, false, 'Snippet loaded into the playground.', button.dataset.snippet, true);
+      });
+    });
+
+    document.querySelectorAll('.run-snippet').forEach(button => {
+      button.addEventListener('click', async () => {
+        const code = getSnippetCode(button.dataset.snippet);
+        if (!code) return;
+        await loadIntoPlayground(code, true, 'Snippet loaded and executed.', button.dataset.snippet, false);
+      });
+    });
+
+    practiceQuestions.forEach(qEl => {
+      qEl.dataset.passed = 'false';
+      qEl.addEventListener('click', async (e) => {
+        const btn = e.target.closest('button[data-action]');
+        if (!btn) return;
+        if (btn.dataset.action === 'check') await checkPracticeAnswer(qEl, btn);
+        if (btn.dataset.action === 'hint') showPracticeHint(qEl);
+        if (btn.dataset.action === 'run') {
+          const loaded = await loadPracticeIntoPlayground(qEl, true);
+          if (!loaded) {
+            setPracticeFeedback(qEl, 'Nothing to run yet. Add code or use the sample solution.', 'warn', false);
+          }
+        }
+      });
+    });
+
+    practiceToggleAllBtn.addEventListener('click', () => {
+      practiceAllOpen = !practiceAllOpen;
+      document.querySelectorAll('#practice .q details').forEach(d => d.open = practiceAllOpen);
+      practiceToggleAllBtn.textContent = practiceAllOpen ? 'Hide all solutions' : 'Show all solutions';
+    });
+
+    practiceResetAllBtn.addEventListener('click', () => {
+      practiceQuestions.forEach(qEl => {
+        const textarea = qEl.querySelector('textarea');
+        if (textarea) textarea.value = '';
+        setPracticeFeedback(qEl, '', '', false);
+        const { wrap, pre } = getInlineRunOutputNodes(qEl.dataset.qid);
+        if (wrap) wrap.hidden = true;
+        if (pre) {
+          pre.textContent = '';
+          pre.classList.remove('err');
+        }
+      });
+      document.querySelectorAll('#practice .q details').forEach(d => d.open = false);
+      practiceAllOpen = false;
+      practiceToggleAllBtn.textContent = 'Show all solutions';
+      updatePracticeScore();
+    });
+
+    pgInit();
+    updatePracticeScore();
+  </script>
+</body>
+</html>
