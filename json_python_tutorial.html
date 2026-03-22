@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JSON with Python Tutorial</title>
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --accent: #2563eb;
+      --border: #e5e7eb;
+      --code-bg: #0f172a;
+      --code-text: #e5e7eb;
+      --shadow: 0 10px 30px rgba(0,0,0,0.08);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(180deg, #eef4ff 0%, var(--bg) 220px);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 32px 20px 60px;
+    }
+
+    .hero {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 32px;
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #dbeafe;
+      color: #1d4ed8;
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 1.15;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .toc, .section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .toc h2, .section h2 {
+      margin-top: 0;
+      font-size: 1.5rem;
+    }
+
+    .toc ol {
+      margin: 0;
+      padding-left: 22px;
+      columns: 2;
+      gap: 24px;
+    }
+
+    .toc li {
+      margin: 8px 0;
+      break-inside: avoid;
+    }
+
+    .toc a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .toc a:hover {
+      text-decoration: underline;
+    }
+
+    p, li {
+      font-size: 1rem;
+    }
+
+    .note {
+      background: #eff6ff;
+      border-left: 4px solid var(--accent);
+      padding: 14px 16px;
+      border-radius: 10px;
+      margin: 14px 0;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin: 16px 0;
+    }
+
+    .mini-card {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      background: #fcfdff;
+    }
+
+    .mini-card h3 {
+      margin-top: 0;
+      font-size: 1.05rem;
+    }
+
+    pre {
+      margin: 14px 0;
+      background: var(--code-bg);
+      color: var(--code-text);
+      padding: 16px;
+      border-radius: 14px;
+      overflow-x: auto;
+      font-size: 0.95rem;
+      line-height: 1.55;
+    }
+
+    code {
+      font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+    }
+
+    .inline-code {
+      background: #eef2ff;
+      color: #312e81;
+      padding: 2px 7px;
+      border-radius: 8px;
+      font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+      font-size: 0.95em;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      overflow: hidden;
+      border-radius: 12px;
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      padding: 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f8fafc;
+    }
+
+    .footer {
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.95rem;
+      margin-top: 28px;
+    }
+
+    @media (max-width: 720px) {
+      .toc ol {
+        columns: 1;
+      }
+
+      .hero, .toc, .section {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="hero">
+      <div class="badge">Beginner-Friendly Tutorial</div>
+      <h1>JSON with Python</h1>
+      <p class="subtitle">
+        Learn how to read, write, parse, and generate JSON in Python using the built-in <span class="inline-code">json</span> module.
+      </p>
+    </section>
+
+    <section class="toc">
+      <h2>Contents</h2>
+      <ol>
+        <li><a href="#intro">What JSON is</a></li>
+        <li><a href="#mapping">Python objects vs JSON</a></li>
+        <li><a href="#dumps">Convert Python object to JSON</a></li>
+        <li><a href="#pretty">Pretty-print JSON</a></li>
+        <li><a href="#loads">Convert JSON text to Python object</a></li>
+        <li><a href="#read-file">Read JSON from a file</a></li>
+        <li><a href="#write-file">Write JSON to a file</a></li>
+        <li><a href="#functions">Common functions</a></li>
+        <li><a href="#list-example">List of dictionaries example</a></li>
+        <li><a href="#access">Access nested JSON data</a></li>
+        <li><a href="#errors">Common errors</a></li>
+        <li><a href="#options">Useful options</a></li>
+        <li><a href="#practical">Full practical example</a></li>
+        <li><a href="#cheatsheet">Quick cheat sheet</a></li>
+        <li><a href="#exercise">Exercise</a></li>
+      </ol>
+    </section>
+
+    <section class="section" id="intro">
+      <h2>1. What JSON is</h2>
+      <p>
+        JSON stands for <strong>JavaScript Object Notation</strong>. It is a text format used to store and exchange structured data.
+      </p>
+      <p>
+        In Python, JSON is handled with the built-in <span class="inline-code">json</span> module.
+      </p>
+      <pre><code>import json</code></pre>
+      <div class="note">
+        JSON is usually plain text. Python converts that text into native objects like dictionaries and lists.
+      </div>
+    </section>
+
+    <section class="section" id="mapping">
+      <h2>2. Python objects vs JSON</h2>
+      <p>Python and JSON look similar, but they are not exactly the same.</p>
+      <div class="grid">
+        <div class="mini-card">
+          <h3>Python</h3>
+          <pre><code>data = {
+    "name": "Alice",
+    "age": 25,
+    "is_student": False,
+    "skills": ["Python", "SQL"],
+    "address": None
+}</code></pre>
+        </div>
+        <div class="mini-card">
+          <h3>JSON</h3>
+          <pre><code>{
+  "name": "Alice",
+  "age": 25,
+  "is_student": false,
+  "skills": ["Python", "SQL"],
+  "address": null
+}</code></pre>
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Python</th>
+            <th>JSON</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="inline-code">dict</span></td><td>object</td></tr>
+          <tr><td><span class="inline-code">list</span></td><td>array</td></tr>
+          <tr><td><span class="inline-code">str</span></td><td>string</td></tr>
+          <tr><td><span class="inline-code">True</span></td><td><span class="inline-code">true</span></td></tr>
+          <tr><td><span class="inline-code">False</span></td><td><span class="inline-code">false</span></td></tr>
+          <tr><td><span class="inline-code">None</span></td><td><span class="inline-code">null</span></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="section" id="dumps">
+      <h2>3. Convert Python object to JSON</h2>
+      <p>Use <span class="inline-code">json.dumps()</span> to convert a Python object into a JSON string.</p>
+      <pre><code>import json
+
+data = {
+    "name": "Alice",
+    "age": 25,
+    "skills": ["Python", "SQL"]
+}
+
+json_text = json.dumps(data)
+print(json_text)</code></pre>
+      <p>Output:</p>
+      <pre><code>{"name": "Alice", "age": 25, "skills": ["Python", "SQL"]}</code></pre>
+    </section>
+
+    <section class="section" id="pretty">
+      <h2>4. Pretty-print JSON</h2>
+      <p>Use the <span class="inline-code">indent</span> parameter to format JSON so it is easier to read.</p>
+      <pre><code>import json
+
+data = {
+    "name": "Alice",
+    "age": 25,
+    "skills": ["Python", "SQL"]
+}
+
+json_text = json.dumps(data, indent=2)
+print(json_text)</code></pre>
+      <p>Output:</p>
+      <pre><code>{
+  "name": "Alice",
+  "age": 25,
+  "skills": [
+    "Python",
+    "SQL"
+  ]
+}</code></pre>
+    </section>
+
+    <section class="section" id="loads">
+      <h2>5. Convert JSON text to Python object</h2>
+      <p>Use <span class="inline-code">json.loads()</span> to parse a JSON string into a Python object.</p>
+      <pre><code>import json
+
+json_text = '{"name": "Alice", "age": 25, "skills": ["Python", "SQL"]}'
+data = json.loads(json_text)
+
+print(data)
+print(type(data))
+print(data["name"])</code></pre>
+      <p>Output:</p>
+      <pre><code>{'name': 'Alice', 'age': 25, 'skills': ['Python', 'SQL']}
+&lt;class 'dict'&gt;
+Alice</code></pre>
+    </section>
+
+    <section class="section" id="read-file">
+      <h2>6. Read JSON from a file</h2>
+      <p>Use <span class="inline-code">json.load()</span> to read JSON from a file.</p>
+      <p>Example file <span class="inline-code">data.json</span>:</p>
+      <pre><code>{
+  "name": "Bob",
+  "age": 30,
+  "city": "Vancouver"
+}</code></pre>
+      <p>Python code:</p>
+      <pre><code>import json
+
+with open("data.json", "r", encoding="utf-8") as f:
+    data = json.load(f)
+
+print(data)
+print(data["city"])</code></pre>
+    </section>
+
+    <section class="section" id="write-file">
+      <h2>7. Write JSON to a file</h2>
+      <p>Use <span class="inline-code">json.dump()</span> to save a Python object as JSON in a file.</p>
+      <pre><code>import json
+
+data = {
+    "name": "Bob",
+    "age": 30,
+    "city": "Vancouver"
+}
+
+with open("output.json", "w", encoding="utf-8") as f:
+    json.dump(data, f, indent=2)</code></pre>
+    </section>
+
+    <section class="section" id="functions">
+      <h2>8. Common functions</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Function</th>
+            <th>Purpose</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="inline-code">json.dumps()</span></td>
+            <td>Convert Python object to JSON string</td>
+          </tr>
+          <tr>
+            <td><span class="inline-code">json.loads()</span></td>
+            <td>Convert JSON string to Python object</td>
+          </tr>
+          <tr>
+            <td><span class="inline-code">json.dump()</span></td>
+            <td>Write Python object to a file as JSON</td>
+          </tr>
+          <tr>
+            <td><span class="inline-code">json.load()</span></td>
+            <td>Read JSON file into a Python object</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="section" id="list-example">
+      <h2>9. Example with a list of dictionaries</h2>
+      <pre><code>import json
+
+students = [
+    {"name": "Alice", "grade": 90},
+    {"name": "Bob", "grade": 85},
+    {"name": "Carol", "grade": 92}
+]
+
+json_text = json.dumps(students, indent=2)
+print(json_text)</code></pre>
+      <p>Output:</p>
+      <pre><code>[
+  {
+    "name": "Alice",
+    "grade": 90
+  },
+  {
+    "name": "Bob",
+    "grade": 85
+  },
+  {
+    "name": "Carol",
+    "grade": 92
+  }
+]</code></pre>
+    </section>
+
+    <section class="section" id="access">
+      <h2>10. Access nested JSON data</h2>
+      <pre><code>import json
+
+json_text = '''
+{
+  "company": "OpenAI",
+  "employees": [
+    {"name": "Alice", "role": "Engineer"},
+    {"name": "Bob", "role": "Designer"}
+  ]
+}
+'''
+
+data = json.loads(json_text)
+
+print(data["company"])
+print(data["employees"][0]["name"])
+print(data["employees"][1]["role"])</code></pre>
+      <p>Output:</p>
+      <pre><code>OpenAI
+Alice
+Designer</code></pre>
+    </section>
+
+    <section class="section" id="errors">
+      <h2>11. Common errors</h2>
+      <p>Invalid JSON often causes <span class="inline-code">json.JSONDecodeError</span>.</p>
+      <pre><code>import json
+
+bad_json = "{name: 'Alice'}"
+data = json.loads(bad_json)</code></pre>
+      <p>This fails because:</p>
+      <ul>
+        <li>The key is not in double quotes.</li>
+        <li>The string uses single quotes.</li>
+      </ul>
+      <p>Safer version:</p>
+      <pre><code>import json
+
+json_text = '{"name": "Alice", "age": 25}'
+
+try:
+    data = json.loads(json_text)
+    print("Valid JSON:", data)
+except json.JSONDecodeError as e:
+    print("Invalid JSON")
+    print(e)</code></pre>
+    </section>
+
+    <section class="section" id="options">
+      <h2>12. Useful options</h2>
+      <h3>Use <span class="inline-code">ensure_ascii=False</span></h3>
+      <p>This is helpful when your data contains Chinese or other non-English characters.</p>
+      <pre><code>import json
+
+data = {
+    "name": "张三",
+    "city": "温哥华"
+}
+
+print(json.dumps(data, ensure_ascii=False, indent=2))</code></pre>
+
+      <h3>Use <span class="inline-code">sort_keys=True</span></h3>
+      <p>This sorts dictionary keys alphabetically in the output.</p>
+      <pre><code>import json
+
+data = {"b": 2, "a": 1, "c": 3}
+print(json.dumps(data, indent=2, sort_keys=True))</code></pre>
+    </section>
+
+    <section class="section" id="practical">
+      <h2>13. Full practical example</h2>
+      <pre><code>import json
+
+student = {
+    "name": "Peter",
+    "age": 16,
+    "subjects": ["Math", "Science", "English"],
+    "graduated": False
+}
+
+# Python object -&gt; JSON string
+json_text = json.dumps(student, indent=2)
+print("JSON text:")
+print(json_text)
+
+# Save to file
+with open("student.json", "w", encoding="utf-8") as f:
+    json.dump(student, f, indent=2, ensure_ascii=False)
+
+# Read back from file
+with open("student.json", "r", encoding="utf-8") as f:
+    loaded_student = json.load(f)
+
+print("\nLoaded from file:")
+print(loaded_student)
+print("Student name:", loaded_student["name"])</code></pre>
+    </section>
+
+    <section class="section" id="cheatsheet">
+      <h2>14. Quick cheat sheet</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Python Type</th>
+            <th>JSON Type</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="inline-code">dict</span></td><td>object</td></tr>
+          <tr><td><span class="inline-code">list</span> / <span class="inline-code">tuple</span></td><td>array</td></tr>
+          <tr><td><span class="inline-code">str</span></td><td>string</td></tr>
+          <tr><td><span class="inline-code">int</span>, <span class="inline-code">float</span></td><td>number</td></tr>
+          <tr><td><span class="inline-code">True</span></td><td><span class="inline-code">true</span></td></tr>
+          <tr><td><span class="inline-code">False</span></td><td><span class="inline-code">false</span></td></tr>
+          <tr><td><span class="inline-code">None</span></td><td><span class="inline-code">null</span></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="section" id="exercise">
+      <h2>15. Exercise</h2>
+      <p>Try this code:</p>
+      <pre><code>import json
+
+person = {
+    "name": "Anna",
+    "age": 22,
+    "hobbies": ["reading", "drawing"]
+}
+
+text = json.dumps(person, indent=2)
+print(text)
+
+data = json.loads(text)
+print(data["hobbies"][1])</code></pre>
+      <p>Expected final output:</p>
+      <pre><code>drawing</code></pre>
+      <div class="note">
+        Practice both directions: Python object to JSON with <span class="inline-code">dumps()</span>, and JSON back to Python object with <span class="inline-code">loads()</span>.
+      </div>
+    </section>
+
+    <p class="footer">Built as a standalone HTML tutorial page for learning JSON with Python.</p>
+  </div>
+</body>
+</html>
