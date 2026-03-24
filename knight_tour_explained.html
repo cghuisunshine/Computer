@@ -1,0 +1,702 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Knight Tour Sample Code Explained</title>
+  <style>
+    :root{
+      --bg:#08111f;
+      --panel:#0f1b33;
+      --card:#132241;
+      --text:#edf2ff;
+      --muted:#b8c4e6;
+      --line:#2a3f72;
+      --accent:#7dd3fc;
+      --accent-2:#a7f3d0;
+      --note:#122845;
+      --code:#09111f;
+      --shadow:0 18px 40px rgba(0,0,0,.32);
+      --mono:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      --sans:ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:var(--sans);
+      color:var(--text);
+      background:
+        radial-gradient(900px 600px at 15% 10%, rgba(125,211,252,.16), transparent 60%),
+        radial-gradient(700px 500px at 85% 20%, rgba(167,243,208,.12), transparent 60%),
+        linear-gradient(180deg, #09111f 0%, #08111f 100%);
+    }
+    a{color:var(--accent)}
+    .wrap{max-width:1200px; margin:0 auto; padding:22px 18px 56px}
+    .topbar{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      margin-bottom:18px;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:rgba(15,27,51,.76);
+      color:var(--muted);
+      font-size:13px;
+    }
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 14px;
+      border:1px solid var(--line);
+      border-radius:12px;
+      background:rgba(19,34,65,.82);
+      color:var(--text);
+      text-decoration:none;
+      font-weight:700;
+    }
+    .btn:hover{border-color:color-mix(in oklab, var(--line) 45%, white 55%)}
+    .hero{
+      border:1px solid rgba(125,211,252,.18);
+      background:linear-gradient(135deg, rgba(19,34,65,.94), rgba(15,27,51,.9));
+      border-radius:24px;
+      padding:24px;
+      box-shadow:var(--shadow);
+      margin-bottom:18px;
+    }
+    .hero h1{
+      margin:0 0 10px;
+      font-size:clamp(28px, 4vw, 42px);
+      line-height:1.05;
+      letter-spacing:.2px;
+    }
+    .hero p{
+      margin:0;
+      max-width:860px;
+      color:var(--muted);
+      line-height:1.65;
+      font-size:16px;
+    }
+    .hero-grid{
+      display:grid;
+      grid-template-columns:2fr 1fr;
+      gap:14px;
+      margin-top:18px;
+    }
+    @media (max-width: 900px){
+      .hero-grid{grid-template-columns:1fr}
+    }
+    .mini-card{
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:14px;
+      background:rgba(9,17,31,.52);
+    }
+    .mini-card h2{
+      margin:0 0 8px;
+      font-size:15px;
+    }
+    .mini-card p, .mini-card li{
+      color:var(--muted);
+      line-height:1.55;
+    }
+    .mini-card ul{
+      margin:0;
+      padding-left:18px;
+    }
+    .layout{
+      display:grid;
+      grid-template-columns:300px 1fr;
+      gap:18px;
+      align-items:start;
+    }
+    @media (max-width: 980px){
+      .layout{grid-template-columns:1fr}
+    }
+    nav{
+      position:sticky;
+      top:18px;
+      border:1px solid var(--line);
+      border-radius:20px;
+      background:rgba(15,27,51,.88);
+      padding:14px;
+      box-shadow:var(--shadow);
+    }
+    nav h2{
+      margin:0 0 10px;
+      font-size:14px;
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.12em;
+    }
+    .toc{
+      list-style:none;
+      margin:0;
+      padding:0;
+      display:grid;
+      gap:8px;
+    }
+    .toc a{
+      display:block;
+      text-decoration:none;
+      padding:10px 12px;
+      border:1px solid var(--line);
+      border-radius:12px;
+      background:rgba(19,34,65,.72);
+      color:var(--text);
+    }
+    .toc a:hover{border-color:color-mix(in oklab, var(--line) 45%, white 55%)}
+    .content{
+      display:grid;
+      gap:16px;
+    }
+    section{
+      border:1px solid var(--line);
+      border-radius:20px;
+      background:rgba(15,27,51,.86);
+      box-shadow:var(--shadow);
+      padding:18px;
+    }
+    section h2{
+      margin:0 0 8px;
+      font-size:23px;
+    }
+    section h3{
+      margin:0 0 8px;
+      font-size:18px;
+    }
+    section p, section li{
+      color:var(--muted);
+      line-height:1.7;
+      font-size:15px;
+    }
+    section ul, section ol{
+      margin:8px 0 0;
+      padding-left:20px;
+    }
+    .codebox{
+      margin-top:12px;
+      border:1px solid rgba(125,211,252,.14);
+      border-radius:16px;
+      overflow:hidden;
+      background:var(--code);
+    }
+    .codehead{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:10px 12px;
+      border-bottom:1px solid rgba(125,211,252,.12);
+      color:var(--muted);
+      font-size:12px;
+    }
+    pre{
+      margin:0;
+      padding:14px;
+      overflow:auto;
+      font-family:var(--mono);
+      font-size:13px;
+      line-height:1.55;
+      color:var(--text);
+    }
+    code{font-family:var(--mono)}
+    .grid-2{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+    }
+    @media (max-width: 820px){
+      .grid-2{grid-template-columns:1fr}
+    }
+    .note{
+      margin-top:12px;
+      padding:12px 14px;
+      border-left:4px solid var(--accent);
+      border-radius:12px;
+      background:rgba(18,40,69,.72);
+      color:var(--text);
+    }
+    .summary-cards{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0, 1fr));
+      gap:12px;
+      margin-top:12px;
+    }
+    @media (max-width: 900px){
+      .summary-cards{grid-template-columns:1fr}
+    }
+    .summary-card{
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:14px;
+      background:rgba(19,34,65,.7);
+    }
+    .summary-card h3{
+      margin:0 0 6px;
+      font-size:15px;
+    }
+    .summary-card p{
+      margin:0;
+      font-size:14px;
+    }
+    .footer{
+      margin-top:18px;
+      text-align:center;
+      color:var(--muted);
+      font-size:13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <span class="pill">Knight Tour explainer</span>
+      <a class="btn" href="practice.html">Back to practice.html</a>
+    </div>
+
+    <header class="hero">
+      <h1>Knight Tour Sample Code Explained</h1>
+      <p>
+        This code finds <b>one knight's tour</b> on a <b>5x5 chessboard</b>, starting from the top-left corner
+        <code>(0, 0)</code>, and then <b>prints the board after each move</b>. A knight's tour means the knight
+        moves in its usual L-shape, visits every square exactly once, and never lands on the same square twice.
+      </p>
+      <div class="hero-grid">
+        <div class="mini-card">
+          <h2>Overall flow</h2>
+          <ul>
+            <li>Create an empty 5x5 board.</li>
+            <li>Start the knight at <code>(0, 0)</code>.</li>
+            <li>Use recursion and backtracking to search for a full tour.</li>
+            <li>Use Warnsdorff's rule to try smarter moves first.</li>
+            <li>Store the successful route in <code>path</code>.</li>
+            <li>Replay the path and print the board after every move.</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h2>Why this works well</h2>
+          <ul>
+            <li><b>Backtracking</b> lets the program undo failed paths.</li>
+            <li><b>Warnsdorff's rule</b> prefers squares with fewer future choices first.</li>
+            <li>Together, these ideas make the search much faster than plain brute force.</li>
+          </ul>
+        </div>
+      </div>
+    </header>
+
+    <div class="layout">
+      <nav>
+        <h2>Sections</h2>
+        <ul class="toc">
+          <li><a href="#full-code">Full sample code</a></li>
+          <li><a href="#section-1">1. Board size and knight moves</a></li>
+          <li><a href="#section-2">2. Printing the board</a></li>
+          <li><a href="#section-3">3. Checking allowed moves</a></li>
+          <li><a href="#section-4">4. Counting future choices</a></li>
+          <li><a href="#section-5">5. Main recursive search</a></li>
+          <li><a href="#section-6">6. Base case</a></li>
+          <li><a href="#section-7">7. Candidate next moves</a></li>
+          <li><a href="#section-8">8. Sorting the moves</a></li>
+          <li><a href="#section-9">9. Recursive exploration</a></li>
+          <li><a href="#section-10">10. Backtracking</a></li>
+          <li><a href="#section-11">11. Preparing the search</a></li>
+          <li><a href="#section-12">12. Replaying the solution</a></li>
+          <li><a href="#final-summary">Final summary</a></li>
+        </ul>
+      </nav>
+
+      <main class="content">
+        <section id="full-code">
+          <h2>Full Sample Code</h2>
+          <p>
+            This is the full sample code from the knight-tour question, shown in one place before the step-by-step explanation.
+          </p>
+          <div class="codebox">
+            <div class="codehead">
+              <span>Python sample solution</span>
+            </div>
+            <pre><code>N = 5
+moves = [
+    (2, 1), (1, 2), (-1, 2), (-2, 1),
+    (-2, -1), (-1, -2), (1, -2), (2, -1)
+]
+
+def print_grid(board):
+    for row in board:
+        print(" ".join(str(cell) for cell in row))
+    print()
+
+def is_valid(r, c, board):
+    return 0 &lt;= r &lt; N and 0 &lt;= c &lt; N and board[r][c] == 0
+
+def onward_count(r, c, board):
+    count = 0
+    for dr, dc in moves:
+        nr, nc = r + dr, c + dc
+        if is_valid(nr, nc, board):
+            count += 1
+    return count
+
+def knight_tour(r, c, step, board, path):
+    board[r][c] = step
+    path.append((r, c))
+
+    if step == N * N:
+        return True
+
+    next_moves = []
+    for dr, dc in moves:
+        nr, nc = r + dr, c + dc
+        if is_valid(nr, nc, board):
+            next_moves.append((onward_count(nr, nc, board), nr, nc))
+
+    next_moves.sort()
+
+    for _, nr, nc in next_moves:
+        if knight_tour(nr, nc, step + 1, board, path):
+            return True
+
+    board[r][c] = 0
+    path.pop()
+    return False
+
+search_grid = [[0] * N for _ in range(N)]
+path = []
+knight_tour(0, 0, 1, search_grid, path)
+
+grid = [[0] * N for _ in range(N)]
+step = 1
+for r, c in path:
+    grid[r][c] = step
+    print_grid(grid)
+    step += 1</code></pre>
+          </div>
+        </section>
+
+        <section id="section-1">
+          <h2>1. Board Size and Knight Moves</h2>
+          <div class="codebox">
+            <div class="codehead">
+              <span>Setup</span>
+            </div>
+            <pre><code>N = 5
+moves = [
+    (2, 1), (1, 2), (-1, 2), (-2, 1),
+    (-2, -1), (-1, -2), (1, -2), (2, -1)
+]</code></pre>
+          </div>
+          <ul>
+            <li><code>N = 5</code> means the board is <code>5 x 5</code>.</li>
+            <li><code>moves</code> stores all <b>8 possible knight moves</b>.</li>
+            <li>For example, <code>(2, 1)</code> means move 2 rows down and 1 column right.</li>
+          </ul>
+          <div class="note">
+            From a position <code>(r, c)</code>, the program tries squares such as <code>(r+2, c+1)</code>, <code>(r+1, c+2)</code>, and the other 6 L-shaped choices.
+          </div>
+        </section>
+
+        <section id="section-2">
+          <h2>2. Printing the Board</h2>
+          <div class="grid-2">
+            <div>
+              <div class="codebox">
+                <div class="codehead">
+                  <span>Printing function</span>
+                </div>
+                <pre><code>def print_grid(board):
+    for row in board:
+        print(" ".join(str(cell) for cell in row))
+    print()</code></pre>
+              </div>
+            </div>
+            <div>
+              <div class="codebox">
+                <div class="codehead">
+                  <span>Example output</span>
+                </div>
+                <pre><code>[1, 0, 0, 0, 0]
+
+becomes
+
+1 0 0 0 0</code></pre>
+              </div>
+            </div>
+          </div>
+          <p>
+            This function prints the current board. The extra <code>print()</code> adds a blank line after the whole board so each step is easier to read.
+          </p>
+        </section>
+
+        <section id="section-3">
+          <h2>3. Checking Whether a Move Is Allowed</h2>
+          <div class="codebox">
+            <div class="codehead">
+              <span>Validation</span>
+            </div>
+            <pre><code>def is_valid(r, c, board):
+    return 0 &lt;= r &lt; N and 0 &lt;= c &lt; N and board[r][c] == 0</code></pre>
+          </div>
+          <p>A move is valid only if all three conditions are true:</p>
+          <ol>
+            <li><code>r</code> is inside the board.</li>
+            <li><code>c</code> is inside the board.</li>
+            <li><code>board[r][c] == 0</code>, which means the square has not been visited yet.</li>
+          </ol>
+          <p>
+            This prevents the knight from going outside the board or revisiting a square.
+          </p>
+        </section>
+
+        <section id="section-4">
+          <h2>4. Counting Future Choices from a Square</h2>
+          <div class="codebox">
+            <div class="codehead">
+              <span>Warnsdorff helper</span>
+            </div>
+            <pre><code>def onward_count(r, c, board):
+    count = 0
+    for dr, dc in moves:
+        nr, nc = r + dr, c + dc
+        if is_valid(nr, nc, board):
+            count += 1
+    return count</code></pre>
+          </div>
+          <p>
+            This function counts how many valid next moves are available from <code>(r, c)</code>.
+          </p>
+          <p>
+            The algorithm uses <b>Warnsdorff's rule</b>: try the move with the <b>fewest onward moves</b> first.
+            That helps avoid getting stuck too early.
+          </p>
+          <div class="note">
+            If one square has only 1 future exit and another has 5 future exits, it is usually smarter to visit the 1-exit square earlier.
+          </div>
+        </section>
+
+        <section id="section-5">
+          <h2>5. Main Recursive Search</h2>
+          <div class="codebox">
+            <div class="codehead">
+              <span>Start of the recursive function</span>
+            </div>
+            <pre><code>def knight_tour(r, c, step, board, path):
+    board[r][c] = step
+    path.append((r, c))</code></pre>
+          </div>
+          <p>The parameters mean:</p>
+          <ul>
+            <li><code>r, c</code>: the current knight position</li>
+            <li><code>step</code>: which move number this is</li>
+            <li><code>board</code>: the board used for searching</li>
+            <li><code>path</code>: the visited positions in order</li>
+          </ul>
+          <p>
+            These two lines mark the current square with the step number and save the position into <code>path</code>.
+          </p>
+          <div class="codebox">
+            <div class="codehead">
+              <span>First call</span>
+            </div>
+            <pre><code>knight_tour(0, 0, 1, search_grid, path)</code></pre>
+          </div>
+          <p>
+            So the program starts by placing step <code>1</code> at <code>(0, 0)</code>.
+          </p>
+        </section>
+
+        <section id="section-6">
+          <h2>6. Base Case: All Squares Visited</h2>
+          <div class="codebox">
+            <div class="codehead">
+              <span>Finish condition</span>
+            </div>
+            <pre><code>if step == N * N:
+    return True</code></pre>
+          </div>
+          <p>
+            For a <code>5 x 5</code> board, <code>N * N = 25</code>. When <code>step == 25</code>, the knight has visited all 25 squares, so the tour is complete.
+          </p>
+        </section>
+
+        <section id="section-7">
+          <h2>7. Build Candidate Next Moves</h2>
+          <div class="codebox">
+            <div class="codehead">
+              <span>Collect possible next squares</span>
+            </div>
+            <pre><code>next_moves = []
+for dr, dc in moves:
+    nr, nc = r + dr, c + dc
+    if is_valid(nr, nc, board):
+        next_moves.append((onward_count(nr, nc, board), nr, nc))</code></pre>
+          </div>
+          <p>
+            This loop checks all 8 possible knight moves from the current square.
+          </p>
+          <p>
+            For every valid next square <code>(nr, nc)</code>, it stores a tuple:
+          </p>
+          <div class="codebox">
+            <div class="codehead">
+              <span>Stored data</span>
+            </div>
+            <pre><code>(onward_count(nr, nc, board), nr, nc)</code></pre>
+          </div>
+          <p>
+            So each candidate includes how many future moves it has, plus its row and column.
+          </p>
+          <div class="codebox">
+            <div class="codehead">
+              <span>Example idea</span>
+            </div>
+            <pre><code>[(2, 2, 1), (4, 1, 2)]</code></pre>
+          </div>
+          <ul>
+            <li>Square <code>(2, 1)</code> has 2 onward moves.</li>
+            <li>Square <code>(1, 2)</code> has 4 onward moves.</li>
+          </ul>
+        </section>
+
+        <section id="section-8">
+          <h2>8. Sort by Smallest Onward Count</h2>
+          <div class="codebox">
+            <div class="codehead">
+              <span>Sorting step</span>
+            </div>
+            <pre><code>next_moves.sort()</code></pre>
+          </div>
+          <p>
+            This sorts the list in ascending order, so the algorithm tries the move with the <b>smallest onward count first</b>. That is the key heuristic.
+          </p>
+        </section>
+
+        <section id="section-9">
+          <h2>9. Recursive Exploration</h2>
+          <div class="codebox">
+            <div class="codehead">
+              <span>Try each candidate move</span>
+            </div>
+            <pre><code>for _, nr, nc in next_moves:
+    if knight_tour(nr, nc, step + 1, board, path):
+        return True</code></pre>
+          </div>
+          <p>
+            The program now tries each next move one by one. For each candidate square, it moves there, increases the step by 1, and continues searching recursively.
+          </p>
+          <p>
+            If any recursive call returns <code>True</code>, the program has found a complete tour, so this function also returns <code>True</code>.
+          </p>
+        </section>
+
+        <section id="section-10">
+          <h2>10. Backtracking</h2>
+          <div class="codebox">
+            <div class="codehead">
+              <span>Undo a failed path</span>
+            </div>
+            <pre><code>board[r][c] = 0
+path.pop()
+return False</code></pre>
+          </div>
+          <p>
+            If none of the next moves work, the algorithm must <b>undo</b> the current move. This is called <b>backtracking</b>.
+          </p>
+          <ul>
+            <li>Reset the square to <code>0</code> so it becomes unvisited again.</li>
+            <li>Remove the last position from <code>path</code>.</li>
+            <li>Return <code>False</code> so the previous call can try another move.</li>
+          </ul>
+        </section>
+
+        <section id="section-11">
+          <h2>11. Preparing the Search</h2>
+          <div class="codebox">
+            <div class="codehead">
+              <span>Set up the board and path</span>
+            </div>
+            <pre><code>search_grid = [[0] * N for _ in range(N)]
+path = []
+knight_tour(0, 0, 1, search_grid, path)</code></pre>
+          </div>
+          <ul>
+            <li><code>search_grid</code> creates a <code>5 x 5</code> board filled with <code>0</code>.</li>
+            <li><code>path</code> starts empty.</li>
+            <li>The search begins at <code>(0, 0)</code> with step <code>1</code>.</li>
+          </ul>
+          <p>
+            After this finishes, <code>path</code> contains the full successful route of the knight.
+          </p>
+        </section>
+
+        <section id="section-12">
+          <h2>12. Replaying the Solution Step by Step</h2>
+          <div class="codebox">
+            <div class="codehead">
+              <span>Replay loop</span>
+            </div>
+            <pre><code>grid = [[0] * N for _ in range(N)]
+step = 1
+for r, c in path:
+    grid[r][c] = step
+    print_grid(grid)
+    step += 1</code></pre>
+          </div>
+          <p>
+            This part is separate from the search. <code>search_grid</code> was used to <b>find</b> the path, while <code>grid</code> is used to <b>show the tour gradually</b>.
+          </p>
+          <ol>
+            <li>Place the current step number.</li>
+            <li>Print the board.</li>
+            <li>Increase the step.</li>
+          </ol>
+          <p>
+            So instead of printing only the final completed board, the program prints the board after move 1, move 2, move 3, and so on until move 25.
+          </p>
+        </section>
+
+        <section id="final-summary">
+          <h2>Final Summary</h2>
+          <div class="summary-cards">
+            <div class="summary-card">
+              <h3>What <code>path</code> stores</h3>
+              <p>
+                After the search, <code>path</code> may look like <code>[(0, 0), (2, 1), (4, 2), (3, 4), ...]</code>. That means step 1 is at <code>(0, 0)</code>, step 2 is at <code>(2, 1)</code>, step 3 is at <code>(4, 2)</code>, and so on.
+              </p>
+            </div>
+            <div class="summary-card">
+              <h3>Key ideas</h3>
+              <p>
+                The code combines recursive backtracking with Warnsdorff's rule. Backtracking fixes wrong choices, and the heuristic makes good choices earlier.
+              </p>
+            </div>
+            <div class="summary-card">
+              <h3>One-sentence description</h3>
+              <p>
+                This program finds a full knight's tour on a 5x5 board using recursive backtracking with a smart move-ordering heuristic, then prints the board after each move in the found path.
+              </p>
+            </div>
+          </div>
+          <div class="note">
+            If you want, the next step would be to make a second version that adds very detailed line-by-line comments directly inside the Python code.
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div class="footer">
+      Open this page in a browser for the formatted explanation.
+    </div>
+  </div>
+</body>
+</html>

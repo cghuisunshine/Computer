@@ -549,6 +549,259 @@ for a in animals:
           </details>
         </div>
 
+        <div class="q" data-qid="bonus2d" data-scored="false">
+          <div class="qhead">
+            <div>
+              <div class="qtitle">Bonus. 2D list lookup</div>
+              <div class="qmeta">Goal: nested list / 2D list</div>
+            </div>
+            <div class="qmeta">Medium</div>
+          </div>
+          <div class="prompt">
+            Create <b>grid = [[1, 2], [3, 4]]</b>. Print <span class="kbd">2</span>, then print <span class="kbd">4</span> by using row and column indexes.
+          </div>
+
+          <textarea placeholder="Type your Python code here..."></textarea>
+
+          <div class="row">
+            <button class="btn" data-action="check">Check</button>
+            <button class="btn secondary" data-action="hint">Hint</button>
+            <span class="feedback"></span>
+          </div>
+
+          <details>
+            <summary>Sample solution</summary>
+            <pre><code>grid = [[1, 2], [3, 4]]
+print(grid[0][1])
+print(grid[1][1])</code></pre>
+          </details>
+        </div>
+
+        <div class="q" data-qid="bonus2dedit" data-scored="false">
+          <div class="qhead">
+            <div>
+              <div class="qtitle">Bonus. Update a 2D list</div>
+              <div class="qmeta">Goal: print a grid, change one value, print again</div>
+            </div>
+            <div class="qmeta">Medium</div>
+          </div>
+          <div class="prompt">
+            Create <b>grid = [[1, 2], [3, 4]]</b>. Print the original grid, change the <span class="kbd">3</span> to <span class="kbd">9</span>, then print the grid again.
+          </div>
+
+          <textarea placeholder="Type your Python code here..."></textarea>
+
+          <div class="row">
+            <button class="btn" data-action="check">Check</button>
+            <button class="btn secondary" data-action="hint">Hint</button>
+            <span class="feedback"></span>
+          </div>
+
+          <details>
+            <summary>Sample solution</summary>
+            <pre><code>grid = [[1, 2], [3, 4]]
+print(grid)
+grid[1][0] = 9
+print(grid)</code></pre>
+          </details>
+        </div>
+
+        <div class="q" data-qid="bonus2drows" data-scored="false">
+          <div class="qhead">
+            <div>
+              <div class="qtitle">Bonus. Print a grid as rows</div>
+              <div class="qmeta">Goal: print each row without brackets</div>
+            </div>
+            <div class="qmeta">Medium</div>
+          </div>
+          <div class="prompt">
+            Create <b>grid = [[1, 2], [3, 4]]</b>. Print it like this, with each row on its own line and numbers separated by spaces:
+            <pre><code>1 2
+3 4</code></pre>
+          </div>
+
+          <textarea placeholder="Type your Python code here..."></textarea>
+
+          <div class="row">
+            <button class="btn" data-action="check">Check</button>
+            <button class="btn secondary" data-action="hint">Hint</button>
+            <span class="feedback"></span>
+          </div>
+
+          <details>
+            <summary>Sample solution</summary>
+            <pre><code>grid = [[1, 2], [3, 4]]
+for row in grid:
+    print(row[0], row[1])</code></pre>
+          </details>
+        </div>
+
+        <div class="q" data-qid="bonus2drowsfn" data-scored="false">
+          <div class="qhead">
+            <div>
+              <div class="qtitle">Bonus. Print a grid as rows with a function</div>
+              <div class="qmeta">Goal: use a function to print each row without brackets</div>
+            </div>
+            <div class="qmeta">Medium</div>
+          </div>
+          <div class="prompt">
+            Create <b>grid = [[1, 2], [3, 4]]</b>. Write a function called <span class="kbd">print_grid(grid)</span> that prints the grid with each row on its own line and numbers separated by spaces:
+            <pre><code>1 2
+3 4</code></pre>
+          </div>
+
+          <textarea placeholder="Type your Python code here..."></textarea>
+
+          <div class="row">
+            <button class="btn" data-action="check">Check</button>
+            <button class="btn secondary" data-action="hint">Hint</button>
+            <span class="feedback"></span>
+          </div>
+
+          <details>
+            <summary>Sample solution</summary>
+            <pre><code>def print_grid(grid):
+    for row in grid:
+        print(*row)
+
+grid = [[1, 2], [3, 4]]
+print_grid(grid)</code></pre>
+          </details>
+        </div>
+
+        <div class="q" data-qid="bonuswrapwalk" data-scored="false">
+          <div class="qhead">
+            <div>
+              <div class="qtitle">Bonus. Wrap-around row walk on a 5x5 grid</div>
+              <div class="qmeta">Goal: move left to right, increase the step number, and wrap at the edge</div>
+            </div>
+            <div class="qmeta">Medium</div>
+          </div>
+          <div class="prompt">
+            Create a <b>5x5</b> grid filled with <span class="kbd">0</span>. Start a piece at <span class="kbd">grid[0][0]</span>.
+            Move from <b>left to right</b>, writing the step number into the current cell. Increase the number by <b>1</b> each move.
+            When the piece reaches the end of a row, <b>wrap around</b> to the first column of the next row.
+            Print the grid after every move until the whole board is filled.
+          </div>
+
+          <textarea placeholder="Type your Python code here..."></textarea>
+
+          <div class="row">
+            <button class="btn" data-action="check">Check</button>
+            <button class="btn secondary" data-action="hint">Hint</button>
+            <span class="feedback"></span>
+          </div>
+
+          <details>
+            <summary>Sample solution</summary>
+            <pre><code>N = 5
+grid = [[0] * N for _ in range(N)]
+
+def print_grid(board):
+    for row in board:
+        print(" ".join(str(cell) for cell in row))
+    print()
+
+row = 0
+col = 0
+
+for step in range(1, N * N + 1):
+    grid[row][col] = step
+    print_grid(grid)
+
+    col += 1
+    if col == N:
+        col = 0
+        row += 1</code></pre>
+          </details>
+        </div>
+
+        <div class="q" data-qid="bonusknighttour" data-scored="false">
+          <div class="qhead">
+            <div>
+              <div class="qtitle">Bonus. Knight tour on a 5x5 grid</div>
+              <div class="qmeta">Goal: fill a 5x5 grid step by step and print after each move</div>
+            </div>
+            <div class="qmeta">Challenge</div>
+          </div>
+          <div class="prompt">
+            Create a <b>5x5</b> grid filled with <span class="kbd">0</span>. Start a knight at <span class="kbd">grid[0][0]</span>.
+            Visit all grid cells, increase the current cell number by one each step, and print the grid after every move.
+            One possible solution is enough.
+            <div class="tiny" style="margin-top:8px;">
+              Need help reading the sample code?
+              <a href="knight_tour_explained.html" target="_blank" rel="noopener">Open the knight-tour explanation page</a>.
+            </div>
+          </div>
+
+          <textarea placeholder="Type your Python code here..."></textarea>
+
+          <div class="row">
+            <button class="btn" data-action="check">Check</button>
+            <button class="btn secondary" data-action="hint">Hint</button>
+            <span class="feedback"></span>
+          </div>
+
+          <details>
+            <summary>Sample solution</summary>
+            <pre><code>N = 5
+moves = [
+    (2, 1), (1, 2), (-1, 2), (-2, 1),
+    (-2, -1), (-1, -2), (1, -2), (2, -1)
+]
+
+def print_grid(board):
+    for row in board:
+        print(" ".join(str(cell) for cell in row))
+    print()
+
+def is_valid(r, c, board):
+    return 0 <= r < N and 0 <= c < N and board[r][c] == 0
+
+def onward_count(r, c, board):
+    count = 0
+    for dr, dc in moves:
+        nr, nc = r + dr, c + dc
+        if is_valid(nr, nc, board):
+            count += 1
+    return count
+
+def knight_tour(r, c, step, board, path):
+    board[r][c] = step
+    path.append((r, c))
+
+    if step == N * N:
+        return True
+
+    next_moves = []
+    for dr, dc in moves:
+        nr, nc = r + dr, c + dc
+        if is_valid(nr, nc, board):
+            next_moves.append((onward_count(nr, nc, board), nr, nc))
+
+    next_moves.sort()
+
+    for _, nr, nc in next_moves:
+        if knight_tour(nr, nc, step + 1, board, path):
+            return True
+
+    board[r][c] = 0
+    path.pop()
+    return False
+
+search_grid = [[0] * N for _ in range(N)]
+path = []
+knight_tour(0, 0, 1, search_grid, path)
+
+grid = [[0] * N for _ in range(N)]
+step = 1
+for r, c in path:
+    grid[r][c] = step
+    print_grid(grid)
+    step += 1</code></pre>
+          </details>
+        </div>
+
         <div class="tiny">
           Want more? Easy add-ons:
           <ul class="checklist">
@@ -1067,6 +1320,12 @@ pet.speak()</code></pre>
       q10: { hint: "Try:\nfor i in range(1, 6):\n    print(\"*\" * i)" },
       q11: { hint: "Try:\nfor n in range(2, 21, 2):\n    print(n)" },
       q12: { hint: "Try:\nanimals = [\"dog\", \"cat\", \"rabbit\"]\nfor a in animals:\n    print(a)" },
+      bonus2d: { hint: "Try:\ngrid = [[1, 2], [3, 4]]\nprint(grid[0][1])\nprint(grid[1][1])" },
+      bonus2dedit: { hint: "Try:\ngrid = [[1, 2], [3, 4]]\nprint(grid)\ngrid[1][0] = 9\nprint(grid)" },
+      bonus2drows: { hint: "Try:\ngrid = [[1, 2], [3, 4]]\nfor row in grid:\n    print(row[0], row[1])" },
+      bonus2drowsfn: { hint: "Try:\ndef print_grid(grid):\n    for row in grid:\n        print(*row)\n\ngrid = [[1, 2], [3, 4]]\nprint_grid(grid)" },
+      bonuswrapwalk: { hint: "Try:\nUse a 5x5 grid and a print_grid(board) function.\nTrack row and col, place step numbers from 1 to 25, move col to the right each time, and when col reaches 5 reset it to 0 and move to the next row." },
+      bonusknighttour: { hint: "Try:\nUse a 5x5 grid, a print_grid(board) function, and a knight_tour(...) function.\nStart at (0, 0), store the path, then replay the path and print the grid after each step." },
       q13: { hint: "Try:\nmath, science, art = 88, 91, 84\nprint(math)\nprint(science)\nprint(art)" },
       q14: { hint: "Try:\nword = \"coding\"\nprint(word[0])\nprint(word[0:4])\nprint(7 + 5)" },
       q15: { hint: "Try:\nsentence = \"%s scored %d points\"\nprint(sentence % (\"Mia\", 19))" },
@@ -1471,8 +1730,9 @@ print("Try changing this code and click Run.")
     }
 
     function updateScore() {
-      const passed = qs.filter(q => q.dataset.passed === "true").length;
-      const total = qs.length;
+      const scoredQs = qs.filter(q => q.dataset.scored !== "false");
+      const passed = scoredQs.filter(q => q.dataset.passed === "true").length;
+      const total = scoredQs.length;
       scorePill.textContent = `Score: ${passed} / ${total}`;
     }
 
