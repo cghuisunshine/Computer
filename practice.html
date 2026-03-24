@@ -549,10 +549,47 @@ for a in animals:
           </details>
         </div>
 
+        <div class="q" data-qid="bonus2dinit" data-scored="false">
+          <div class="qhead">
+            <div>
+              <div class="qtitle">5.1 Bonus. Create a 2D list with variables</div>
+              <div class="qmeta">Goal: use variables + nested for loops to build a 2D list</div>
+            </div>
+            <div class="qmeta">Medium</div>
+          </div>
+          <div class="prompt">
+            Create <b>rows = 3</b> and <b>cols = 4</b>. Use <b>for loops</b> to build a 2D list called <b>grid</b> filled with <span class="kbd">0</span>.
+            Print the final grid.
+          </div>
+
+          <textarea placeholder="Type your Python code here..."></textarea>
+
+          <div class="row">
+            <button class="btn" data-action="check">Check</button>
+            <button class="btn secondary" data-action="hint">Hint</button>
+            <span class="feedback"></span>
+          </div>
+
+          <details>
+            <summary>Sample solution</summary>
+            <pre><code>rows = 3
+cols = 4
+grid = []
+
+for r in range(rows):
+    row = []
+    for c in range(cols):
+        row.append(0)
+    grid.append(row)
+
+print(grid)</code></pre>
+          </details>
+        </div>
+
         <div class="q" data-qid="bonus2d" data-scored="false">
           <div class="qhead">
             <div>
-              <div class="qtitle">5.1 Bonus. 2D list lookup</div>
+              <div class="qtitle">5.2 Bonus. 2D list lookup</div>
               <div class="qmeta">Goal: nested list / 2D list</div>
             </div>
             <div class="qmeta">Medium</div>
@@ -580,7 +617,7 @@ print(grid[1][1])</code></pre>
         <div class="q" data-qid="bonus2dedit" data-scored="false">
           <div class="qhead">
             <div>
-              <div class="qtitle">5.2 Bonus. Update a 2D list</div>
+              <div class="qtitle">5.3 Bonus. Update a 2D list</div>
               <div class="qmeta">Goal: print a grid, change one value, print again</div>
             </div>
             <div class="qmeta">Medium</div>
@@ -609,7 +646,7 @@ print(grid)</code></pre>
         <div class="q" data-qid="bonus2drows" data-scored="false">
           <div class="qhead">
             <div>
-              <div class="qtitle">5.3 Bonus. Print a grid as rows</div>
+              <div class="qtitle">5.4 Bonus. Print a grid as rows</div>
               <div class="qmeta">Goal: print each row without brackets</div>
             </div>
             <div class="qmeta">Medium</div>
@@ -639,7 +676,7 @@ for row in grid:
         <div class="q" data-qid="bonus2drowsfn" data-scored="false">
           <div class="qhead">
             <div>
-              <div class="qtitle">5.4 Bonus. Print a grid as rows with a function</div>
+              <div class="qtitle">5.5 Bonus. Print a grid as rows with a function</div>
               <div class="qmeta">Goal: use a function to print each row without brackets</div>
             </div>
             <div class="qmeta">Medium</div>
@@ -672,7 +709,7 @@ print_grid(grid)</code></pre>
         <div class="q" data-qid="bonuswrapwalk" data-scored="false">
           <div class="qhead">
             <div>
-              <div class="qtitle">5.5 Bonus. Wrap-around row walk on a 5x5 grid</div>
+              <div class="qtitle">5.6 Bonus. Wrap-around row walk on a 5x5 grid</div>
               <div class="qmeta">Goal: move left to right, increase the step number, and wrap at the edge</div>
             </div>
             <div class="qmeta">Medium</div>
@@ -719,7 +756,7 @@ for step in range(1, N * N + 1):
         <div class="q" data-qid="bonusknightmoves" data-scored="false">
           <div class="qhead">
             <div>
-              <div class="qtitle">5.6 Bonus. Knight move patterns</div>
+              <div class="qtitle">5.7 Bonus. Knight move patterns</div>
               <div class="qmeta">Goal: store the 8 knight moves in a list</div>
             </div>
             <div class="qmeta">Easy</div>
@@ -752,7 +789,7 @@ print(moves)</code></pre>
         <div class="q" data-qid="bonusknightjump" data-scored="false">
           <div class="qhead">
             <div>
-              <div class="qtitle">5.7 Bonus. One knight jump</div>
+              <div class="qtitle">5.8 Bonus. One knight jump</div>
               <div class="qmeta">Goal: apply one knight move to a starting position</div>
             </div>
             <div class="qmeta">Easy</div>
@@ -787,7 +824,7 @@ print(new_row, new_col)</code></pre>
         <div class="q" data-qid="bonusknightvalid" data-scored="false">
           <div class="qhead">
             <div>
-              <div class="qtitle">5.8 Bonus. Check if a position is on the board</div>
+              <div class="qtitle">5.9 Bonus. Check if a position is on the board</div>
               <div class="qmeta">Goal: write a simple boundary-checking function</div>
             </div>
             <div class="qmeta">Easy</div>
@@ -820,7 +857,7 @@ print(is_valid(5, 5))</code></pre>
         <div class="q" data-qid="bonusknightvalidmoves" data-scored="false">
           <div class="qhead">
             <div>
-              <div class="qtitle">5.9 Bonus. Find valid knight moves from (0, 0)</div>
+              <div class="qtitle">5.10 Bonus. Find valid knight moves from (0, 0)</div>
               <div class="qmeta">Goal: test all 8 knight moves and keep only the ones on the board</div>
             </div>
             <div class="qmeta">Medium</div>
@@ -859,7 +896,7 @@ for dr, dc in moves:
         <div class="q" data-qid="bonusknighttwosteps" data-scored="false">
           <div class="qhead">
             <div>
-              <div class="qtitle">5.10 Bonus. Place step numbers for two knight moves</div>
+              <div class="qtitle">5.11 Bonus. Place step numbers for two knight moves</div>
               <div class="qmeta">Goal: mark the starting square and one valid knight jump on a grid</div>
             </div>
             <div class="qmeta">Medium</div>
@@ -892,7 +929,7 @@ for row in grid:
         <div class="q" data-qid="bonusknightvisitcheck" data-scored="false">
           <div class="qhead">
             <div>
-              <div class="qtitle">5.11 Bonus. Avoid visited squares</div>
+              <div class="qtitle">5.12 Bonus. Avoid visited squares</div>
               <div class="qmeta">Goal: reject squares that are off the board or already used</div>
             </div>
             <div class="qmeta">Medium</div>
@@ -927,7 +964,7 @@ print(is_valid(0, 0, grid))</code></pre>
         <div class="q" data-qid="bonusknighttour" data-scored="false">
           <div class="qhead">
             <div>
-              <div class="qtitle">5.12 Bonus. Knight tour on a 5x5 grid</div>
+              <div class="qtitle">5.13 Bonus. Knight tour on a 5x5 grid</div>
               <div class="qmeta">Goal: fill a 5x5 grid step by step and print after each move</div>
             </div>
             <div class="qmeta">Challenge</div>
