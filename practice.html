@@ -716,6 +716,214 @@ for step in range(1, N * N + 1):
           </details>
         </div>
 
+        <div class="q" data-qid="bonusknightmoves" data-scored="false">
+          <div class="qhead">
+            <div>
+              <div class="qtitle">Bonus. Knight move patterns</div>
+              <div class="qmeta">Goal: store the 8 knight moves in a list</div>
+            </div>
+            <div class="qmeta">Easy</div>
+          </div>
+          <div class="prompt">
+            Create a list called <span class="kbd">moves</span> that stores the 8 knight moves:
+            <span class="kbd">(2, 1)</span>, <span class="kbd">(1, 2)</span>, <span class="kbd">(-1, 2)</span>, <span class="kbd">(-2, 1)</span>,
+            <span class="kbd">(-2, -1)</span>, <span class="kbd">(-1, -2)</span>, <span class="kbd">(1, -2)</span>, <span class="kbd">(2, -1)</span>.
+            Print the list.
+          </div>
+
+          <textarea placeholder="Type your Python code here..."></textarea>
+
+          <div class="row">
+            <button class="btn" data-action="check">Check</button>
+            <button class="btn secondary" data-action="hint">Hint</button>
+            <span class="feedback"></span>
+          </div>
+
+          <details>
+            <summary>Sample solution</summary>
+            <pre><code>moves = [
+    (2, 1), (1, 2), (-1, 2), (-2, 1),
+    (-2, -1), (-1, -2), (1, -2), (2, -1)
+]
+print(moves)</code></pre>
+          </details>
+        </div>
+
+        <div class="q" data-qid="bonusknightjump" data-scored="false">
+          <div class="qhead">
+            <div>
+              <div class="qtitle">Bonus. One knight jump</div>
+              <div class="qmeta">Goal: apply one knight move to a starting position</div>
+            </div>
+            <div class="qmeta">Easy</div>
+          </div>
+          <div class="prompt">
+            Start at row <span class="kbd">0</span>, col <span class="kbd">0</span>.
+            Use the knight move <span class="kbd">(2, 1)</span> to find the new position.
+            Print the new row and column.
+          </div>
+
+          <textarea placeholder="Type your Python code here..."></textarea>
+
+          <div class="row">
+            <button class="btn" data-action="check">Check</button>
+            <button class="btn secondary" data-action="hint">Hint</button>
+            <span class="feedback"></span>
+          </div>
+
+          <details>
+            <summary>Sample solution</summary>
+            <pre><code>row = 0
+col = 0
+dr, dc = 2, 1
+
+new_row = row + dr
+new_col = col + dc
+
+print(new_row, new_col)</code></pre>
+          </details>
+        </div>
+
+        <div class="q" data-qid="bonusknightvalid" data-scored="false">
+          <div class="qhead">
+            <div>
+              <div class="qtitle">Bonus. Check if a position is on the board</div>
+              <div class="qmeta">Goal: write a simple boundary-checking function</div>
+            </div>
+            <div class="qmeta">Easy</div>
+          </div>
+          <div class="prompt">
+            Write a function <span class="kbd">is_valid(r, c)</span> for a <b>5x5</b> board.
+            It should return <span class="kbd">True</span> if the position is inside the board, otherwise <span class="kbd">False</span>.
+          </div>
+
+          <textarea placeholder="Type your Python code here..."></textarea>
+
+          <div class="row">
+            <button class="btn" data-action="check">Check</button>
+            <button class="btn secondary" data-action="hint">Hint</button>
+            <span class="feedback"></span>
+          </div>
+
+          <details>
+            <summary>Sample solution</summary>
+            <pre><code>N = 5
+
+def is_valid(r, c):
+    return 0 &lt;= r &lt; N and 0 &lt;= c &lt; N
+
+print(is_valid(2, 1))
+print(is_valid(5, 5))</code></pre>
+          </details>
+        </div>
+
+        <div class="q" data-qid="bonusknightvalidmoves" data-scored="false">
+          <div class="qhead">
+            <div>
+              <div class="qtitle">Bonus. Find valid knight moves from (0, 0)</div>
+              <div class="qmeta">Goal: test all 8 knight moves and keep only the ones on the board</div>
+            </div>
+            <div class="qmeta">Medium</div>
+          </div>
+          <div class="prompt">
+            Use the 8 knight moves and print only the moves that stay inside the <b>5x5</b> board when starting from <span class="kbd">(0, 0)</span>.
+          </div>
+
+          <textarea placeholder="Type your Python code here..."></textarea>
+
+          <div class="row">
+            <button class="btn" data-action="check">Check</button>
+            <button class="btn secondary" data-action="hint">Hint</button>
+            <span class="feedback"></span>
+          </div>
+
+          <details>
+            <summary>Sample solution</summary>
+            <pre><code>N = 5
+moves = [
+    (2, 1), (1, 2), (-1, 2), (-2, 1),
+    (-2, -1), (-1, -2), (1, -2), (2, -1)
+]
+
+def is_valid(r, c):
+    return 0 &lt;= r &lt; N and 0 &lt;= c &lt; N
+
+row, col = 0, 0
+for dr, dc in moves:
+    nr, nc = row + dr, col + dc
+    if is_valid(nr, nc):
+        print(nr, nc)</code></pre>
+          </details>
+        </div>
+
+        <div class="q" data-qid="bonusknighttwosteps" data-scored="false">
+          <div class="qhead">
+            <div>
+              <div class="qtitle">Bonus. Place step numbers for two knight moves</div>
+              <div class="qmeta">Goal: mark the starting square and one valid knight jump on a grid</div>
+            </div>
+            <div class="qmeta">Medium</div>
+          </div>
+          <div class="prompt">
+            Create a <b>5x5</b> grid of <span class="kbd">0</span>. Put <span class="kbd">1</span> at <span class="kbd">(0, 0)</span>, then move the knight to one valid square and put <span class="kbd">2</span> there. Print the board.
+          </div>
+
+          <textarea placeholder="Type your Python code here..."></textarea>
+
+          <div class="row">
+            <button class="btn" data-action="check">Check</button>
+            <button class="btn secondary" data-action="hint">Hint</button>
+            <span class="feedback"></span>
+          </div>
+
+          <details>
+            <summary>Sample solution</summary>
+            <pre><code>N = 5
+grid = [[0] * N for _ in range(N)]
+
+grid[0][0] = 1
+grid[2][1] = 2
+
+for row in grid:
+    print(*row)</code></pre>
+          </details>
+        </div>
+
+        <div class="q" data-qid="bonusknightvisitcheck" data-scored="false">
+          <div class="qhead">
+            <div>
+              <div class="qtitle">Bonus. Avoid visited squares</div>
+              <div class="qmeta">Goal: reject squares that are off the board or already used</div>
+            </div>
+            <div class="qmeta">Medium</div>
+          </div>
+          <div class="prompt">
+            Write <span class="kbd">is_valid(r, c, board)</span> so that a move is valid only if it is inside the board and the square still contains <span class="kbd">0</span>.
+          </div>
+
+          <textarea placeholder="Type your Python code here..."></textarea>
+
+          <div class="row">
+            <button class="btn" data-action="check">Check</button>
+            <button class="btn secondary" data-action="hint">Hint</button>
+            <span class="feedback"></span>
+          </div>
+
+          <details>
+            <summary>Sample solution</summary>
+            <pre><code>N = 5
+
+def is_valid(r, c, board):
+    return 0 &lt;= r &lt; N and 0 &lt;= c &lt; N and board[r][c] == 0
+
+grid = [[0] * N for _ in range(N)]
+grid[0][0] = 1
+
+print(is_valid(2, 1, grid))
+print(is_valid(0, 0, grid))</code></pre>
+          </details>
+        </div>
+
         <div class="q" data-qid="bonusknighttour" data-scored="false">
           <div class="qhead">
             <div>
@@ -1325,6 +1533,12 @@ pet.speak()</code></pre>
       bonus2drows: { hint: "Try:\ngrid = [[1, 2], [3, 4]]\nfor row in grid:\n    print(row[0], row[1])" },
       bonus2drowsfn: { hint: "Try:\ndef print_grid(grid):\n    for row in grid:\n        print(*row)\n\ngrid = [[1, 2], [3, 4]]\nprint_grid(grid)" },
       bonuswrapwalk: { hint: "Try:\nUse a 5x5 grid and a print_grid(board) function.\nTrack row and col, place step numbers from 1 to 25, move col to the right each time, and when col reaches 5 reset it to 0 and move to the next row." },
+      bonusknightmoves: { hint: "Try:\nmoves = [\n    (2, 1), (1, 2), (-1, 2), (-2, 1),\n    (-2, -1), (-1, -2), (1, -2), (2, -1)\n]\nprint(moves)" },
+      bonusknightjump: { hint: "Try:\nrow, col = 0, 0\ndr, dc = 2, 1\nprint(row + dr, col + dc)" },
+      bonusknightvalid: { hint: "Try:\nN = 5\n\ndef is_valid(r, c):\n    return 0 <= r < N and 0 <= c < N" },
+      bonusknightvalidmoves: { hint: "Try:\nStart with row, col = 0, 0.\nLoop through each knight move, add dr and dc, and print only positions where 0 <= nr < 5 and 0 <= nc < 5." },
+      bonusknighttwosteps: { hint: "Try:\nMake a 5x5 grid of 0.\nPut 1 at grid[0][0], choose a valid knight move like (2, 1), put 2 there, then print each row." },
+      bonusknightvisitcheck: { hint: "Try:\nCheck three things: row is on the board, col is on the board, and board[r][c] == 0." },
       bonusknighttour: { hint: "Try:\nUse a 5x5 grid, a print_grid(board) function, and a knight_tour(...) function.\nStart at (0, 0), store the path, then replay the path and print the grid after each step." },
       q13: { hint: "Try:\nmath, science, art = 88, 91, 84\nprint(math)\nprint(science)\nprint(art)" },
       q14: { hint: "Try:\nword = \"coding\"\nprint(word[0])\nprint(word[0:4])\nprint(7 + 5)" },
