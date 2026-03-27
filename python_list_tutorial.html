@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Python List Tutorial</title>
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --line: #dbe3ee;
+      --accent: #2563eb;
+      --accent-soft: #e8f0ff;
+      --code-bg: #0f172a;
+      --code-text: #e5eefc;
+      --ok: #0f766e;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 28px 18px 60px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #dbeafe, #eff6ff 60%, #ffffff);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 28px;
+      margin-bottom: 22px;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 2rem;
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .toc, .section, .summary-box, .practice-box {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 22px;
+      margin-bottom: 18px;
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.04);
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 1.45rem;
+      color: #111827;
+    }
+
+    h3 {
+      margin-bottom: 8px;
+      color: #1d4ed8;
+    }
+
+    p, li {
+      font-size: 1rem;
+    }
+
+    code.inline {
+      background: var(--accent-soft);
+      color: #1e40af;
+      padding: 2px 7px;
+      border-radius: 6px;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 0.95em;
+    }
+
+    pre {
+      margin: 12px 0;
+      background: var(--code-bg);
+      color: var(--code-text);
+      padding: 16px;
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid #1e293b;
+    }
+
+    pre code {
+      font-family: Consolas, Monaco, monospace;
+      font-size: 0.95rem;
+    }
+
+    ul, ol {
+      padding-left: 22px;
+    }
+
+    .toc a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .toc a:hover {
+      text-decoration: underline;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .note {
+      border-left: 4px solid #f59e0b;
+      background: #fff7e6;
+      padding: 12px 14px;
+      border-radius: 10px;
+      margin-top: 12px;
+    }
+
+    .good {
+      border-left-color: #10b981;
+      background: #ecfdf5;
+    }
+
+    .footer {
+      text-align: center;
+      color: var(--muted);
+      margin-top: 30px;
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 760px) {
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 1.7rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="hero">
+      <h1>Python List Tutorial</h1>
+      <p class="subtitle">A beginner-friendly web page for learning Python lists, with examples, explanations, and practice.</p>
+    </section>
+
+    <section class="toc">
+      <h2>Contents</h2>
+      <ol>
+        <li><a href="#what-is-a-list">What is a list?</a></li>
+        <li><a href="#create">Create a list</a></li>
+        <li><a href="#access">Access items by index</a></li>
+        <li><a href="#change">Change list items</a></li>
+        <li><a href="#add">Add items</a></li>
+        <li><a href="#remove">Remove items</a></li>
+        <li><a href="#length">Length of a list</a></li>
+        <li><a href="#loop">Loop through a list</a></li>
+        <li><a href="#check">Check if an item is in a list</a></li>
+        <li><a href="#slice">List slicing</a></li>
+        <li><a href="#methods">Common list methods</a></li>
+        <li><a href="#nested">Nested lists</a></li>
+        <li><a href="#build">Build a list with a loop</a></li>
+        <li><a href="#comprehension">List comprehension</a></li>
+        <li><a href="#grid">2D list example</a></li>
+        <li><a href="#practice">Practice questions</a></li>
+        <li><a href="#summary">Summary</a></li>
+      </ol>
+    </section>
+
+    <section class="section" id="what-is-a-list">
+      <h2>1. What is a list?</h2>
+      <p>A <strong>list</strong> stores multiple items in one variable.</p>
+      <pre><code>fruits = ["apple", "banana", "orange"]
+print(fruits)</code></pre>
+      <pre><code>['apple', 'banana', 'orange']</code></pre>
+    </section>
+
+    <section class="section" id="create">
+      <h2>2. Create a list</h2>
+      <pre><code>numbers = [1, 2, 3, 4]
+names = ["Tom", "Amy", "John"]
+mixed = [1, "hello", 3.5, True]
+empty = []</code></pre>
+      <p>A list can hold numbers, strings, booleans, or even mixed types.</p>
+    </section>
+
+    <section class="section" id="access">
+      <h2>3. Access items by index</h2>
+      <p>Python list index starts from <strong>0</strong>.</p>
+      <pre><code>fruits = ["apple", "banana", "orange"]
+
+print(fruits[0])   # apple
+print(fruits[1])   # banana
+print(fruits[2])   # orange</code></pre>
+      <p>You can also use negative index:</p>
+      <pre><code>print(fruits[-1])  # orange
+print(fruits[-2])  # banana</code></pre>
+    </section>
+
+    <section class="section" id="change">
+      <h2>4. Change list items</h2>
+      <pre><code>fruits = ["apple", "banana", "orange"]
+fruits[1] = "grape"
+
+print(fruits)</code></pre>
+      <pre><code>['apple', 'grape', 'orange']</code></pre>
+    </section>
+
+    <section class="section" id="add">
+      <h2>5. Add items</h2>
+      <h3><code class="inline">append()</code> adds one item to the end</h3>
+      <pre><code>numbers = [1, 2, 3]
+numbers.append(4)
+
+print(numbers)</code></pre>
+
+      <h3><code class="inline">insert()</code> adds at a specific position</h3>
+      <pre><code>numbers = [1, 2, 3]
+numbers.insert(1, 99)
+
+print(numbers)</code></pre>
+      <pre><code>[1, 99, 2, 3]</code></pre>
+    </section>
+
+    <section class="section" id="remove">
+      <h2>6. Remove items</h2>
+      <h3><code class="inline">remove()</code> removes by value</h3>
+      <pre><code>fruits = ["apple", "banana", "orange"]
+fruits.remove("banana")
+
+print(fruits)</code></pre>
+
+      <h3><code class="inline">pop()</code> removes by index</h3>
+      <pre><code>numbers = [10, 20, 30]
+numbers.pop(1)
+
+print(numbers)</code></pre>
+
+      <h3><code class="inline">del</code> deletes by index</h3>
+      <pre><code>numbers = [10, 20, 30]
+del numbers[0]
+
+print(numbers)</code></pre>
+    </section>
+
+    <section class="section" id="length">
+      <h2>7. Length of a list</h2>
+      <p>Use <code class="inline">len()</code>:</p>
+      <pre><code>fruits = ["apple", "banana", "orange"]
+print(len(fruits))</code></pre>
+      <pre><code>3</code></pre>
+    </section>
+
+    <section class="section" id="loop">
+      <h2>8. Loop through a list</h2>
+      <pre><code>fruits = ["apple", "banana", "orange"]
+
+for fruit in fruits:
+    print(fruit)</code></pre>
+    </section>
+
+    <section class="section" id="check">
+      <h2>9. Check if an item is in a list</h2>
+      <pre><code>fruits = ["apple", "banana", "orange"]
+
+print("banana" in fruits)   # True
+print("grape" in fruits)    # False</code></pre>
+    </section>
+
+    <section class="section" id="slice">
+      <h2>10. List slicing</h2>
+      <p>Get part of a list:</p>
+      <pre><code>numbers = [10, 20, 30, 40, 50]
+
+print(numbers[1:4])   # [20, 30, 40]
+print(numbers[:3])    # [10, 20, 30]
+print(numbers[2:])    # [30, 40, 50]</code></pre>
+    </section>
+
+    <section class="section" id="methods">
+      <h2>11. Common list methods</h2>
+      <pre><code>numbers = [3, 1, 4, 1, 5]
+
+numbers.sort()
+print(numbers)   # [1, 1, 3, 4, 5]
+
+numbers.reverse()
+print(numbers)   # [5, 4, 3, 1, 1]
+
+print(numbers.count(1))   # 2
+print(numbers.index(4))   # 1</code></pre>
+    </section>
+
+    <section class="section" id="nested">
+      <h2>12. Nested lists</h2>
+      <p>A list can contain other lists.</p>
+      <pre><code>grid = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+]
+
+print(grid[0])      # [1, 2, 3]
+print(grid[1][2])   # 6</code></pre>
+    </section>
+
+    <section class="section" id="build">
+      <h2>13. Build a list with a loop</h2>
+      <pre><code>squares = []
+
+for i in range(5):
+    squares.append(i * i)
+
+print(squares)</code></pre>
+      <pre><code>[0, 1, 4, 9, 16]</code></pre>
+    </section>
+
+    <section class="section" id="comprehension">
+      <h2>14. List comprehension</h2>
+      <p>A shorter way to create lists:</p>
+      <pre><code>squares = [i * i for i in range(5)]
+print(squares)</code></pre>
+    </section>
+
+    <section class="section" id="grid">
+      <h2>15. 2D list example</h2>
+      <pre><code>rows = 3
+cols = 4
+grid = []
+
+for r in range(rows):
+    row = []
+    for c in range(cols):
+        row.append(0)
+    grid.append(row)
+
+print(grid)</code></pre>
+      <pre><code>[[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]</code></pre>
+
+      <p>Shorter version:</p>
+      <pre><code>grid = [[0] * 4 for _ in range(3)]
+print(grid)</code></pre>
+
+      <div class="note">
+        <strong>Important note:</strong><br>
+        Be careful with <code class="inline">grid = [[0] * 4] * 3</code> because the rows are linked together.
+      </div>
+
+      <div class="note good">
+        <strong>Better:</strong><br>
+        Use <code class="inline">grid = [[0] * 4 for _ in range(3)]</code>.
+      </div>
+    </section>
+
+    <section class="practice-box" id="practice">
+      <h2>16. Practice questions</h2>
+      <ol>
+        <li>Create a list of 5 colors.</li>
+        <li>Print the first and last item.</li>
+        <li>Add one new color.</li>
+        <li>Remove one color.</li>
+        <li>Loop through and print all colors.</li>
+        <li>Create a list of numbers from 1 to 10.</li>
+        <li>Make a new list with squares of those numbers.</li>
+      </ol>
+
+      <h3>Small practice example</h3>
+      <pre><code>colors = ["red", "blue", "green"]
+
+print(colors[0])
+print(colors[-1])
+
+colors.append("yellow")
+colors.remove("blue")
+
+for color in colors:
+    print(color)</code></pre>
+    </section>
+
+    <section class="summary-box" id="summary">
+      <h2>17. Summary</h2>
+      <p>A Python list lets you:</p>
+      <ul>
+        <li>store many items</li>
+        <li>access by index</li>
+        <li>change items</li>
+        <li>add and remove items</li>
+        <li>loop through items</li>
+        <li>create 2D lists</li>
+      </ul>
+    </section>
+
+    <p class="footer">Made as a simple HTML tutorial page for Python list practice.</p>
+  </div>
+</body>
+</html>
