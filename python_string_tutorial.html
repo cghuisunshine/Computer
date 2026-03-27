@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Python String Tutorial</title>
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --line: #dbe3ee;
+      --accent: #2563eb;
+      --accent-soft: #e8f0ff;
+      --code-bg: #0f172a;
+      --code-text: #e5eefc;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 28px 18px 60px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #dbeafe, #eff6ff 60%, #ffffff);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 28px;
+      margin-bottom: 22px;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 2rem;
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .toc, .section, .summary-box, .practice-box {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 22px;
+      margin-bottom: 18px;
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.04);
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 1.45rem;
+      color: #111827;
+    }
+
+    h3 {
+      margin-bottom: 8px;
+      color: #1d4ed8;
+    }
+
+    p, li {
+      font-size: 1rem;
+    }
+
+    code.inline {
+      background: var(--accent-soft);
+      color: #1e40af;
+      padding: 2px 7px;
+      border-radius: 6px;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 0.95em;
+    }
+
+    pre {
+      margin: 12px 0;
+      background: var(--code-bg);
+      color: var(--code-text);
+      padding: 16px;
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid #1e293b;
+    }
+
+    pre code {
+      font-family: Consolas, Monaco, monospace;
+      font-size: 0.95rem;
+    }
+
+    ul, ol {
+      padding-left: 22px;
+    }
+
+    .toc a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .toc a:hover {
+      text-decoration: underline;
+    }
+
+    .note {
+      border-left: 4px solid #f59e0b;
+      background: #fff7e6;
+      padding: 12px 14px;
+      border-radius: 10px;
+      margin-top: 12px;
+    }
+
+    .good {
+      border-left-color: #10b981;
+      background: #ecfdf5;
+    }
+
+    .footer {
+      text-align: center;
+      color: var(--muted);
+      margin-top: 30px;
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 760px) {
+      h1 {
+        font-size: 1.7rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="hero">
+      <h1>Python String Tutorial</h1>
+      <p class="subtitle">A beginner-friendly web page for learning Python strings, with examples, explanations, and practice.</p>
+    </section>
+
+    <section class="toc">
+      <h2>Contents</h2>
+      <ol>
+        <li><a href="#what-is-a-string">What is a string?</a></li>
+        <li><a href="#create">Create strings</a></li>
+        <li><a href="#quotes">Single quotes and double quotes</a></li>
+        <li><a href="#multiline">Multi-line strings</a></li>
+        <li><a href="#access">Access characters by index</a></li>
+        <li><a href="#loop">Loop through a string</a></li>
+        <li><a href="#length">Length of a string</a></li>
+        <li><a href="#slice">String slicing</a></li>
+        <li><a href="#combine">Combine strings</a></li>
+        <li><a href="#repeat">Repeat strings</a></li>
+        <li><a href="#check">Check text inside a string</a></li>
+        <li><a href="#methods">Common string methods</a></li>
+        <li><a href="#replace">Replace text</a></li>
+        <li><a href="#split-join">Split and join</a></li>
+        <li><a href="#format">Format strings</a></li>
+        <li><a href="#escape">Escape characters</a></li>
+        <li><a href="#practice">Practice questions</a></li>
+        <li><a href="#summary">Summary</a></li>
+      </ol>
+    </section>
+
+    <section class="section" id="what-is-a-string">
+      <h2>1. What is a string?</h2>
+      <p>A <strong>string</strong> is text in Python.</p>
+      <pre><code>name = "Peter"
+message = "Hello, world!"
+print(name)
+print(message)</code></pre>
+    </section>
+
+    <section class="section" id="create">
+      <h2>2. Create strings</h2>
+      <pre><code>word = "apple"
+sentence = "I like Python."
+empty = ""</code></pre>
+      <p>Strings are written inside quotation marks.</p>
+    </section>
+
+    <section class="section" id="quotes">
+      <h2>3. Single quotes and double quotes</h2>
+      <pre><code>a = 'hello'
+b = "world"
+
+print(a)
+print(b)</code></pre>
+      <p>Both single quotes and double quotes work.</p>
+    </section>
+
+    <section class="section" id="multiline">
+      <h2>4. Multi-line strings</h2>
+      <pre><code>text = """This is line 1.
+This is line 2.
+This is line 3."""
+
+print(text)</code></pre>
+    </section>
+
+    <section class="section" id="access">
+      <h2>5. Access characters by index</h2>
+      <p>Strings use index positions like lists. The first character is at index <strong>0</strong>.</p>
+      <pre><code>word = "python"
+
+print(word[0])   # p
+print(word[1])   # y
+print(word[-1])  # n</code></pre>
+      <div class="note">
+        Strings are <strong>immutable</strong>. That means you can read characters, but you cannot directly change one character inside a string.
+      </div>
+    </section>
+
+    <section class="section" id="loop">
+      <h2>6. Loop through a string</h2>
+      <pre><code>word = "cat"
+
+for ch in word:
+    print(ch)</code></pre>
+    </section>
+
+    <section class="section" id="length">
+      <h2>7. Length of a string</h2>
+      <p>Use <code class="inline">len()</code>:</p>
+      <pre><code>text = "banana"
+print(len(text))</code></pre>
+      <pre><code>6</code></pre>
+    </section>
+
+    <section class="section" id="slice">
+      <h2>8. String slicing</h2>
+      <pre><code>word = "python"
+
+print(word[0:2])   # py
+print(word[2:5])   # tho
+print(word[:4])    # pyth
+print(word[3:])    # hon</code></pre>
+    </section>
+
+    <section class="section" id="combine">
+      <h2>9. Combine strings</h2>
+      <p>Use <code class="inline">+</code> to join strings.</p>
+      <pre><code>first = "Hello"
+second = "World"
+result = first + " " + second
+
+print(result)</code></pre>
+      <pre><code>Hello World</code></pre>
+    </section>
+
+    <section class="section" id="repeat">
+      <h2>10. Repeat strings</h2>
+      <pre><code>print("ha" * 3)</code></pre>
+      <pre><code>hahaha</code></pre>
+    </section>
+
+    <section class="section" id="check">
+      <h2>11. Check text inside a string</h2>
+      <pre><code>text = "I like Python"
+
+print("Python" in text)   # True
+print("Java" in text)     # False</code></pre>
+    </section>
+
+    <section class="section" id="methods">
+      <h2>12. Common string methods</h2>
+      <pre><code>text = "  hello world  "
+
+print(text.upper())
+print(text.lower())
+print(text.strip())
+print(text.title())
+print(text.capitalize())</code></pre>
+      <p>Useful methods:</p>
+      <ul>
+        <li><code class="inline">upper()</code> makes all letters uppercase</li>
+        <li><code class="inline">lower()</code> makes all letters lowercase</li>
+        <li><code class="inline">strip()</code> removes spaces at the beginning and end</li>
+        <li><code class="inline">title()</code> makes each word start with a capital letter</li>
+        <li><code class="inline">capitalize()</code> makes only the first letter uppercase</li>
+      </ul>
+    </section>
+
+    <section class="section" id="replace">
+      <h2>13. Replace text</h2>
+      <pre><code>text = "I like cats"
+new_text = text.replace("cats", "dogs")
+
+print(new_text)</code></pre>
+      <pre><code>I like dogs</code></pre>
+    </section>
+
+    <section class="section" id="split-join">
+      <h2>14. Split and join</h2>
+      <h3><code class="inline">split()</code></h3>
+      <pre><code>text = "red,green,blue"
+colors = text.split(",")
+print(colors)</code></pre>
+      <pre><code>['red', 'green', 'blue']</code></pre>
+
+      <h3><code class="inline">join()</code></h3>
+      <pre><code>words = ["I", "love", "Python"]
+sentence = " ".join(words)
+print(sentence)</code></pre>
+      <pre><code>I love Python</code></pre>
+    </section>
+
+    <section class="section" id="format">
+      <h2>15. Format strings</h2>
+      <p>Using f-strings:</p>
+      <pre><code>name = "Amy"
+age = 12
+
+print(f"My name is {name} and I am {age} years old.")</code></pre>
+
+      <p>Using <code class="inline">format()</code>:</p>
+      <pre><code>name = "Amy"
+age = 12
+
+print("My name is {} and I am {} years old.".format(name, age))</code></pre>
+    </section>
+
+    <section class="section" id="escape">
+      <h2>16. Escape characters</h2>
+      <pre><code>print("He said, \"Hello!\"")
+print("Line1\nLine2")
+print("A\tB")</code></pre>
+      <p>Common escape characters:</p>
+      <ul>
+        <li><code class="inline">\"</code> double quote</li>
+        <li><code class="inline">\n</code> new line</li>
+        <li><code class="inline">\t</code> tab</li>
+      </ul>
+    </section>
+
+    <section class="practice-box" id="practice">
+      <h2>17. Practice questions</h2>
+      <ol>
+        <li>Create a string with your name.</li>
+        <li>Print the first and last character.</li>
+        <li>Print the length of the string.</li>
+        <li>Make the string uppercase.</li>
+        <li>Replace one part of the string with new text.</li>
+        <li>Split a sentence into a list of words.</li>
+        <li>Use an f-string to print your age and favorite subject.</li>
+      </ol>
+
+      <h3>Small practice example</h3>
+      <pre><code>name = "python"
+
+print(name[0])
+print(name[-1])
+print(len(name))
+print(name.upper())
+print(name.replace("py", "my"))</code></pre>
+    </section>
+
+    <section class="summary-box" id="summary">
+      <h2>18. Summary</h2>
+      <p>A Python string lets you:</p>
+      <ul>
+        <li>store text</li>
+        <li>access characters by index</li>
+        <li>slice part of the text</li>
+        <li>combine and repeat text</li>
+        <li>use methods like <code class="inline">upper()</code>, <code class="inline">lower()</code>, and <code class="inline">replace()</code></li>
+        <li>format text with f-strings</li>
+      </ul>
+
+      <div class="note good">
+        Strings are one of the most important Python data types. You will use them in almost every program.
+      </div>
+    </section>
+
+    <p class="footer">Made as a simple HTML tutorial page for Python string practice.</p>
+  </div>
+</body>
+</html>
