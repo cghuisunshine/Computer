@@ -1,0 +1,362 @@
+[
+  {
+    "title": "Create a name string",
+    "prompt": "Create a string variable called name with the text \"Peter\".",
+    "starter": "name = ",
+    "answer": "name = \"Peter\"",
+    "hint": "Put the text inside quotation marks.",
+    "level": 1
+  },
+  {
+    "title": "Create a message string",
+    "prompt": "Create a string variable called message with the text \"Hello, world!\".",
+    "starter": "message = ",
+    "answer": "message = \"Hello, world!\"",
+    "hint": "Strings are text inside quotes.",
+    "level": 1
+  },
+  {
+    "title": "Print a string variable",
+    "prompt": "Create name = \"Peter\" and print it.",
+    "starter": "name = \"Peter\"\n",
+    "answer": "name = \"Peter\"\nprint(name)",
+    "hint": "Use print with the variable name.",
+    "level": 1
+  },
+  {
+    "title": "Create a word string",
+    "prompt": "Create a string variable called word with the text \"apple\".",
+    "starter": "word = ",
+    "answer": "word = \"apple\"",
+    "hint": "Use double quotes around apple.",
+    "level": 1
+  },
+  {
+    "title": "Create a sentence string",
+    "prompt": "Create a string variable called sentence with the text \"I like Python.\".",
+    "starter": "sentence = ",
+    "answer": "sentence = \"I like Python.\"",
+    "hint": "Remember the period is part of the string.",
+    "level": 1
+  },
+  {
+    "title": "Create an empty string",
+    "prompt": "Create an empty string variable called empty.",
+    "starter": "empty = ",
+    "answer": "empty = \"\"",
+    "hint": "An empty string uses two quotation marks with nothing inside.",
+    "level": 1
+  },
+  {
+    "title": "Use single quotes",
+    "prompt": "Create a string variable a with the text hello using single quotes.",
+    "starter": "a = ",
+    "answer": "a = 'hello'",
+    "hint": "Single quotes also work for strings.",
+    "level": 1
+  },
+  {
+    "title": "Use double quotes",
+    "prompt": "Create a string variable b with the text world using double quotes.",
+    "starter": "b = ",
+    "answer": "b = \"world\"",
+    "hint": "Double quotes also work for strings.",
+    "level": 1
+  },
+  {
+    "title": "Print single and double quote strings",
+    "prompt": "Create a = 'hello' and b = \"world\", then print both.",
+    "starter": "a = 'hello'\nb = \"world\"\n",
+    "answer": "a = 'hello'\nb = \"world\"\nprint(a)\nprint(b)",
+    "hint": "Use one print line for each variable.",
+    "level": 1
+  },
+  {
+    "title": "Create a multi-line string",
+    "prompt": "Create a variable called text that stores three lines: This is line 1. This is line 2. This is line 3.",
+    "starter": "text = ",
+    "answer": "text = \"\"\"This is line 1.\nThis is line 2.\nThis is line 3.\"\"\"",
+    "hint": "Use triple quotes for a multi-line string.",
+    "level": 2
+  },
+  {
+    "title": "Print a multi-line string",
+    "prompt": "Create a multi-line string called text with three lines and print it.",
+    "starter": "text = \"\"\"This is line 1.\nThis is line 2.\nThis is line 3.\"\"\"\n",
+    "answer": "text = \"\"\"This is line 1.\nThis is line 2.\nThis is line 3.\"\"\"\nprint(text)",
+    "hint": "After creating the triple-quoted string, use print(text).",
+    "level": 2
+  },
+  {
+    "title": "Access first character",
+    "prompt": "Given word = \"python\", print the first character.",
+    "starter": "word = \"python\"\n",
+    "answer": "word = \"python\"\nprint(word[0])",
+    "hint": "The first character is at index 0.",
+    "level": 1
+  },
+  {
+    "title": "Access second character",
+    "prompt": "Given word = \"python\", print the second character.",
+    "starter": "word = \"python\"\n",
+    "answer": "word = \"python\"\nprint(word[1])",
+    "hint": "The second character is at index 1.",
+    "level": 1
+  },
+  {
+    "title": "Access last character",
+    "prompt": "Given word = \"python\", print the last character using a negative index.",
+    "starter": "word = \"python\"\n",
+    "answer": "word = \"python\"\nprint(word[-1])",
+    "hint": "Use -1 for the last character.",
+    "level": 1
+  },
+  {
+    "title": "Loop through a string",
+    "prompt": "Given word = \"cat\", use a loop to print each character on its own line.",
+    "starter": "word = \"cat\"\n",
+    "answer": "word = \"cat\"\nfor ch in word:\n    print(ch)",
+    "hint": "Use for ch in word.",
+    "level": 2
+  },
+  {
+    "title": "Find string length",
+    "prompt": "Given text = \"banana\", print its length.",
+    "starter": "text = \"banana\"\n",
+    "answer": "text = \"banana\"\nprint(len(text))",
+    "hint": "Use len() to count characters.",
+    "level": 1
+  },
+  {
+    "title": "Slice first part",
+    "prompt": "Given word = \"python\", print the slice from index 0 to 2.",
+    "starter": "word = \"python\"\n",
+    "answer": "word = \"python\"\nprint(word[0:2])",
+    "hint": "This slice should give the first two letters.",
+    "level": 2
+  },
+  {
+    "title": "Slice middle part",
+    "prompt": "Given word = \"python\", print the slice from index 2 to 5.",
+    "starter": "word = \"python\"\n",
+    "answer": "word = \"python\"\nprint(word[2:5])",
+    "hint": "Start at index 2 and stop before index 5.",
+    "level": 2
+  },
+  {
+    "title": "Slice from the start",
+    "prompt": "Given word = \"python\", print the first four characters using slicing.",
+    "starter": "word = \"python\"\n",
+    "answer": "word = \"python\"\nprint(word[:4])",
+    "hint": "Leave the start empty.",
+    "level": 2
+  },
+  {
+    "title": "Slice to the end",
+    "prompt": "Given word = \"python\", print all characters from index 3 to the end.",
+    "starter": "word = \"python\"\n",
+    "answer": "word = \"python\"\nprint(word[3:])",
+    "hint": "Leave the end empty.",
+    "level": 2
+  },
+  {
+    "title": "Combine strings",
+    "prompt": "Create first = \"Hello\" and second = \"World\", combine them with a space between, store the result in result, and print it.",
+    "starter": "first = \"Hello\"\nsecond = \"World\"\n",
+    "answer": "first = \"Hello\"\nsecond = \"World\"\nresult = first + \" \" + second\nprint(result)",
+    "hint": "Use + and add a space string between them.",
+    "level": 2
+  },
+  {
+    "title": "Repeat a string",
+    "prompt": "Print the string \"ha\" repeated 3 times.",
+    "starter": "",
+    "answer": "print(\"ha\" * 3)",
+    "hint": "Use * with the number 3.",
+    "level": 1
+  },
+  {
+    "title": "Check text in string true",
+    "prompt": "Given text = \"I like Python\", print whether \"Python\" is inside the string.",
+    "starter": "text = \"I like Python\"\n",
+    "answer": "text = \"I like Python\"\nprint(\"Python\" in text)",
+    "hint": "Use the in operator.",
+    "level": 2
+  },
+  {
+    "title": "Check text in string false",
+    "prompt": "Given text = \"I like Python\", print whether \"Java\" is inside the string.",
+    "starter": "text = \"I like Python\"\n",
+    "answer": "text = \"I like Python\"\nprint(\"Java\" in text)",
+    "hint": "Use the in operator with Java.",
+    "level": 2
+  },
+  {
+    "title": "Uppercase a string",
+    "prompt": "Given text = \"  hello world  \", print the uppercase version.",
+    "starter": "text = \"  hello world  \"\n",
+    "answer": "text = \"  hello world  \"\nprint(text.upper())",
+    "hint": "Use the upper() method.",
+    "level": 2
+  },
+  {
+    "title": "Lowercase a string",
+    "prompt": "Given text = \"  hello world  \", print the lowercase version.",
+    "starter": "text = \"  hello world  \"\n",
+    "answer": "text = \"  hello world  \"\nprint(text.lower())",
+    "hint": "Use the lower() method.",
+    "level": 2
+  },
+  {
+    "title": "Strip spaces",
+    "prompt": "Given text = \"  hello world  \", remove the spaces at the beginning and end, then print the result.",
+    "starter": "text = \"  hello world  \"\n",
+    "answer": "text = \"  hello world  \"\nprint(text.strip())",
+    "hint": "Use strip() to remove outside spaces.",
+    "level": 2
+  },
+  {
+    "title": "Title case a string",
+    "prompt": "Given text = \"  hello world  \", print it in title case.",
+    "starter": "text = \"  hello world  \"\n",
+    "answer": "text = \"  hello world  \"\nprint(text.title())",
+    "hint": "Use title() to capitalize each word.",
+    "level": 2
+  },
+  {
+    "title": "Capitalize a string",
+    "prompt": "Given text = \"  hello world  \", print it with only the first letter uppercase.",
+    "starter": "text = \"  hello world  \"\n",
+    "answer": "text = \"  hello world  \"\nprint(text.capitalize())",
+    "hint": "Use capitalize().",
+    "level": 2
+  },
+  {
+    "title": "Replace text",
+    "prompt": "Given text = \"I like cats\", replace cats with dogs, store the result in new_text, and print it.",
+    "starter": "text = \"I like cats\"\n",
+    "answer": "text = \"I like cats\"\nnew_text = text.replace(\"cats\", \"dogs\")\nprint(new_text)",
+    "hint": "Use replace(old, new).",
+    "level": 2
+  },
+  {
+    "title": "Split a string",
+    "prompt": "Given text = \"red,green,blue\", split it by commas into a list called colors and print the list.",
+    "starter": "text = \"red,green,blue\"\n",
+    "answer": "text = \"red,green,blue\"\ncolors = text.split(\",\")\nprint(colors)",
+    "hint": "Use split with a comma string.",
+    "level": 2
+  },
+  {
+    "title": "Join words into a sentence",
+    "prompt": "Given words = [\"I\", \"love\", \"Python\"], join them with spaces into a variable called sentence and print it.",
+    "starter": "words = [\"I\", \"love\", \"Python\"]\n",
+    "answer": "words = [\"I\", \"love\", \"Python\"]\nsentence = \" \".join(words)\nprint(sentence)",
+    "hint": "The separator goes before .join().",
+    "level": 3
+  },
+  {
+    "title": "Format with f-string",
+    "prompt": "Given name = \"Amy\" and age = 12, print: My name is Amy and I am 12 years old. Use an f-string.",
+    "starter": "name = \"Amy\"\nage = 12\n",
+    "answer": "name = \"Amy\"\nage = 12\nprint(f\"My name is {name} and I am {age} years old.\")",
+    "hint": "Use f before the string and curly braces for variables.",
+    "level": 3
+  },
+  {
+    "title": "Format with format method",
+    "prompt": "Given name = \"Amy\" and age = 12, print: My name is Amy and I am 12 years old. Use format().",
+    "starter": "name = \"Amy\"\nage = 12\n",
+    "answer": "name = \"Amy\"\nage = 12\nprint(\"My name is {} and I am {} years old.\".format(name, age))",
+    "hint": "Use {} placeholders and then .format(name, age).",
+    "level": 3
+  },
+  {
+    "title": "Print escaped quotes",
+    "prompt": "Print the text: He said, \"Hello!\"",
+    "starter": "",
+    "answer": "print(\"He said, \\\"Hello!\\\"\")",
+    "hint": "Use \\\" to include quote marks inside the string.",
+    "level": 3
+  },
+  {
+    "title": "Print with newline",
+    "prompt": "Print Line1 and Line2 on separate lines using one string.",
+    "starter": "",
+    "answer": "print(\"Line1\\nLine2\")",
+    "hint": "Use \\n for a new line.",
+    "level": 2
+  },
+  {
+    "title": "Print with tab",
+    "prompt": "Print A and B with a tab space between them.",
+    "starter": "",
+    "answer": "print(\"A\\tB\")",
+    "hint": "Use \\t for a tab.",
+    "level": 2
+  },
+  {
+    "title": "Create your name string",
+    "prompt": "Create a string called my_name with your name in it.",
+    "starter": "my_name = ",
+    "answer": "my_name = \"Peter\"",
+    "hint": "Use any name as a string.",
+    "level": 1
+  },
+  {
+    "title": "Print first and last character",
+    "prompt": "Given name = \"python\", print the first and last character.",
+    "starter": "name = \"python\"\n",
+    "answer": "name = \"python\"\nprint(name[0])\nprint(name[-1])",
+    "hint": "Use index 0 and -1.",
+    "level": 2
+  },
+  {
+    "title": "Print string length practice",
+    "prompt": "Given name = \"python\", print its length.",
+    "starter": "name = \"python\"\n",
+    "answer": "name = \"python\"\nprint(len(name))",
+    "hint": "Use len(name).",
+    "level": 1
+  },
+  {
+    "title": "Uppercase practice",
+    "prompt": "Given name = \"python\", print it in uppercase.",
+    "starter": "name = \"python\"\n",
+    "answer": "name = \"python\"\nprint(name.upper())",
+    "hint": "Use upper().",
+    "level": 1
+  },
+  {
+    "title": "Replace practice",
+    "prompt": "Given name = \"python\", replace \"py\" with \"my\" and print the result.",
+    "starter": "name = \"python\"\n",
+    "answer": "name = \"python\"\nprint(name.replace(\"py\", \"my\"))",
+    "hint": "Use replace(old, new).",
+    "level": 2
+  },
+  {
+    "title": "Split sentence into words",
+    "prompt": "Given text = \"I love Python\", split it into a list of words and print the list.",
+    "starter": "text = \"I love Python\"\n",
+    "answer": "text = \"I love Python\"\nprint(text.split())",
+    "hint": "split() with no argument splits by spaces.",
+    "level": 2
+  },
+  {
+    "title": "Use f-string for age and subject",
+    "prompt": "Create age = 12 and subject = \"Math\", then use an f-string to print: I am 12 years old and my favorite subject is Math.",
+    "starter": "age = 12\nsubject = \"Math\"\n",
+    "answer": "age = 12\nsubject = \"Math\"\nprint(f\"I am {age} years old and my favorite subject is {subject}.\")",
+    "hint": "Use curly braces inside an f-string.",
+    "level": 3
+  },
+  {
+    "title": "Small practice example full",
+    "prompt": "Write the full program that sets name = \"python\", prints the first character, last character, length, uppercase form, and the result of replacing \"py\" with \"my\".",
+    "starter": "name = \"python\"\n",
+    "answer": "name = \"python\"\nprint(name[0])\nprint(name[-1])\nprint(len(name))\nprint(name.upper())\nprint(name.replace(\"py\", \"my\"))",
+    "hint": "Combine all the small practice steps into one program.",
+    "level": 4
+  }
+]
