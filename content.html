@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Computer Repo Contents</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f5f1ea;
+      --panel: #fffdf8;
+      --panel-border: #d7cdbd;
+      --text: #2d241a;
+      --muted: #6b5c49;
+      --link: #8f3b1b;
+      --link-hover: #6b2d14;
+      --line: #e5dccf;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    main {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 32px 20px 48px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      font-weight: 700;
+    }
+
+    p {
+      margin: 0 0 20px;
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    .meta {
+      display: inline-block;
+      margin-bottom: 24px;
+      padding: 6px 10px;
+      border: 1px solid var(--panel-border);
+      background: var(--panel);
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .panel {
+      border: 1px solid var(--panel-border);
+      background: var(--panel);
+    }
+
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    li + li {
+      border-top: 1px solid var(--line);
+    }
+
+    a {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 16px;
+      color: var(--link);
+      text-decoration: none;
+      align-items: baseline;
+    }
+
+    a:hover,
+    a:focus-visible {
+      background: #f9f3e8;
+      color: var(--link-hover);
+      outline: none;
+    }
+
+    .name {
+      font-size: 1rem;
+    }
+
+    .kind {
+      color: var(--muted);
+      font-size: 0.88rem;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 640px) {
+      a {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Computer Repo Contents</h1>
+    <p>
+      Static index of tracked files in this GitHub repo. Each entry opens the file using a relative link from the repo root.
+    </p>
+    <div class="meta">11 links</div>
+    <section class="panel" aria-label="Tracked files">
+      <ul>
+        <li><a href=".gitignore"><span class="name">.gitignore</span><span class="kind">config</span></a></li>
+        <li><a href="content.html"><span class="name">content.html</span><span class="kind">html</span></a></li>
+        <li><a href="json.html"><span class="name">json.html</span><span class="kind">html</span></a></li>
+        <li><a href="json_python_tutorial.html"><span class="name">json_python_tutorial.html</span><span class="kind">html</span></a></li>
+        <li><a href="knight_tour_explained.html"><span class="name">knight_tour_explained.html</span><span class="kind">html</span></a></li>
+        <li><a href="list_questions.json"><span class="name">list_questions.json</span><span class="kind">json</span></a></li>
+        <li><a href="practice.html"><span class="name">practice.html</span><span class="kind">html</span></a></li>
+        <li><a href="python_list_tutorial.html"><span class="name">python_list_tutorial.html</span><span class="kind">html</span></a></li>
+        <li><a href="python_playground.html"><span class="name">python_playground.html</span><span class="kind">html</span></a></li>
+        <li><a href="python_practice_tutor.html"><span class="name">python_practice_tutor.html</span><span class="kind">html</span></a></li>
+        <li><a href="python_string_tutorial.html"><span class="name">python_string_tutorial.html</span><span class="kind">html</span></a></li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>
