@@ -442,6 +442,22 @@
         <div class="panel-section">
           <h3>Question Bank</h3>
           <div class="checkpoint-box">
+            <label class="field-label" for="repoBankSelect">Load from repo</label>
+            <div class="field-row">
+              <select id="repoBankSelect" class="question-select" aria-label="Choose repo question bank"></select>
+              <button class="secondary compact" id="repoBankBtn" type="button">Load Repo Bank</button>
+            </div>
+            <label class="field-label" for="bankUrlInput" style="margin-top: 10px;">Load from URL</label>
+            <div class="field-row">
+              <input
+                id="bankUrlInput"
+                class="api-input"
+                type="url"
+                spellcheck="false"
+                placeholder="https://example.com/question-bank.json"
+              />
+              <button class="secondary compact" id="bankUrlBtn" type="button">Load URL</button>
+            </div>
             <label class="field-label" for="importFile">Import JSON</label>
             <div class="field-row">
               <input id="importFile" class="api-input" type="file" accept=".json,application/json" />
@@ -491,6 +507,7 @@
     const AI_CHECKPOINT_STORAGE_KEY = "pythonListTutorAiUrl";
     const SESSION_STORAGE_KEY = "pythonListTutorSession";
     const QUESTION_BANK_STORAGE_KEY = "pythonListTutorQuestionBank";
+    const REPO_BANK_MANIFEST_PATH = "./question-banks/index.json";
 
     const BUILTIN_QUESTIONS = [
       {
@@ -665,6 +682,10 @@
       output: document.getElementById('output'),
       aiApiUrl: document.getElementById('aiApiUrl'),
       testApiBtn: document.getElementById('testApiBtn'),
+      repoBankSelect: document.getElementById('repoBankSelect'),
+      repoBankBtn: document.getElementById('repoBankBtn'),
+      bankUrlInput: document.getElementById('bankUrlInput'),
+      bankUrlBtn: document.getElementById('bankUrlBtn'),
       importFile: document.getElementById('importFile'),
       importBtn: document.getElementById('importBtn'),
       builtinBtn: document.getElementById('builtinBtn'),
@@ -775,6 +796,61 @@
         return parseImportedQuestionBankText(raw);
       } catch {
         return null;
+      }
+    }
+
+    function parseQuestionBankManifest(data) {
+      const banks = Array.isArray(data) ? data : data?.banks;
+      if (!Array.isArray(banks)) {
+        throw new Error('Question bank manifest must contain a banks array.');
+      }
+      return banks
+        .map((bank, index) => ({
+          id: String(bank.id || bank.path || `bank-${index + 1}`),
+          label: String(bank.label || bank.name || '').trim(),
+          path: String(bank.path || bank.url || '').trim()
+        }))
+        .filter(bank => bank.label && bank.path);
+    }
+
+    function populateRepoBankSelect(banks) {
+      if (!banks.length) {
+        el.repoBankSelect.innerHTML = '<option value="">No repo banks found</option>';
+        el.repoBankBtn.disabled = true;
+        return;
+      }
+      el.repoBankSelect.innerHTML = banks
+        .map(bank => `<option value="${escapeHtml(bank.path)}">${escapeHtml(bank.label)}</option>`)
+        .join('');
+      el.repoBankBtn.disabled = false;
+    }
+
+    async function loadQuestionBankFromUrl(url) {
+      const trimmedUrl = String(url || '').trim();
+      if (!trimmedUrl) {
+        throw new Error('Provide a JSON URL first.');
+      }
+      const response = await fetch(trimmedUrl);
+      if (!response.ok) {
+        throw new Error(`Failed to load ${trimmedUrl} (${response.status}).`);
+      }
+      const text = await response.text();
+      const importedQuestions = parseImportedQuestionBankText(text);
+      replaceQuestionBank(importedQuestions);
+      return importedQuestions;
+    }
+
+    async function loadRepoBankManifest() {
+      try {
+        const response = await fetch(REPO_BANK_MANIFEST_PATH);
+        if (!response.ok) {
+          populateRepoBankSelect([]);
+          return;
+        }
+        const data = await response.json();
+        populateRepoBankSelect(parseQuestionBankManifest(data));
+      } catch {
+        populateRepoBankSelect([]);
       }
     }
 
@@ -1404,6 +1480,24 @@ json.dumps(_result)
       }
     }
 
+    async function handleLoadRepoBank() {
+      try {
+        const importedQuestions = await loadQuestionBankFromUrl(el.repoBankSelect.value);
+        setStatus(`Loaded ${importedQuestions.length} question${importedQuestions.length === 1 ? '' : 's'} from repo.`, 'good');
+      } catch (err) {
+        setStatus(`Repo bank load failed: ${String(err.message || err)}`, 'bad');
+      }
+    }
+
+    async function handleLoadBankUrl() {
+      try {
+        const importedQuestions = await loadQuestionBankFromUrl(el.bankUrlInput.value);
+        setStatus(`Loaded ${importedQuestions.length} question${importedQuestions.length === 1 ? '' : 's'} from URL.`, 'good');
+      } catch (err) {
+        setStatus(`URL load failed: ${String(err.message || err)}`, 'bad');
+      }
+    }
+
     function handleUseBuiltInSet() {
       restoreBuiltInQuestionBank();
       setStatus('Restored the built-in question set.', 'warn');
@@ -1430,6 +1524,7 @@ json.dumps(_result)
       });
       el.testApiBtn.addEventListener('click', testApi);
       populateQuestionPicker();
+      loadRepoBankManifest();
       setApiStatus('Ready.', '');
     })();
 
@@ -1440,6 +1535,8 @@ json.dumps(_result)
     el.nextBtn.addEventListener('click', handleNext);
     el.resetBtn.addEventListener('click', handleReset);
     el.restartBtn.addEventListener('click', handleRestartProgress);
+    el.repoBankBtn.addEventListener('click', handleLoadRepoBank);
+    el.bankUrlBtn.addEventListener('click', handleLoadBankUrl);
     el.importBtn.addEventListener('click', handleImportQuestions);
     el.builtinBtn.addEventListener('click', handleUseBuiltInSet);
     el.jumpBtn.addEventListener('click', handleJumpToQuestion);
