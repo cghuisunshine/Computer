@@ -1,0 +1,1455 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Python List Practice Tutor</title>
+  <style>
+    :root {
+      --bg: #f3f4f6;
+      --panel: #ffffff;
+      --panel-alt: #f9fafb;
+      --text: #111827;
+      --muted: #4b5563;
+      --border: #d1d5db;
+      --border-strong: #9ca3af;
+      --primary: #1d4ed8;
+      --primary-soft: #dbeafe;
+      --good: #166534;
+      --good-soft: #dcfce7;
+      --warn: #b45309;
+      --warn-soft: #ffedd5;
+      --bad: #b91c1c;
+      --bad-soft: #fee2e2;
+      --code: #111827;
+      --code-line: #1f2937;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .wrap {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 24px 24px 36px;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    .hero {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px 28px;
+      margin-bottom: 18px;
+    }
+
+    .hero-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 8px;
+    }
+
+    .hero h1 {
+      font-size: 32px;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+    }
+
+    .hero p,
+    .hero-copy p {
+      color: var(--muted);
+      max-width: 850px;
+      margin-bottom: 0;
+    }
+
+    .runtime-note {
+      min-width: 220px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+      background: var(--panel-alt);
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.28fr) minmax(320px, 0.88fr);
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .pill {
+      border-radius: 999px;
+      background: var(--panel-alt);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+
+    .question-box {
+      background: var(--panel-alt);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+
+    .question-box h2 {
+      font-size: 24px;
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+
+    .starter {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 14px;
+      white-space: pre-wrap;
+      color: #111827;
+      margin-top: 10px;
+    }
+
+    label {
+      display: inline-block;
+      margin-bottom: 8px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 340px;
+      resize: vertical;
+      border-radius: 10px;
+      border: 1px solid var(--code-line);
+      padding: 16px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 15px;
+      background: var(--code);
+      color: #f3f4f6;
+      outline: none;
+    }
+
+    textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.14);
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    button {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    .primary { background: var(--primary); border-color: var(--primary); color: white; }
+    .secondary { background: #fff; color: var(--text); }
+    .success { background: var(--good-soft); color: var(--good); border-color: #bbf7d0; }
+    .warning { background: var(--warn-soft); color: var(--warn); border-color: #fdba74; }
+    .compact { padding: 9px 12px; font-size: 13px; }
+
+    .status {
+      margin-top: 16px;
+      padding: 12px 14px;
+      border-radius: 8px;
+      font-weight: 700;
+      display: none;
+    }
+
+    .status.good { display: block; background: var(--good-soft); color: var(--good); border: 1px solid #bbf7d0; }
+    .status.bad { display: block; background: var(--bad-soft); color: var(--bad); border: 1px solid #fecaca; }
+    .status.warn { display: block; background: var(--warn-soft); color: var(--warn); border: 1px solid #fed7aa; }
+
+    .panel-section {
+      margin-bottom: 18px;
+    }
+
+    .panel-section h3 {
+      font-size: 15px;
+      letter-spacing: 0.01em;
+      margin-bottom: 10px;
+    }
+
+    pre.output {
+      background: var(--code);
+      color: #e5e7eb;
+      border-radius: 8px;
+      padding: 14px;
+      min-height: 84px;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      margin: 0;
+      border: 1px solid var(--code-line);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 14px;
+    }
+
+    .feedback-box, .answer-box, .progress-box, .checkpoint-box {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      background: var(--panel-alt);
+    }
+
+    .muted { color: var(--muted); }
+
+    .list {
+      padding-left: 18px;
+      margin: 8px 0 0;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 12px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--primary);
+      transition: width 0.25s ease;
+    }
+
+    .small {
+      font-size: 13px;
+    }
+
+    .loading {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 14px;
+      margin-top: 0;
+    }
+
+    .field-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .field-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .jump-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .api-input {
+      flex: 1;
+      min-width: 0;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 14px;
+      color: var(--text);
+      background: #fff;
+    }
+
+    .question-select {
+      flex: 1;
+      min-width: 0;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 14px;
+      color: var(--text);
+      background: #fff;
+    }
+
+    .api-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.12);
+    }
+
+    .api-status {
+      min-height: 20px;
+      margin-top: 10px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .api-status.ok { color: var(--good); }
+    .api-status.bad { color: var(--bad); }
+    .api-status.warn { color: var(--warn); }
+
+    .feedback-box p:last-child,
+    .answer-box p:last-child,
+    .checkpoint-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .feedback-heading {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: baseline;
+      margin-bottom: 8px;
+    }
+
+    .feedback-source {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .section-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 14px 0;
+    }
+
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: 1fr; }
+      textarea { min-height: 260px; }
+      .hero-head { flex-direction: column; }
+      .runtime-note { min-width: 0; width: 100%; }
+      .field-row { flex-direction: column; align-items: stretch; }
+      .jump-row { flex-direction: column; align-items: stretch; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <div class="hero-head">
+        <div class="hero-copy">
+          <h1>Python List Practice Tutor</h1>
+          <p>
+            Students work through one list question at a time, run real Python in the browser to inspect
+            output, and use AI grading for correctness plus short coaching feedback.
+          </p>
+        </div>
+        <div class="runtime-note">
+          <strong>Browser runtime</strong>
+          <div class="loading" id="pyStatus">Loading Python runtime…</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="grid">
+      <section class="card">
+        <div class="meta">
+          <span class="pill" id="levelBadge">Level 1</span>
+          <span class="pill" id="questionBadge">Question 1</span>
+          <span class="pill" id="streakBadge">Streak 0</span>
+        </div>
+
+        <div class="question-box">
+          <h2 id="questionTitle">Loading question…</h2>
+          <p id="questionPrompt"></p>
+          <div class="starter" id="starterCode"></div>
+        </div>
+
+        <div class="jump-row">
+          <select id="questionPicker" class="question-select" aria-label="Choose question"></select>
+          <button class="secondary compact" id="jumpBtn" type="button">Go To Question</button>
+        </div>
+
+        <label for="code"><strong>Student Python code</strong></label>
+        <textarea id="code" spellcheck="false"></textarea>
+
+        <div class="btn-row">
+          <button class="primary" id="runBtn">Run Code</button>
+          <button class="success" id="checkBtn">Check Answer</button>
+          <button class="secondary" id="hintBtn">Show Hint</button>
+          <button class="warning" id="solutionBtn">Show Model Answer</button>
+          <button class="secondary" id="nextBtn" disabled>Next Question</button>
+          <button class="secondary" id="resetBtn">Reset Current</button>
+          <button class="secondary" id="restartBtn">Start Over</button>
+        </div>
+
+        <div id="status" class="status"></div>
+      </section>
+
+      <aside class="card">
+        <div class="panel-section">
+          <h3>AI Grading</h3>
+          <div class="checkpoint-box">
+            <label class="field-label" for="aiApiUrl">Endpoint</label>
+            <div class="field-row">
+              <input
+                id="aiApiUrl"
+                class="api-input"
+                type="url"
+                spellcheck="false"
+                placeholder="https://lakesideart.gochatus.org/grade-service/general"
+              />
+              <button class="secondary compact" id="testApiBtn" type="button">Test Endpoint</button>
+            </div>
+            <p class="small muted">This service expects a JSON body with a single <code>message</code> field.</p>
+            <div class="api-status" id="apiStatus">Ready.</div>
+          </div>
+        </div>
+
+        <div class="panel-section">
+          <h3>Question Bank</h3>
+          <div class="checkpoint-box">
+            <label class="field-label" for="importFile">Import JSON</label>
+            <div class="field-row">
+              <input id="importFile" class="api-input" type="file" accept=".json,application/json" />
+              <button class="secondary compact" id="importBtn" type="button">Import File</button>
+            </div>
+            <div class="field-row" style="margin-top: 8px;">
+              <button class="secondary compact" id="builtinBtn" type="button">Use Built-in Set</button>
+            </div>
+            <p class="small muted">Supported format: a JSON array of questions, or an object with a <code>questions</code> array.</p>
+          </div>
+        </div>
+
+        <div class="panel-section">
+          <h3>Program Output</h3>
+          <pre class="output" id="output">Run your code to see output here.</pre>
+        </div>
+
+        <div class="panel-section">
+          <h3>AI Feedback</h3>
+          <div class="feedback-box" id="feedbackBox">
+            <p class="muted">After checking, this area will show the AI grading result and coaching notes.</p>
+          </div>
+        </div>
+
+        <div class="panel-section">
+          <h3>Correct Answer / Reference</h3>
+          <div class="answer-box" id="answerBox">
+            <p class="muted">The model answer will appear here when requested or when you solve the question.</p>
+          </div>
+        </div>
+
+        <div class="panel-section">
+          <h3>Progress</h3>
+          <div class="progress-box">
+            <div><strong>Mastery score:</strong> <span id="scoreText">0</span></div>
+            <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+            <p class="small muted" id="progressNote">Answer correctly to unlock harder questions.</p>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.27.2/full/pyodide.js"></script>
+  <script>
+    const DEFAULT_AI_CHECKPOINT_URL = "https://lakesideart.gochatus.org/grade-service/general";
+    const AI_CHECKPOINT_STORAGE_KEY = "pythonListTutorAiUrl";
+    const SESSION_STORAGE_KEY = "pythonListTutorSession";
+    const QUESTION_BANK_STORAGE_KEY = "pythonListTutorQuestionBank";
+
+    const BUILTIN_QUESTIONS = [
+      {
+        id: 1,
+        level: 1,
+        title: "Create and print a list",
+        prompt: "Create a list called nums with the values 3, 5, and 7. Then print the whole list.",
+        starter: "# Create a list named nums\n# Then print it\n",
+        answer: "nums = [3, 5, 7]\nprint(nums)",
+        hint: "Use square brackets to build a list, like [1, 2, 3].",
+        checks: [
+          { type: "stdout", expected: "[3, 5, 7]" },
+          { type: "var_equals", name: "nums", expected: [3, 5, 7] }
+        ],
+        commonMistakes: [
+          { pattern: /nums\s*=\s*\(.*\)/s, message: "You used parentheses, which make a tuple, not a list." },
+          { pattern: /print\s*\(\s*3\s*,\s*5\s*,\s*7\s*\)/s, message: "Print the list variable itself, not three separate arguments." }
+        ]
+      },
+      {
+        id: 2,
+        level: 1,
+        title: "Access a list item",
+        prompt: "Create a list fruits = ['apple', 'banana', 'orange']. Print only the second item.",
+        starter: "fruits = ['apple', 'banana', 'orange']\n# Print only banana\n",
+        answer: "fruits = ['apple', 'banana', 'orange']\nprint(fruits[1])",
+        hint: "Python list indexes start at 0, so the second item uses index 1.",
+        checks: [
+          { type: "stdout", expected: "banana" },
+          { type: "var_equals", name: "fruits", expected: ['apple', 'banana', 'orange'] }
+        ],
+        commonMistakes: [
+          { pattern: /fruits\[2\]/, message: "Index 2 is the third item, not the second." },
+          { pattern: /print\s*\(\s*fruits\s*\)/, message: "That prints the whole list. The question asks for one item." }
+        ]
+      },
+      {
+        id: 3,
+        level: 2,
+        title: "Change one item",
+        prompt: "Create colors = ['red', 'blue', 'green']. Change 'blue' to 'yellow'. Then print the updated list.",
+        starter: "colors = ['red', 'blue', 'green']\n# Change blue to yellow\n",
+        answer: "colors = ['red', 'blue', 'green']\ncolors[1] = 'yellow'\nprint(colors)",
+        hint: "Assign a new value to the correct index.",
+        checks: [
+          { type: "stdout", expected: "['red', 'yellow', 'green']" },
+          { type: "var_equals", name: "colors", expected: ['red', 'yellow', 'green'] }
+        ],
+        commonMistakes: [
+          { pattern: /colors\s*=\s*\['red',\s*'blue',\s*'green'\]/, message: "You created the list, but it looks like you did not change the second item." },
+          { pattern: /colors\[2\]\s*=\s*'yellow'/, message: "Index 2 changes the third item. 'blue' is at index 1." }
+        ]
+      },
+      {
+        id: 4,
+        level: 2,
+        title: "Append to a list",
+        prompt: "Create a list called pets with 'cat' and 'dog'. Add 'hamster' to the end. Print the final list.",
+        starter: "# Create pets\n# Add hamster\n",
+        answer: "pets = ['cat', 'dog']\npets.append('hamster')\nprint(pets)",
+        hint: "Use list.append(value) to add one item to the end.",
+        checks: [
+          { type: "stdout", expected: "['cat', 'dog', 'hamster']" },
+          { type: "var_equals", name: "pets", expected: ['cat', 'dog', 'hamster'] }
+        ],
+        commonMistakes: [
+          { pattern: /append\s*\[\s*'hamster'\s*\]/, message: "append uses parentheses, not square brackets." },
+          { pattern: /pets\s*\+\s*\['hamster'\]/, message: "This creates a new list expression, but you still need to store or print the result." }
+        ]
+      },
+      {
+        id: 5,
+        level: 3,
+        title: "Use len()",
+        prompt: "Create scores = [88, 91, 76, 95]. Print how many items are in the list.",
+        starter: "scores = [88, 91, 76, 95]\n# Print the number of items\n",
+        answer: "scores = [88, 91, 76, 95]\nprint(len(scores))",
+        hint: "len(list_name) gives the number of items in a list.",
+        checks: [
+          { type: "stdout", expected: "4" },
+          { type: "var_equals", name: "scores", expected: [88, 91, 76, 95] }
+        ],
+        commonMistakes: [
+          { pattern: /print\s*\(\s*scores\s*\)/, message: "That prints the list, not its length." },
+          { pattern: /scores\.length/, message: "Python uses len(scores), not scores.length." }
+        ]
+      },
+      {
+        id: 6,
+        level: 3,
+        title: "Loop through a list",
+        prompt: "Create nums = [2, 4, 6]. Use a for loop to print each number on its own line.",
+        starter: "nums = [2, 4, 6]\n# Use a for loop\n",
+        answer: "nums = [2, 4, 6]\nfor n in nums:\n    print(n)",
+        hint: "Use: for item in list_name:",
+        checks: [
+          { type: "stdout", expected: "2\n4\n6" },
+          { type: "var_equals", name: "nums", expected: [2, 4, 6] }
+        ],
+        commonMistakes: [
+          { pattern: /for\s+n\s+in\s+range\(nums\)/, message: "range(nums) is invalid because nums is a list, not a number." },
+          { pattern: /print\s*\(\s*nums\s*\)/, message: "That prints the whole list at once, not each item one by one." }
+        ]
+      },
+      {
+        id: 7,
+        level: 4,
+        title: "Sum a list",
+        prompt: "Create values = [4, 6, 10]. Print the total of all numbers in the list.",
+        starter: "values = [4, 6, 10]\n# Print the total\n",
+        answer: "values = [4, 6, 10]\nprint(sum(values))",
+        hint: "Python has a built-in function: sum(your_list).",
+        checks: [
+          { type: "stdout", expected: "20" },
+          { type: "var_equals", name: "values", expected: [4, 6, 10] }
+        ],
+        commonMistakes: [
+          { pattern: /len\(values\)/, message: "len(values) gives the number of items, not the total sum." },
+          { pattern: /print\s*\(\s*values\s*\)/, message: "You need the total, not the list itself." }
+        ]
+      },
+      {
+        id: 8,
+        level: 5,
+        title: "Build a new list with a condition",
+        prompt: "Create nums = [1, 2, 3, 4, 5, 6]. Make a new list called evens that contains only the even numbers. Print evens.",
+        starter: "nums = [1, 2, 3, 4, 5, 6]\n# Build evens\n",
+        answer: "nums = [1, 2, 3, 4, 5, 6]\nevens = []\nfor n in nums:\n    if n % 2 == 0:\n        evens.append(n)\nprint(evens)",
+        hint: "Check whether n % 2 == 0, and append matching numbers into a new list.",
+        checks: [
+          { type: "stdout", expected: "[2, 4, 6]" },
+          { type: "var_equals", name: "evens", expected: [2, 4, 6] }
+        ],
+        commonMistakes: [
+          { pattern: /if\s+n\s*%\s*2\s*==\s*1/, message: "That keeps odd numbers, not even numbers." },
+          { pattern: /evens\s*=\s*nums/, message: "That copies all items. You need only the even ones." }
+        ]
+      }
+    ];
+
+    let questions = BUILTIN_QUESTIONS.map(question => ({ ...question }));
+
+    let pyodide;
+    let currentQuestion = null;
+    let usedQuestionIds = [];
+    let solvedQuestionIds = [];
+    let mastery = 0;
+    let streak = 0;
+    let questionCount = 0;
+    let recentResults = [];
+    let unlockedNext = false;
+
+    const el = {
+      pyStatus: document.getElementById('pyStatus'),
+      levelBadge: document.getElementById('levelBadge'),
+      questionBadge: document.getElementById('questionBadge'),
+      streakBadge: document.getElementById('streakBadge'),
+      questionTitle: document.getElementById('questionTitle'),
+      questionPrompt: document.getElementById('questionPrompt'),
+      starterCode: document.getElementById('starterCode'),
+      questionPicker: document.getElementById('questionPicker'),
+      jumpBtn: document.getElementById('jumpBtn'),
+      code: document.getElementById('code'),
+      runBtn: document.getElementById('runBtn'),
+      checkBtn: document.getElementById('checkBtn'),
+      hintBtn: document.getElementById('hintBtn'),
+      solutionBtn: document.getElementById('solutionBtn'),
+      nextBtn: document.getElementById('nextBtn'),
+      resetBtn: document.getElementById('resetBtn'),
+      restartBtn: document.getElementById('restartBtn'),
+      status: document.getElementById('status'),
+      output: document.getElementById('output'),
+      aiApiUrl: document.getElementById('aiApiUrl'),
+      testApiBtn: document.getElementById('testApiBtn'),
+      importFile: document.getElementById('importFile'),
+      importBtn: document.getElementById('importBtn'),
+      builtinBtn: document.getElementById('builtinBtn'),
+      apiStatus: document.getElementById('apiStatus'),
+      feedbackBox: document.getElementById('feedbackBox'),
+      answerBox: document.getElementById('answerBox'),
+      scoreText: document.getElementById('scoreText'),
+      progressFill: document.getElementById('progressFill'),
+      progressNote: document.getElementById('progressNote')
+    };
+
+    function escapeHtml(text) {
+      return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    }
+
+    function setApiStatus(message, type) {
+      el.apiStatus.className = 'api-status' + (type ? ` ${type}` : '');
+      el.apiStatus.textContent = message || '';
+    }
+
+    function getAiApiUrl() {
+      const value = (el.aiApiUrl.value || '').trim();
+      return value || null;
+    }
+
+    function saveAiApiUrl() {
+      try {
+        localStorage.setItem(AI_CHECKPOINT_STORAGE_KEY, (el.aiApiUrl.value || '').trim());
+      } catch {
+        // ignore persistence errors
+      }
+    }
+
+    function getQuestionById(id) {
+      return questions.find(question => question.id === id) || null;
+    }
+
+    function buildSessionSnapshot() {
+      return {
+        version: 1,
+        currentQuestionId: currentQuestion ? currentQuestion.id : null,
+        usedQuestionIds: usedQuestionIds.slice(),
+        solvedQuestionIds: solvedQuestionIds.slice(),
+        mastery,
+        streak,
+        questionCount,
+        recentResults: recentResults.slice(),
+        unlockedNext,
+        completed: !currentQuestion && solvedQuestionIds.length === questions.length,
+        draftCode: currentQuestion ? (el.code.value || '') : ''
+      };
+    }
+
+    function persistSessionState() {
+      try {
+        localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(buildSessionSnapshot()));
+      } catch {
+        // ignore persistence errors
+      }
+    }
+
+    function clearPersistedSession() {
+      try {
+        localStorage.removeItem(SESSION_STORAGE_KEY);
+      } catch {
+        // ignore persistence errors
+      }
+    }
+
+    function loadSessionSnapshot() {
+      try {
+        const raw = localStorage.getItem(SESSION_STORAGE_KEY);
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        return parsed && typeof parsed === 'object' ? parsed : null;
+      } catch {
+        return null;
+      }
+    }
+
+    function cloneQuestionBank(sourceQuestions) {
+      return sourceQuestions.map(question => ({
+        ...question,
+        checks: Array.isArray(question.checks)
+          ? question.checks.map(check => ({ ...check }))
+          : [],
+        commonMistakes: Array.isArray(question.commonMistakes)
+          ? question.commonMistakes.map(item => ({ ...item }))
+          : []
+      }));
+    }
+
+    function persistQuestionBank() {
+      try {
+        localStorage.setItem(QUESTION_BANK_STORAGE_KEY, JSON.stringify(questions));
+      } catch {
+        // ignore persistence errors
+      }
+    }
+
+    function loadStoredQuestionBank() {
+      try {
+        const raw = localStorage.getItem(QUESTION_BANK_STORAGE_KEY);
+        if (!raw) return null;
+        return parseImportedQuestionBankText(raw);
+      } catch {
+        return null;
+      }
+    }
+
+    function parseImportedQuestionBankText(text) {
+      const parsed = JSON.parse(text);
+      const sourceQuestions = Array.isArray(parsed) ? parsed : parsed?.questions;
+
+      if (!Array.isArray(sourceQuestions) || sourceQuestions.length === 0) {
+        throw new Error('Imported JSON must contain a non-empty questions array.');
+      }
+
+      return sourceQuestions.map((question, index) => {
+        const title = String(question.title || '').trim();
+        const prompt = String(question.prompt ?? question.question ?? '').trim();
+        const answer = String(question.answer ?? question.reference_answer ?? '').trim();
+
+        if (!title || !prompt || !answer) {
+          throw new Error(`Question ${index + 1} must include title, prompt, and answer.`);
+        }
+
+        return {
+          id: index + 1,
+          level: Number.isFinite(question.level) ? question.level : 1,
+          title,
+          prompt,
+          starter: String(question.starter || '').trim(),
+          answer,
+          hint: String(question.hint || 'Use the prompt and the reference answer to guide your solution.').trim(),
+          checks: [],
+          commonMistakes: []
+        };
+      });
+    }
+
+    function replaceQuestionBank(nextQuestions) {
+      questions = cloneQuestionBank(nextQuestions);
+      persistQuestionBank();
+      clearPersistedSession();
+      populateQuestionPicker();
+      startSession();
+    }
+
+    function restoreBuiltInQuestionBank() {
+      questions = cloneQuestionBank(BUILTIN_QUESTIONS);
+      try {
+        localStorage.removeItem(QUESTION_BANK_STORAGE_KEY);
+      } catch {
+        // ignore persistence errors
+      }
+      clearPersistedSession();
+      populateQuestionPicker();
+      startSession();
+    }
+
+    function populateQuestionPicker() {
+      el.questionPicker.innerHTML = questions
+        .map(question => `<option value="${question.id}">Question ${question.id}: ${escapeHtml(question.title)}</option>`)
+        .join('');
+    }
+
+    function syncQuestionPicker() {
+      if (!currentQuestion) {
+        el.questionPicker.value = '';
+        return;
+      }
+      el.questionPicker.value = String(currentQuestion.id);
+    }
+
+    async function fetchJsonWithTimeout(url, options, timeoutMs) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeoutMs);
+      try {
+        const response = await fetch(url, { ...options, signal: controller.signal });
+        const text = await response.text().catch(() => '');
+        let data = null;
+        try { data = text ? JSON.parse(text) : null; } catch { data = null; }
+        return { ok: response.ok, status: response.status, data, text };
+      } catch (err) {
+        if (err && err.name === 'AbortError') {
+          return { ok: false, status: 0, data: null, text: '', aborted: true };
+        }
+        throw err;
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+
+    function extractGeneralResponse(data) {
+      if (!data) return '';
+      if (typeof data.response === 'string') return data.response.trim();
+      if (data.result && typeof data.result.response === 'string') return data.result.response.trim();
+      if (typeof data.message === 'string') return data.message.trim();
+      return '';
+    }
+
+    function deriveHealthUrl(apiUrl) {
+      try {
+        const u = new URL(apiUrl);
+        u.search = '';
+        u.hash = '';
+        const cleanPath = u.pathname.replace(/\/+$/, '');
+        if (/\/(grade|general|health)$/.test(cleanPath)) {
+          u.pathname = cleanPath.replace(/\/(grade|general|health)$/, '/health');
+        } else {
+          u.pathname = cleanPath + '/health';
+        }
+        return u.toString();
+      } catch {
+        return null;
+      }
+    }
+
+    async function testApi() {
+      const apiUrl = getAiApiUrl();
+      if (!apiUrl) {
+        setApiStatus('Set an endpoint first.', 'bad');
+        return;
+      }
+
+      const healthUrl = deriveHealthUrl(apiUrl);
+      if (!healthUrl) {
+        setApiStatus('Endpoint URL is invalid.', 'bad');
+        return;
+      }
+
+      setApiStatus('Testing endpoint…', 'warn');
+      try {
+        const { ok, status, data, aborted } = await fetchJsonWithTimeout(healthUrl, { method: 'GET' }, 5000);
+        if (aborted) {
+          setApiStatus('Health check timed out.', 'bad');
+          return;
+        }
+        if (!ok) {
+          setApiStatus(`Health check failed (${status}).`, 'bad');
+          return;
+        }
+
+        const healthy = !!(data && (data.ok === true || data.status === 'ok'));
+        setApiStatus(healthy ? 'Endpoint reachable.' : 'Endpoint reachable with a nonstandard health response.', healthy ? 'ok' : 'warn');
+      } catch {
+        setApiStatus('Unable to reach endpoint.', 'bad');
+      }
+    }
+
+    function buildAiCheckpointPrompt({ question, studentCode, result }) {
+      const output = result.stdout ? result.stdout : '(blank)';
+      const errorText = result.error ? result.error : 'None';
+
+      return [
+        'You are grading one beginner Python answer.',
+        'Decide whether the student answer is correct for the task.',
+        'Return plain text only, using exactly this format:',
+        'Verdict: correct OR Verdict: wrong',
+        'Why: one or two short sentences',
+        'Next Step: one short sentence',
+        'Keep the whole response under 120 words.',
+        '',
+        `Question title: ${question.title}`,
+        `Task: ${question.prompt}`,
+        `Reference solution:\n${question.answer}`,
+        `Student code:\n${studentCode || '(blank)'}`,
+        `Program output:\n${output}`,
+        `Runtime error: ${errorText}`,
+        `Hint available to student: ${question.hint}`,
+        'Judge correctness from the task, the student code, the output, and any runtime error.',
+        'Do not mention hidden rubrics or checker internals.'
+      ].join('\n');
+    }
+
+    function parseAiCheckpointResult(text) {
+      const raw = String(text || '').trim();
+      const verdictMatch = raw.match(/^\s*Verdict:\s*(correct|wrong)\b/im);
+      const whyMatch = raw.match(/^\s*Why:\s*([\s\S]*?)(?=^\s*Next Step:|\s*$)/im);
+      const nextStepMatch = raw.match(/^\s*Next Step:\s*([\s\S]*?)\s*$/im);
+
+      if (!verdictMatch) {
+        throw new Error('AI response missing structured verdict.');
+      }
+
+      const pieces = [];
+      if (whyMatch && whyMatch[1].trim()) pieces.push(`Why: ${whyMatch[1].trim()}`);
+      if (nextStepMatch && nextStepMatch[1].trim()) pieces.push(`Next Step: ${nextStepMatch[1].trim()}`);
+
+      return {
+        verdict: verdictMatch[1].toLowerCase(),
+        feedback: pieces.join('\n\n') || raw,
+        raw
+      };
+    }
+
+    async function requestAiCheckpoint({ question, studentCode, result }) {
+      const apiUrl = getAiApiUrl();
+      if (!apiUrl) return null;
+
+      const payload = {
+        message: buildAiCheckpointPrompt({ question, studentCode, result })
+      };
+
+      const { ok, status, data, text, aborted } = await fetchJsonWithTimeout(
+        apiUrl,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        },
+        60000
+      );
+
+      if (aborted) throw new Error('AI grading timed out.');
+
+      const responseText = extractGeneralResponse(data);
+      if (!ok || !responseText) {
+        const reason = data && data.error ? data.error : `bad_response_${status}`;
+        const detail = text ? ` ${text.slice(0, 160)}` : '';
+        throw new Error(`${reason}${detail}`.trim());
+      }
+
+      return parseAiCheckpointResult(responseText);
+    }
+
+    async function loadPython() {
+      pyodide = await loadPyodide();
+      el.pyStatus.textContent = 'Python runtime ready.';
+      if (!applySessionSnapshot(loadSessionSnapshot())) {
+        startSession();
+      }
+    }
+
+    function startSession() {
+      mastery = 0;
+      streak = 0;
+      questionCount = 0;
+      recentResults = [];
+      usedQuestionIds = [];
+      solvedQuestionIds = [];
+      updateProgress();
+      chooseNextQuestion();
+    }
+
+    function renderCompletionState() {
+      currentQuestion = null;
+      el.levelBadge.textContent = 'Completed';
+      el.questionBadge.textContent = `Question ${questionCount}`;
+      el.streakBadge.textContent = `Streak ${streak}`;
+      el.questionTitle.textContent = 'All questions completed!';
+      el.questionPrompt.textContent = 'Great job. You finished every question in this practice set.';
+      el.starterCode.textContent = '';
+      el.code.value = '';
+      el.code.disabled = true;
+      el.runBtn.disabled = true;
+      el.checkBtn.disabled = true;
+      el.hintBtn.disabled = true;
+      el.solutionBtn.disabled = true;
+      el.resetBtn.disabled = true;
+      el.restartBtn.disabled = false;
+      el.questionPicker.disabled = true;
+      el.jumpBtn.disabled = true;
+      el.nextBtn.disabled = true;
+      clearPanels();
+      setStatus('You finished all questions.', 'good');
+      persistSessionState();
+    }
+
+    function getTargetLevel() {
+      if (mastery <= 10) return 1;
+      if (mastery <= 25) return 2;
+      if (mastery <= 40) return 3;
+      if (mastery <= 60) return 4;
+      return 5;
+    }
+
+    function chooseNextQuestion() {
+      unlockedNext = false;
+      el.nextBtn.disabled = true;
+      const remaining = questions.filter(q => !solvedQuestionIds.includes(q.id));
+
+      if (!remaining.length) {
+        renderCompletionState();
+        return;
+      }
+
+      const targetLevel = getAdaptiveLevel();
+      let pool = remaining.filter(q => q.level === targetLevel && !usedQuestionIds.includes(q.id));
+
+      if (!pool.length) {
+        pool = remaining.filter(q => !usedQuestionIds.includes(q.id));
+      }
+      if (!pool.length) {
+        usedQuestionIds = [];
+        pool = remaining.filter(q => q.level === targetLevel);
+      }
+      if (!pool.length) {
+        pool = remaining.slice();
+      }
+
+      currentQuestion = pool[Math.floor(Math.random() * pool.length)];
+      usedQuestionIds.push(currentQuestion.id);
+      questionCount += 1;
+      renderQuestion();
+      clearPanels();
+      persistSessionState();
+    }
+
+    function getAdaptiveLevel() {
+      const base = getTargetLevel();
+      const last3 = recentResults.slice(-3);
+      const correctCount = last3.filter(Boolean).length;
+      if (last3.length === 3 && correctCount === 3) return Math.min(5, base + 1);
+      if (last3.length === 3 && correctCount === 0) return Math.max(1, base - 1);
+      return base;
+    }
+
+    function renderQuestion() {
+      el.code.disabled = false;
+      el.runBtn.disabled = false;
+      el.checkBtn.disabled = false;
+      el.hintBtn.disabled = false;
+      el.solutionBtn.disabled = false;
+      el.resetBtn.disabled = false;
+      el.restartBtn.disabled = false;
+      el.questionPicker.disabled = false;
+      el.jumpBtn.disabled = false;
+      el.levelBadge.textContent = `Level ${currentQuestion.level}`;
+      el.questionBadge.textContent = `Question ${questionCount}`;
+      el.streakBadge.textContent = `Streak ${streak}`;
+      el.questionTitle.textContent = currentQuestion.title;
+      el.questionPrompt.textContent = currentQuestion.prompt;
+      el.starterCode.textContent = currentQuestion.starter;
+      el.code.value = currentQuestion.starter;
+      syncQuestionPicker();
+    }
+
+    function clearPanels() {
+      setStatus('', '');
+      el.output.textContent = 'Run your code to see output here.';
+      el.feedbackBox.innerHTML = '<p class="muted">After checking, this area will show the AI grading result and coaching notes.</p>';
+      el.answerBox.innerHTML = '<p class="muted">The model answer will appear here when requested or when you solve the question.</p>';
+    }
+
+    function setStatus(message, type) {
+      el.status.className = 'status';
+      if (!message) {
+        el.status.textContent = '';
+        return;
+      }
+      el.status.classList.add(type);
+      el.status.textContent = message;
+    }
+
+    function updateProgress() {
+      el.scoreText.textContent = mastery;
+      const pct = Math.max(0, Math.min(100, mastery));
+      el.progressFill.style.width = pct + '%';
+      const level = getTargetLevel();
+      el.progressNote.textContent = `Current working level: ${level}. Solve correctly to unlock harder problems.`;
+    }
+
+    function applySessionSnapshot(snapshot) {
+      if (!snapshot || typeof snapshot !== 'object') return false;
+
+      const nextSolvedIds = Array.isArray(snapshot.solvedQuestionIds)
+        ? snapshot.solvedQuestionIds.filter(id => getQuestionById(id))
+        : [];
+      const nextUsedIds = Array.isArray(snapshot.usedQuestionIds)
+        ? snapshot.usedQuestionIds.filter(id => getQuestionById(id))
+        : [];
+      const nextRecentResults = Array.isArray(snapshot.recentResults)
+        ? snapshot.recentResults.filter(value => typeof value === 'boolean').slice(-6)
+        : [];
+      const nextCurrentQuestion = snapshot.currentQuestionId == null
+        ? null
+        : getQuestionById(snapshot.currentQuestionId);
+
+      if (snapshot.currentQuestionId != null && !nextCurrentQuestion) {
+        return false;
+      }
+
+      solvedQuestionIds = nextSolvedIds;
+      usedQuestionIds = nextUsedIds;
+      mastery = Number.isFinite(snapshot.mastery) ? snapshot.mastery : 0;
+      streak = Number.isFinite(snapshot.streak) ? snapshot.streak : 0;
+      questionCount = Number.isFinite(snapshot.questionCount) ? snapshot.questionCount : 0;
+      recentResults = nextRecentResults;
+      unlockedNext = snapshot.unlockedNext === true;
+
+      updateProgress();
+
+      if (snapshot.completed === true || (!nextCurrentQuestion && solvedQuestionIds.length === questions.length)) {
+        renderCompletionState();
+        return true;
+      }
+
+      if (!nextCurrentQuestion) {
+        return false;
+      }
+
+      currentQuestion = nextCurrentQuestion;
+      renderQuestion();
+      clearPanels();
+      el.code.value = typeof snapshot.draftCode === 'string' ? snapshot.draftCode : currentQuestion.starter;
+      el.nextBtn.disabled = !unlockedNext;
+      persistSessionState();
+      return true;
+    }
+
+    function jumpToQuestionById(questionId) {
+      const nextQuestion = getQuestionById(Number(questionId));
+      if (!nextQuestion) return false;
+
+      currentQuestion = nextQuestion;
+      unlockedNext = false;
+      el.nextBtn.disabled = true;
+      if (!usedQuestionIds.includes(nextQuestion.id)) {
+        usedQuestionIds.push(nextQuestion.id);
+      }
+      renderQuestion();
+      clearPanels();
+      persistSessionState();
+      setStatus(`Jumped to Question ${nextQuestion.id}.`, 'warn');
+      return true;
+    }
+
+    function buildRunnerScript(code) {
+      return `
+import sys, io, json
+_buffer = io.StringIO()
+sys.stdout = _buffer
+_globals_before = set(globals().keys())
+_error = None
+try:
+${indent(code, 1)}
+except Exception as e:
+    _error = f"{type(e).__name__}: {e}"
+sys.stdout = sys.__stdout__
+_visible = {}
+for _k, _v in list(globals().items()):
+    if _k.startswith('__'):
+        continue
+    if _k in ['sys', 'io', 'json', '_buffer', '_globals_before', '_error', '_visible']:
+        continue
+    try:
+        json.dumps(_v)
+        _visible[_k] = _v
+    except Exception:
+        pass
+_result = {
+    'stdout': _buffer.getvalue().rstrip(),
+    'error': _error,
+    'globals': _visible
+}
+json.dumps(_result)
+`;
+    }
+
+    async function runStudentCode(code) {
+      const resultStr = await pyodide.runPythonAsync(buildRunnerScript(code));
+      return JSON.parse(resultStr);
+    }
+
+    function indent(code, spaces) {
+      const pad = ' '.repeat(spaces * 4);
+      return code
+        .split('\n')
+        .map(line => pad + line)
+        .join('\n');
+    }
+
+    function buildFeedback(aiResult, question, result, aiErrorText) {
+      const aiSource = aiResult ? 'AI grading active' : (aiErrorText ? 'AI grading unavailable' : 'AI grading idle');
+      const aiBody = aiResult
+        ? `<p>${escapeHtml(aiResult.feedback || aiResult.raw).replace(/\n/g, '<br>')}</p>`
+        : `<p class="muted">${escapeHtml(aiErrorText || 'Run Check Answer to request a short coaching response from the AI endpoint.')}</p>`;
+
+      return `
+        <div class="feedback-heading">
+          <strong>${aiResult ? (aiResult.verdict === 'correct' ? 'Checkpoint complete' : 'Checkpoint needs revision') : 'Checkpoint unavailable'}</strong>
+          <span class="feedback-source">${escapeHtml(aiSource)}</span>
+        </div>
+        <p><strong>Python run:</strong> ${result.error ? 'runtime error' : 'completed'}</p>
+        <p><strong>Hint</strong>: ${escapeHtml(question.hint)}</p>
+        <p><strong>Your output</strong>: ${escapeHtml(result.stdout || '(blank)')}</p>
+        <div class="section-divider"></div>
+        <p><strong>AI grading</strong></p>
+        ${aiBody}
+      `;
+    }
+
+    function showAnswer(question) {
+      el.answerBox.innerHTML = `
+        <p><strong>Reference solution</strong></p>
+        <pre class="output">${escapeHtml(question.answer)}</pre>
+        <p class="small muted">A student may solve it in a different way and still be correct.</p>
+      `;
+    }
+
+    async function handleRun() {
+      if (!pyodide) return;
+      setStatus('Running code…', 'warn');
+      try {
+        const result = await runStudentCode(el.code.value);
+        if (result.error) {
+          el.output.textContent = result.stdout ? `${result.stdout}\n${result.error}` : result.error;
+          setStatus('Your code ran with an error.', 'bad');
+        } else {
+          el.output.textContent = result.stdout || '(No printed output)';
+          setStatus('Code ran successfully.', 'good');
+        }
+      } catch (err) {
+        el.output.textContent = String(err);
+        setStatus('The Python runner failed.', 'bad');
+      }
+    }
+
+    async function handleCheck() {
+      if (!pyodide) return;
+      setStatus('Checking answer with AI…', 'warn');
+      try {
+        const code = el.code.value;
+        const result = await runStudentCode(code);
+        el.output.textContent = result.error
+          ? (result.stdout ? `${result.stdout}\n${result.error}` : result.error)
+          : (result.stdout || '(No printed output)');
+
+        let aiResult = null;
+        let aiErrorText = null;
+
+        try {
+          aiResult = await requestAiCheckpoint({
+            question: currentQuestion,
+            studentCode: code,
+            result
+          });
+        } catch (err) {
+          aiErrorText = `AI grading unavailable: ${String(err.message || err)}`;
+        }
+
+        el.feedbackBox.innerHTML = buildFeedback(
+          aiResult,
+          currentQuestion,
+          result,
+          aiErrorText
+        );
+
+        if (!aiResult) {
+          setStatus('Unable to grade this answer because the AI endpoint is unavailable.', 'bad');
+          return;
+        }
+
+        if (aiResult.verdict === 'correct') {
+          if (!solvedQuestionIds.includes(currentQuestion.id)) {
+            solvedQuestionIds.push(currentQuestion.id);
+          }
+          streak += 1;
+          mastery = Math.min(100, mastery + 12);
+          recentResults.push(true);
+          unlockedNext = true;
+          el.nextBtn.disabled = false;
+          setStatus('Correct. AI grading approved this answer.', 'good');
+          showAnswer(currentQuestion);
+        } else {
+          streak = 0;
+          mastery = Math.max(0, mastery - 4);
+          recentResults.push(false);
+          setStatus('Keep trying. Use the AI feedback to revise your code.', 'bad');
+        }
+
+        if (recentResults.length > 6) recentResults = recentResults.slice(-6);
+        el.streakBadge.textContent = `Streak ${streak}`;
+        updateProgress();
+        persistSessionState();
+      } catch (err) {
+        el.feedbackBox.innerHTML = `<p><strong>Check failed.</strong> ${escapeHtml(String(err))}</p>`;
+        setStatus('Unable to check this answer.', 'bad');
+      }
+    }
+
+    function handleHint() {
+      el.feedbackBox.innerHTML = `
+        <p><strong>Hint</strong></p>
+        <p>${escapeHtml(currentQuestion.hint)}</p>
+        <p class="small muted">Try again before opening the model answer.</p>
+      `;
+      setStatus('Hint shown.', 'warn');
+      persistSessionState();
+    }
+
+    function handleSolution() {
+      showAnswer(currentQuestion);
+      setStatus('Model answer shown.', 'warn');
+      persistSessionState();
+    }
+
+    function handleNext() {
+      if (!unlockedNext) {
+        setStatus('Solve the current question correctly before moving on.', 'bad');
+        return;
+      }
+      chooseNextQuestion();
+    }
+
+    function handleReset() {
+      el.code.value = currentQuestion.starter;
+      setStatus('Current editor reset.', 'warn');
+      persistSessionState();
+    }
+
+    function handleRestartProgress() {
+      clearPersistedSession();
+      startSession();
+      setStatus('Progress reset. Starting from the beginning.', 'warn');
+    }
+
+    async function handleImportQuestions() {
+      const file = el.importFile.files && el.importFile.files[0];
+      if (!file) {
+        setStatus('Choose a JSON file first.', 'bad');
+        return;
+      }
+
+      try {
+        const text = await file.text();
+        const importedQuestions = parseImportedQuestionBankText(text);
+        replaceQuestionBank(importedQuestions);
+        setStatus(`Imported ${importedQuestions.length} question${importedQuestions.length === 1 ? '' : 's'} from file.`, 'good');
+      } catch (err) {
+        setStatus(`Import failed: ${String(err.message || err)}`, 'bad');
+      }
+    }
+
+    function handleUseBuiltInSet() {
+      restoreBuiltInQuestionBank();
+      setStatus('Restored the built-in question set.', 'warn');
+    }
+
+    function handleJumpToQuestion() {
+      if (jumpToQuestionById(el.questionPicker.value)) {
+        return;
+      }
+      setStatus('Choose a valid question first.', 'bad');
+    }
+
+    (function initAiCheckpointControls() {
+      const storedQuestionBank = loadStoredQuestionBank();
+      if (storedQuestionBank) {
+        questions = storedQuestionBank;
+      }
+      let savedUrl = null;
+      try { savedUrl = localStorage.getItem(AI_CHECKPOINT_STORAGE_KEY); } catch { savedUrl = null; }
+      el.aiApiUrl.value = savedUrl === null ? DEFAULT_AI_CHECKPOINT_URL : savedUrl;
+      el.aiApiUrl.addEventListener('change', () => {
+        saveAiApiUrl();
+        setApiStatus('Endpoint updated.', 'warn');
+      });
+      el.testApiBtn.addEventListener('click', testApi);
+      populateQuestionPicker();
+      setApiStatus('Ready.', '');
+    })();
+
+    el.runBtn.addEventListener('click', handleRun);
+    el.checkBtn.addEventListener('click', handleCheck);
+    el.hintBtn.addEventListener('click', handleHint);
+    el.solutionBtn.addEventListener('click', handleSolution);
+    el.nextBtn.addEventListener('click', handleNext);
+    el.resetBtn.addEventListener('click', handleReset);
+    el.restartBtn.addEventListener('click', handleRestartProgress);
+    el.importBtn.addEventListener('click', handleImportQuestions);
+    el.builtinBtn.addEventListener('click', handleUseBuiltInSet);
+    el.jumpBtn.addEventListener('click', handleJumpToQuestion);
+    el.code.addEventListener('input', persistSessionState);
+
+    loadPython().catch(err => {
+      el.pyStatus.textContent = 'Failed to load Python runtime.';
+      setStatus('Could not start Python in the browser.', 'bad');
+      el.output.textContent = String(err);
+    });
+  </script>
+</body>
+</html>

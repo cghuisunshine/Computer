@@ -1,0 +1,426 @@
+[
+  {
+    "title": "What is a list",
+    "prompt": "Create a variable called fruits that stores apple, banana, and orange in a Python list.",
+    "starter": "fruits = ",
+    "answer": "fruits = [\"apple\", \"banana\", \"orange\"]",
+    "hint": "Use square brackets and separate items with commas.",
+    "level": 1
+  },
+  {
+    "title": "Print a list variable",
+    "prompt": "Create fruits = [\"apple\", \"banana\", \"orange\"] and print the whole list.",
+    "starter": "fruits = [\"apple\", \"banana\", \"orange\"]\n",
+    "answer": "fruits = [\"apple\", \"banana\", \"orange\"]\nprint(fruits)",
+    "hint": "Use print with the variable name.",
+    "level": 1
+  },
+  {
+    "title": "Create integer list",
+    "prompt": "Create a list called numbers that stores 1, 2, 3, and 4.",
+    "starter": "numbers = ",
+    "answer": "numbers = [1, 2, 3, 4]",
+    "hint": "Put the integers inside square brackets.",
+    "level": 1
+  },
+  {
+    "title": "Create string list",
+    "prompt": "Create a list called names with Tom, Amy, and John.",
+    "starter": "names = ",
+    "answer": "names = [\"Tom\", \"Amy\", \"John\"]",
+    "hint": "Each name should be a string.",
+    "level": 1
+  },
+  {
+    "title": "Create mixed list",
+    "prompt": "Create a list called mixed with 1, \"hello\", 3.5, and True.",
+    "starter": "mixed = ",
+    "answer": "mixed = [1, \"hello\", 3.5, True]",
+    "hint": "A Python list can store mixed types.",
+    "level": 1
+  },
+  {
+    "title": "Create empty list",
+    "prompt": "Create an empty list called empty.",
+    "starter": "empty = ",
+    "answer": "empty = []",
+    "hint": "An empty list uses empty square brackets.",
+    "level": 1
+  },
+  {
+    "title": "Access first item",
+    "prompt": "Given fruits = [\"apple\", \"banana\", \"orange\"], print the first item.",
+    "starter": "fruits = [\"apple\", \"banana\", \"orange\"]\n",
+    "answer": "fruits = [\"apple\", \"banana\", \"orange\"]\nprint(fruits[0])",
+    "hint": "Python list indexes start at 0.",
+    "level": 1
+  },
+  {
+    "title": "Access second item",
+    "prompt": "Given fruits = [\"apple\", \"banana\", \"orange\"], print the second item.",
+    "starter": "fruits = [\"apple\", \"banana\", \"orange\"]\n",
+    "answer": "fruits = [\"apple\", \"banana\", \"orange\"]\nprint(fruits[1])",
+    "hint": "The second item is at index 1.",
+    "level": 1
+  },
+  {
+    "title": "Access third item",
+    "prompt": "Given fruits = [\"apple\", \"banana\", \"orange\"], print the third item.",
+    "starter": "fruits = [\"apple\", \"banana\", \"orange\"]\n",
+    "answer": "fruits = [\"apple\", \"banana\", \"orange\"]\nprint(fruits[2])",
+    "hint": "The third item is at index 2.",
+    "level": 1
+  },
+  {
+    "title": "Access last item with negative index",
+    "prompt": "Given fruits = [\"apple\", \"banana\", \"orange\"], print the last item using a negative index.",
+    "starter": "fruits = [\"apple\", \"banana\", \"orange\"]\n",
+    "answer": "fruits = [\"apple\", \"banana\", \"orange\"]\nprint(fruits[-1])",
+    "hint": "Use -1 for the last item.",
+    "level": 1
+  },
+  {
+    "title": "Access second last item",
+    "prompt": "Given fruits = [\"apple\", \"banana\", \"orange\"], print the second last item using a negative index.",
+    "starter": "fruits = [\"apple\", \"banana\", \"orange\"]\n",
+    "answer": "fruits = [\"apple\", \"banana\", \"orange\"]\nprint(fruits[-2])",
+    "hint": "Use -2 for the second last item.",
+    "level": 1
+  },
+  {
+    "title": "Change list item",
+    "prompt": "Given fruits = [\"apple\", \"banana\", \"orange\"], change banana to grape and print the list.",
+    "starter": "fruits = [\"apple\", \"banana\", \"orange\"]\n",
+    "answer": "fruits = [\"apple\", \"banana\", \"orange\"]\nfruits[1] = \"grape\"\nprint(fruits)",
+    "hint": "banana is at index 1.",
+    "level": 2
+  },
+  {
+    "title": "Append one item",
+    "prompt": "Given numbers = [1, 2, 3], add 4 to the end and print the list.",
+    "starter": "numbers = [1, 2, 3]\n",
+    "answer": "numbers = [1, 2, 3]\nnumbers.append(4)\nprint(numbers)",
+    "hint": "Use append() to add one item to the end.",
+    "level": 2
+  },
+  {
+    "title": "Insert item at position",
+    "prompt": "Given numbers = [1, 2, 3], insert 99 at index 1 and print the list.",
+    "starter": "numbers = [1, 2, 3]\n",
+    "answer": "numbers = [1, 2, 3]\nnumbers.insert(1, 99)\nprint(numbers)",
+    "hint": "Use insert(index, value).",
+    "level": 2
+  },
+  {
+    "title": "Remove by value",
+    "prompt": "Given fruits = [\"apple\", \"banana\", \"orange\"], remove banana and print the list.",
+    "starter": "fruits = [\"apple\", \"banana\", \"orange\"]\n",
+    "answer": "fruits = [\"apple\", \"banana\", \"orange\"]\nfruits.remove(\"banana\")\nprint(fruits)",
+    "hint": "Use remove() with the value to delete.",
+    "level": 2
+  },
+  {
+    "title": "Remove by index with pop",
+    "prompt": "Given numbers = [10, 20, 30], remove the item at index 1 using pop(), then print the list.",
+    "starter": "numbers = [10, 20, 30]\n",
+    "answer": "numbers = [10, 20, 30]\nnumbers.pop(1)\nprint(numbers)",
+    "hint": "Use pop() with the index number.",
+    "level": 2
+  },
+  {
+    "title": "Delete by index with del",
+    "prompt": "Given numbers = [10, 20, 30], delete the item at index 0 using del, then print the list.",
+    "starter": "numbers = [10, 20, 30]\n",
+    "answer": "numbers = [10, 20, 30]\ndel numbers[0]\nprint(numbers)",
+    "hint": "Use del followed by the list item.",
+    "level": 2
+  },
+  {
+    "title": "Length of list",
+    "prompt": "Given fruits = [\"apple\", \"banana\", \"orange\"], print the number of items in the list.",
+    "starter": "fruits = [\"apple\", \"banana\", \"orange\"]\n",
+    "answer": "fruits = [\"apple\", \"banana\", \"orange\"]\nprint(len(fruits))",
+    "hint": "Use len() to count items.",
+    "level": 1
+  },
+  {
+    "title": "Loop through list",
+    "prompt": "Given fruits = [\"apple\", \"banana\", \"orange\"], use a for loop to print each fruit.",
+    "starter": "fruits = [\"apple\", \"banana\", \"orange\"]\n",
+    "answer": "fruits = [\"apple\", \"banana\", \"orange\"]\nfor fruit in fruits:\n    print(fruit)",
+    "hint": "Use for fruit in fruits.",
+    "level": 2
+  },
+  {
+    "title": "Check item in list true",
+    "prompt": "Given fruits = [\"apple\", \"banana\", \"orange\"], print whether \"banana\" is in the list.",
+    "starter": "fruits = [\"apple\", \"banana\", \"orange\"]\n",
+    "answer": "fruits = [\"apple\", \"banana\", \"orange\"]\nprint(\"banana\" in fruits)",
+    "hint": "Use the in keyword.",
+    "level": 2
+  },
+  {
+    "title": "Check item in list false",
+    "prompt": "Given fruits = [\"apple\", \"banana\", \"orange\"], print whether \"grape\" is in the list.",
+    "starter": "fruits = [\"apple\", \"banana\", \"orange\"]\n",
+    "answer": "fruits = [\"apple\", \"banana\", \"orange\"]\nprint(\"grape\" in fruits)",
+    "hint": "Use the in keyword with grape.",
+    "level": 2
+  },
+  {
+    "title": "Slice middle part",
+    "prompt": "Given numbers = [10, 20, 30, 40, 50], print the slice from index 1 up to index 4.",
+    "starter": "numbers = [10, 20, 30, 40, 50]\n",
+    "answer": "numbers = [10, 20, 30, 40, 50]\nprint(numbers[1:4])",
+    "hint": "Use numbers[start:end].",
+    "level": 2
+  },
+  {
+    "title": "Slice from start",
+    "prompt": "Given numbers = [10, 20, 30, 40, 50], print the first three items using slicing.",
+    "starter": "numbers = [10, 20, 30, 40, 50]\n",
+    "answer": "numbers = [10, 20, 30, 40, 50]\nprint(numbers[:3])",
+    "hint": "Leave the start empty and use :3.",
+    "level": 2
+  },
+  {
+    "title": "Slice to end",
+    "prompt": "Given numbers = [10, 20, 30, 40, 50], print all items from index 2 to the end.",
+    "starter": "numbers = [10, 20, 30, 40, 50]\n",
+    "answer": "numbers = [10, 20, 30, 40, 50]\nprint(numbers[2:])",
+    "hint": "Use 2: with no end value.",
+    "level": 2
+  },
+  {
+    "title": "Sort list",
+    "prompt": "Given numbers = [3, 1, 4, 1, 5], sort the list and print it.",
+    "starter": "numbers = [3, 1, 4, 1, 5]\n",
+    "answer": "numbers = [3, 1, 4, 1, 5]\nnumbers.sort()\nprint(numbers)",
+    "hint": "Use sort() before printing.",
+    "level": 2
+  },
+  {
+    "title": "Reverse list",
+    "prompt": "Given numbers = [3, 1, 4, 1, 5], reverse the list and print it.",
+    "starter": "numbers = [3, 1, 4, 1, 5]\n",
+    "answer": "numbers = [3, 1, 4, 1, 5]\nnumbers.reverse()\nprint(numbers)",
+    "hint": "Use reverse() to flip the order.",
+    "level": 2
+  },
+  {
+    "title": "Count value in list",
+    "prompt": "Given numbers = [3, 1, 4, 1, 5], print how many times 1 appears.",
+    "starter": "numbers = [3, 1, 4, 1, 5]\n",
+    "answer": "numbers = [3, 1, 4, 1, 5]\nprint(numbers.count(1))",
+    "hint": "Use count() with the value.",
+    "level": 2
+  },
+  {
+    "title": "Find index of value",
+    "prompt": "Given numbers = [3, 1, 4, 1, 5], print the index of 4.",
+    "starter": "numbers = [3, 1, 4, 1, 5]\n",
+    "answer": "numbers = [3, 1, 4, 1, 5]\nprint(numbers.index(4))",
+    "hint": "Use index() to find the position.",
+    "level": 2
+  },
+  {
+    "title": "Create nested list",
+    "prompt": "Create a variable called grid that stores [[1, 2, 3], [4, 5, 6], [7, 8, 9]].",
+    "starter": "grid = ",
+    "answer": "grid = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]",
+    "hint": "This is a list of lists.",
+    "level": 2
+  },
+  {
+    "title": "Print first row of nested list",
+    "prompt": "Given grid = [[1, 2, 3], [4, 5, 6], [7, 8, 9]], print the first row.",
+    "starter": "grid = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]\n",
+    "answer": "grid = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]\nprint(grid[0])",
+    "hint": "The first row is at index 0.",
+    "level": 2
+  },
+  {
+    "title": "Access nested item",
+    "prompt": "Given grid = [[1, 2, 3], [4, 5, 6], [7, 8, 9]], print the number 6.",
+    "starter": "grid = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]\n",
+    "answer": "grid = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]\nprint(grid[1][2])",
+    "hint": "Second row, third column.",
+    "level": 3
+  },
+  {
+    "title": "Build list with loop",
+    "prompt": "Create an empty list called squares. Use a loop to append the squares of 0, 1, 2, 3, and 4, then print the list.",
+    "starter": "squares = []\n",
+    "answer": "squares = []\nfor i in range(5):\n    squares.append(i * i)\nprint(squares)",
+    "hint": "Use range(5) and append(i * i).",
+    "level": 3
+  },
+  {
+    "title": "List comprehension squares",
+    "prompt": "Use list comprehension to create a list called squares with the squares of 0 to 4, then print it.",
+    "starter": "squares = ",
+    "answer": "squares = [i * i for i in range(5)]\nprint(squares)",
+    "hint": "Use square brackets with a for loop inside.",
+    "level": 3
+  },
+  {
+    "title": "Create 2D grid with nested loops",
+    "prompt": "Create a 3 by 4 grid filled with 0 using nested loops, then print it.",
+    "starter": "rows = 3\ncols = 4\ngrid = []\n",
+    "answer": "rows = 3\ncols = 4\ngrid = []\nfor r in range(rows):\n    row = []\n    for c in range(cols):\n        row.append(0)\n    grid.append(row)\nprint(grid)",
+    "hint": "Make one row inside the outer loop.",
+    "level": 4
+  },
+  {
+    "title": "Create 2D grid with comprehension",
+    "prompt": "Create a 3 by 4 grid filled with 0 using a list comprehension, then print it.",
+    "starter": "grid = ",
+    "answer": "grid = [[0] * 4 for _ in range(3)]\nprint(grid)",
+    "hint": "Use a comprehension to make separate rows.",
+    "level": 4
+  },
+  {
+    "title": "Make a colors list",
+    "prompt": "Create a list called colors with five colors of your choice.",
+    "starter": "colors = ",
+    "answer": "colors = [\"red\", \"blue\", \"green\", \"yellow\", \"purple\"]",
+    "hint": "Write any five color names as strings.",
+    "level": 1
+  },
+  {
+    "title": "Print first and last color",
+    "prompt": "Given colors = [\"red\", \"blue\", \"green\"], print the first and last item.",
+    "starter": "colors = [\"red\", \"blue\", \"green\"]\n",
+    "answer": "colors = [\"red\", \"blue\", \"green\"]\nprint(colors[0])\nprint(colors[-1])",
+    "hint": "Use index 0 and -1.",
+    "level": 2
+  },
+  {
+    "title": "Add new color",
+    "prompt": "Given colors = [\"red\", \"blue\", \"green\"], add yellow to the end and print the list.",
+    "starter": "colors = [\"red\", \"blue\", \"green\"]\n",
+    "answer": "colors = [\"red\", \"blue\", \"green\"]\ncolors.append(\"yellow\")\nprint(colors)",
+    "hint": "Use append() with the new color.",
+    "level": 2
+  },
+  {
+    "title": "Remove one color",
+    "prompt": "Given colors = [\"red\", \"blue\", \"green\"], remove blue and print the list.",
+    "starter": "colors = [\"red\", \"blue\", \"green\"]\n",
+    "answer": "colors = [\"red\", \"blue\", \"green\"]\ncolors.remove(\"blue\")\nprint(colors)",
+    "hint": "Use remove() with the value blue.",
+    "level": 2
+  },
+  {
+    "title": "Loop through colors",
+    "prompt": "Given colors = [\"red\", \"blue\", \"green\"], use a loop to print all colors.",
+    "starter": "colors = [\"red\", \"blue\", \"green\"]\n",
+    "answer": "colors = [\"red\", \"blue\", \"green\"]\nfor color in colors:\n    print(color)",
+    "hint": "Use for color in colors.",
+    "level": 2
+  },
+  {
+    "title": "Create numbers one to ten",
+    "prompt": "Create a list called numbers that stores the integers from 1 to 10.",
+    "starter": "numbers = ",
+    "answer": "numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]",
+    "hint": "Write all integers from 1 through 10.",
+    "level": 1
+  },
+  {
+    "title": "Squares from number list with loop",
+    "prompt": "Given numbers = [1, 2, 3, 4, 5], create a new list called squares using a loop, then print it.",
+    "starter": "numbers = [1, 2, 3, 4, 5]\nsquares = []\n",
+    "answer": "numbers = [1, 2, 3, 4, 5]\nsquares = []\nfor n in numbers:\n    squares.append(n * n)\nprint(squares)",
+    "hint": "Loop through numbers and append n * n.",
+    "level": 3
+  },
+  {
+    "title": "Practice example part one",
+    "prompt": "Given colors = [\"red\", \"blue\", \"green\"], print the first item.",
+    "starter": "colors = [\"red\", \"blue\", \"green\"]\n",
+    "answer": "colors = [\"red\", \"blue\", \"green\"]\nprint(colors[0])",
+    "hint": "Use index 0.",
+    "level": 1
+  },
+  {
+    "title": "Practice example part two",
+    "prompt": "Given colors = [\"red\", \"blue\", \"green\"], print the last item.",
+    "starter": "colors = [\"red\", \"blue\", \"green\"]\n",
+    "answer": "colors = [\"red\", \"blue\", \"green\"]\nprint(colors[-1])",
+    "hint": "Use -1 for the last item.",
+    "level": 1
+  },
+  {
+    "title": "Practice example append",
+    "prompt": "Given colors = [\"red\", \"blue\", \"green\"], append yellow.",
+    "starter": "colors = [\"red\", \"blue\", \"green\"]\n",
+    "answer": "colors = [\"red\", \"blue\", \"green\"]\ncolors.append(\"yellow\")",
+    "hint": "Use append() with yellow.",
+    "level": 2
+  },
+  {
+    "title": "Practice example remove",
+    "prompt": "Given colors = [\"red\", \"blue\", \"green\"], remove blue.",
+    "starter": "colors = [\"red\", \"blue\", \"green\"]\n",
+    "answer": "colors = [\"red\", \"blue\", \"green\"]\ncolors.remove(\"blue\")",
+    "hint": "Use remove() with blue.",
+    "level": 2
+  },
+  {
+    "title": "Practice example full sequence",
+    "prompt": "Write the full program that creates colors = [\"red\", \"blue\", \"green\"], prints the first and last item, appends yellow, removes blue, then prints each color with a loop.",
+    "starter": "colors = [\"red\", \"blue\", \"green\"]\n",
+    "answer": "colors = [\"red\", \"blue\", \"green\"]\nprint(colors[0])\nprint(colors[-1])\ncolors.append(\"yellow\")\ncolors.remove(\"blue\")\nfor color in colors:\n    print(color)",
+    "hint": "Combine the smaller steps into one program.",
+    "level": 4
+  },
+  {
+    "title": "Store many items concept",
+    "prompt": "Create a list called animals that stores cat, dog, and bird.",
+    "starter": "animals = ",
+    "answer": "animals = [\"cat\", \"dog\", \"bird\"]",
+    "hint": "A list stores multiple items in one variable.",
+    "level": 1
+  },
+  {
+    "title": "Access by index concept",
+    "prompt": "Given animals = [\"cat\", \"dog\", \"bird\"], print the item at index 1.",
+    "starter": "animals = [\"cat\", \"dog\", \"bird\"]\n",
+    "answer": "animals = [\"cat\", \"dog\", \"bird\"]\nprint(animals[1])",
+    "hint": "Index 1 is the second item.",
+    "level": 1
+  },
+  {
+    "title": "Change item concept",
+    "prompt": "Given animals = [\"cat\", \"dog\", \"bird\"], change dog to fish and print the list.",
+    "starter": "animals = [\"cat\", \"dog\", \"bird\"]\n",
+    "answer": "animals = [\"cat\", \"dog\", \"bird\"]\nanimals[1] = \"fish\"\nprint(animals)",
+    "hint": "Replace the value at index 1.",
+    "level": 2
+  },
+  {
+    "title": "Add and remove concept",
+    "prompt": "Given animals = [\"cat\", \"dog\"], add bird, remove cat, then print the list.",
+    "starter": "animals = [\"cat\", \"dog\"]\n",
+    "answer": "animals = [\"cat\", \"dog\"]\nanimals.append(\"bird\")\nanimals.remove(\"cat\")\nprint(animals)",
+    "hint": "Use append() and remove().",
+    "level": 3
+  },
+  {
+    "title": "2D list first row",
+    "prompt": "Given grid = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]], print the first row.",
+    "starter": "grid = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]\n",
+    "answer": "grid = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]\nprint(grid[0])",
+    "hint": "Use index 0 to get the first row.",
+    "level": 2
+  },
+  {
+    "title": "2D list specific item",
+    "prompt": "Given grid = [[0, 1], [2, 3]], print the value 3.",
+    "starter": "grid = [[0, 1], [2, 3]]\n",
+    "answer": "grid = [[0, 1], [2, 3]]\nprint(grid[1][1])",
+    "hint": "Second row, second column.",
+    "level": 3
+  }
+]
