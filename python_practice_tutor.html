@@ -330,9 +330,40 @@
     .api-status.bad { color: var(--bad); }
     .api-status.warn { color: var(--warn); }
 
+    .ask-input {
+      width: 100%;
+      min-height: 112px;
+      resize: vertical;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      font-family: inherit;
+      font-size: 14px;
+      line-height: 1.45;
+      background: #fff;
+      color: var(--text);
+      outline: none;
+    }
+
+    .ask-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.12);
+    }
+
+    .ask-answer {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      min-height: 96px;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
     .feedback-box p:last-child,
     .answer-box p:last-child,
-    .checkpoint-box p:last-child {
+    .checkpoint-box p:last-child,
+    .ask-answer p:last-child {
       margin-bottom: 0;
     }
 
@@ -479,6 +510,27 @@
           <h3>AI Feedback</h3>
           <div class="feedback-box" id="feedbackBox">
             <p class="muted">After checking, this area will show the AI grading result and coaching notes.</p>
+          </div>
+        </div>
+
+        <div class="panel-section">
+          <h3>Ask Tutor</h3>
+          <div class="checkpoint-box">
+            <label class="field-label" for="askInput">Question</label>
+            <textarea
+              id="askInput"
+              class="ask-input"
+              spellcheck="true"
+              placeholder="Ask about the current question, your code, or selected text..."
+            ></textarea>
+            <div class="btn-row">
+              <button class="primary" id="askBtn" type="button">Ask</button>
+              <button class="secondary" id="askClearBtn" type="button">Clear</button>
+            </div>
+            <div class="api-status" id="askStatus">Select text or type a question to ask for help.</div>
+            <div class="ask-answer" id="askAnswerBox">
+              <p class="muted">Answers will appear here and use the current tutor state as context.</p>
+            </div>
           </div>
         </div>
 
@@ -657,6 +709,9 @@
     let questionCount = 0;
     let recentResults = [];
     let unlockedNext = false;
+    let lastRunResult = null;
+    let lastAiFeedbackText = '';
+    let lastAutoAskPrefill = '';
 
     const el = {
       pyStatus: document.getElementById('pyStatus'),
@@ -689,6 +744,11 @@
       builtinBtn: document.getElementById('builtinBtn'),
       apiStatus: document.getElementById('apiStatus'),
       feedbackBox: document.getElementById('feedbackBox'),
+      askInput: document.getElementById('askInput'),
+      askBtn: document.getElementById('askBtn'),
+      askClearBtn: document.getElementById('askClearBtn'),
+      askStatus: document.getElementById('askStatus'),
+      askAnswerBox: document.getElementById('askAnswerBox'),
       answerBox: document.getElementById('answerBox'),
       scoreText: document.getElementById('scoreText'),
       progressFill: document.getElementById('progressFill'),
@@ -700,6 +760,15 @@
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;');
+    }
+
+    function safeText(value) {
+      if (value === null || value === undefined) return '';
+      return String(value);
+    }
+
+    function normalizeWhitespace(text) {
+      return safeText(text).replace(/\s+/g, ' ').trim();
     }
 
     function setApiStatus(message, type) {
@@ -989,6 +1058,103 @@
       return '';
     }
 
+    function buildAskPrompt(contextText, userQuestion) {
+      const context = normalizeWhitespace(contextText);
+      const question = normalizeWhitespace(userQuestion);
+
+      return [
+        'You are a helpful assistant for a single web page.',
+        'Prefer using the provided Page Context when it contains the answer.',
+        'If the answer is not found in the Page Context, you MAY answer using your general knowledge,',
+        'but you MUST clearly label that portion as not based on the Page Context.',
+        'When possible, separate your response into:',
+        '1) Based on this page: ...',
+        '2) General knowledge (not from this page): ...',
+        '',
+        'Page Context:',
+        context,
+        '',
+        'Question:',
+        question,
+        '',
+        'Answer:'
+      ].join('\n');
+    }
+
+    function buildTutorAskContext({ question, studentCode, runResult, aiFeedbackText }) {
+      const current = question || currentQuestion || {};
+      const latestRun = runResult || lastRunResult || { stdout: '', error: null };
+      const pieces = [
+        `Question title: ${safeText(current.title || '').trim() || '(unknown)'}`,
+        `Task: ${safeText(current.prompt || '').trim() || '(unknown)'}`,
+        `Starter code:\n${safeText(current.starter || '').trim() || '(blank)'}`,
+        `Student code:\n${safeText(studentCode).trim() || '(blank)'}`,
+        `Program output:\n${safeText(latestRun.stdout).trim() || '(blank)'}`,
+        `Runtime error: ${safeText(latestRun.error).trim() || 'None'}`,
+        `Reference solution:\n${safeText(current.answer || '').trim() || '(blank)'}`,
+        `Hint:\n${safeText(current.hint || '').trim() || '(blank)'}`,
+      ];
+
+      const feedbackText = safeText(aiFeedbackText).trim();
+      if (feedbackText) {
+        pieces.push(`Latest AI feedback:\n${feedbackText}`);
+      }
+
+      return pieces.join('\n\n');
+    }
+
+    function buildSelectionExcerpt(contextText, selectionText, beforeWords = 40, afterWords = 40) {
+      const normalizedContext = normalizeWhitespace(contextText);
+      const normalizedSelection = normalizeWhitespace(selectionText);
+      if (!normalizedContext || !normalizedSelection) return '';
+
+      const words = normalizedContext.match(/\S+/g) || [];
+      if (!words.length) return '';
+
+      const selectionWords = normalizedSelection.match(/\S+/g) || [];
+      const lowerWords = words.map(word => word.toLowerCase());
+      const lowerSelection = selectionWords.map(word => word.toLowerCase());
+
+      let startIndex = -1;
+      for (let i = 0; i <= lowerWords.length - lowerSelection.length; i += 1) {
+        let matched = true;
+        for (let j = 0; j < lowerSelection.length; j += 1) {
+          if (lowerWords[i + j] !== lowerSelection[j]) {
+            matched = false;
+            break;
+          }
+        }
+        if (matched) {
+          startIndex = i;
+          break;
+        }
+      }
+
+      if (startIndex === -1) return '';
+      const excerptStart = Math.max(0, startIndex - beforeWords);
+      const excerptEnd = Math.min(words.length, startIndex + lowerSelection.length + afterWords);
+      return words.slice(excerptStart, excerptEnd).join(' ');
+    }
+
+    function getAskContext({ question, studentCode, runResult, aiFeedbackText, askText, selectionText }) {
+      const baseContext = buildTutorAskContext({ question, studentCode, runResult, aiFeedbackText });
+      const normalizedAsk = normalizeWhitespace(askText);
+      const normalizedSelection = normalizeWhitespace(selectionText);
+
+      if (normalizedAsk && normalizedSelection && normalizedAsk.toLowerCase() === normalizedSelection.toLowerCase()) {
+        const excerpt = buildSelectionExcerpt(baseContext, normalizedSelection);
+        if (excerpt) {
+          return [
+            `Selected focus: ${normalizedSelection}`,
+            '',
+            excerpt
+          ].join('\n');
+        }
+      }
+
+      return baseContext;
+    }
+
     function deriveHealthUrl(apiUrl) {
       try {
         const u = new URL(apiUrl);
@@ -1114,6 +1280,64 @@
       return parseAiCheckpointResult(responseText);
     }
 
+    function setAskStatus(message, type) {
+      el.askStatus.className = 'api-status' + (type ? ` ${type}` : '');
+      el.askStatus.textContent = message || '';
+    }
+
+    function resetAskAnswerBox() {
+      el.askAnswerBox.innerHTML = '<p class="muted">Answers will appear here and use the current tutor state as context.</p>';
+    }
+
+    function clearAskPanel({ keepInput = false } = {}) {
+      if (!keepInput) {
+        el.askInput.value = '';
+        lastAutoAskPrefill = '';
+      }
+      setAskStatus('Select text or type a question to ask for help.', '');
+      resetAskAnswerBox();
+    }
+
+    async function requestAskAnswer(questionText, selectionText) {
+      const apiUrl = getAiApiUrl();
+      if (!apiUrl) {
+        throw new Error('Set an endpoint first.');
+      }
+
+      const contextText = getAskContext({
+        question: currentQuestion,
+        studentCode: el.code.value,
+        runResult: lastRunResult,
+        aiFeedbackText: lastAiFeedbackText,
+        askText: questionText,
+        selectionText
+      });
+
+      const payload = {
+        message: buildAskPrompt(contextText, questionText)
+      };
+
+      const { ok, status, data, text, aborted } = await fetchJsonWithTimeout(
+        apiUrl,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        },
+        60000
+      );
+
+      if (aborted) throw new Error('Ask request timed out.');
+
+      const responseText = extractGeneralResponse(data) || safeText(text).trim();
+      if (!ok || !responseText) {
+        const reason = data && data.error ? data.error : `bad_response_${status}`;
+        throw new Error(reason);
+      }
+
+      return responseText;
+    }
+
     async function loadPython() {
       pyodide = await loadPyodide();
       el.pyStatus.textContent = 'Python runtime ready.';
@@ -1231,6 +1455,9 @@
       el.output.textContent = 'Run your code to see output here.';
       el.feedbackBox.innerHTML = '<p class="muted">After checking, this area will show the AI grading result and coaching notes.</p>';
       el.answerBox.innerHTML = '<p class="muted">The model answer will appear here when requested or when you solve the question.</p>';
+      lastRunResult = null;
+      lastAiFeedbackText = '';
+      clearAskPanel();
     }
 
     function setStatus(message, type) {
@@ -1394,6 +1621,7 @@ json.dumps(_result)
       setStatus('Running code…', 'warn');
       try {
         const result = await runStudentCode(el.code.value);
+        lastRunResult = result;
         if (result.error) {
           el.output.textContent = result.stdout ? `${result.stdout}\n${result.error}` : result.error;
           setStatus('Your code ran with an error.', 'bad');
@@ -1436,6 +1664,10 @@ json.dumps(_result)
           result,
           aiErrorText
         );
+        lastRunResult = result;
+        lastAiFeedbackText = aiResult
+          ? (aiResult.feedback || aiResult.raw || '')
+          : (aiErrorText || '');
 
         if (!aiResult) {
           setStatus('Unable to grade this answer because the AI endpoint is unavailable.', 'bad');
@@ -1553,6 +1785,80 @@ json.dumps(_result)
       setStatus('Choose a valid question first.', 'bad');
     }
 
+    function getTextareaSelectionValue(textarea) {
+      if (!textarea || typeof textarea.value !== 'string') return '';
+      if (typeof textarea.selectionStart !== 'number' || typeof textarea.selectionEnd !== 'number') return '';
+      if (textarea.selectionStart === textarea.selectionEnd) return '';
+      return textarea.value.slice(textarea.selectionStart, textarea.selectionEnd).trim();
+    }
+
+    function isRelevantSelectionTarget(target) {
+      if (!target) return false;
+      if (target === el.code || target === el.askInput) return true;
+      if (typeof target.closest !== 'function') return false;
+      return !!target.closest('#questionTitle, #questionPrompt, #starterCode, #output, #feedbackBox, #answerBox');
+    }
+
+    function getSelectionTextFromTarget(target) {
+      if (target === el.code || target === el.askInput) {
+        return getTextareaSelectionValue(target);
+      }
+
+      try {
+        const selection = window.getSelection ? window.getSelection() : null;
+        return selection ? safeText(selection.toString()).trim() : '';
+      } catch {
+        return '';
+      }
+    }
+
+    function prefillAskFromSelection(selectionText) {
+      const trimmed = safeText(selectionText).trim();
+      if (!trimmed) return;
+
+      const currentValue = safeText(el.askInput.value).trim();
+      if (!currentValue || currentValue === lastAutoAskPrefill) {
+        el.askInput.value = trimmed;
+        lastAutoAskPrefill = trimmed;
+      }
+
+      setAskStatus('Ask input prefilled from your selection.', 'warn');
+      el.askInput.focus();
+    }
+
+    function handleAskSelectionPrefill(event) {
+      if (!isRelevantSelectionTarget(event && event.target)) return;
+      const selectionText = getSelectionTextFromTarget(event.target);
+      if (!selectionText) return;
+      prefillAskFromSelection(selectionText);
+    }
+
+    async function handleAsk() {
+      const questionText = safeText(el.askInput.value).trim();
+      if (!questionText) {
+        setAskStatus('Type a question or select text first.', 'bad');
+        return;
+      }
+
+      el.askBtn.disabled = true;
+      el.askClearBtn.disabled = true;
+      setAskStatus('Thinking…', 'warn');
+      el.askAnswerBox.innerHTML = '<p class="muted">Working on an answer…</p>';
+
+      try {
+        const activeSelection = getSelectionTextFromTarget(document.activeElement);
+        const answer = await requestAskAnswer(questionText, activeSelection || lastAutoAskPrefill);
+        el.askAnswerBox.innerHTML = `<p>${escapeHtml(answer).replace(/\n/g, '<br>')}</p>`;
+        setAskStatus('Answer ready.', 'ok');
+      } catch (err) {
+        el.askAnswerBox.innerHTML = `<p class="muted">${escapeHtml(String(err.message || err))}</p>`;
+        setAskStatus(`Ask failed: ${String(err.message || err)}`, 'bad');
+      } finally {
+        el.askBtn.disabled = false;
+        el.askClearBtn.disabled = false;
+      }
+    }
+
     (function initAiCheckpointControls() {
       const storedQuestionBank = loadStoredQuestionBank();
       if (storedQuestionBank) {
@@ -1584,6 +1890,12 @@ json.dumps(_result)
     el.builtinBtn.addEventListener('click', handleUseBuiltInSet);
     el.jumpBtn.addEventListener('click', handleJumpToQuestion);
     el.code.addEventListener('input', persistSessionState);
+    el.askBtn.addEventListener('click', handleAsk);
+    el.askClearBtn.addEventListener('click', () => clearAskPanel());
+    el.code.addEventListener('mouseup', handleAskSelectionPrefill);
+    el.code.addEventListener('keyup', handleAskSelectionPrefill);
+    document.addEventListener('mouseup', handleAskSelectionPrefill);
+    document.addEventListener('keyup', handleAskSelectionPrefill);
 
     loadPython().catch(err => {
       el.pyStatus.textContent = 'Failed to load Python runtime.';
