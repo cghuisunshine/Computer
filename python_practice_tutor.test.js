@@ -222,6 +222,7 @@ test("ask tutor includes an auto-open toggle that updates its label", () => {
 
   const context = loadTutorScript();
   assert.equal(typeof context.setSelectionAutoOpenEnabled, "function");
+  assert.equal(context.__elements.get("askAutoOpenToggle").textContent, "Auto-open: Off");
 
   context.setSelectionAutoOpenEnabled(true);
   assert.equal(context.__elements.get("askAutoOpenToggle").textContent, "Auto-open: On");

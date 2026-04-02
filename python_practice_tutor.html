@@ -681,7 +681,7 @@
         <p class="muted">Answers will appear here and use the current tutor state as context.</p>
       </div>
       <div class="ask-popup-foot">
-        <button class="ask-popup-link" id="askAutoOpenToggle" type="button">Auto-open: On</button>
+        <button class="ask-popup-link" id="askAutoOpenToggle" type="button">Auto-open: Off</button>
       </div>
     </div>
   </section>
@@ -847,7 +847,7 @@
     let lastAiFeedbackText = '';
     let lastAutoAskPrefill = '';
     let askPopupOpen = false;
-    let selectionAutoOpenEnabled = true;
+    let selectionAutoOpenEnabled = false;
 
     const el = {
       pyStatus: document.getElementById('pyStatus'),
@@ -1452,10 +1452,10 @@
     function loadSelectionAutoOpenPreference() {
       try {
         const stored = localStorage.getItem(ASK_AUTO_OPEN_STORAGE_KEY);
-        if (stored === null) return true;
+        if (stored === null) return false;
         return stored !== 'false';
       } catch {
-        return true;
+        return false;
       }
     }
 
