@@ -19,6 +19,7 @@ function loadTutorScript() {
   const storage = new Map();
 
   function makeElement() {
+    const attributes = new Map();
     return {
       textContent: "",
       innerHTML: "",
@@ -32,6 +33,8 @@ function loadTutorScript() {
       focus() {},
       select() {},
       addEventListener() {},
+      setAttribute(name, value) { attributes.set(String(name), String(value)); },
+      getAttribute(name) { return attributes.has(String(name)) ? attributes.get(String(name)) : null; },
       contains() { return false; },
       closest() { return null; },
       classList: {
@@ -209,4 +212,20 @@ test("ask tutor uses a launcher plus popup panel that can be opened and closed",
   context.setAskPopupOpen(false);
   assert.equal(context.__elements.get("askPopup").hidden, true);
   assert.equal(context.__elements.get("askLauncherBtn").hidden, false);
+});
+
+test("ask tutor includes an auto-open toggle that updates its label", () => {
+  const html = loadTutorHtml();
+
+  assert.match(html, /id="askAutoOpenToggle"/);
+  assert.match(html, /Auto-open:/);
+
+  const context = loadTutorScript();
+  assert.equal(typeof context.setSelectionAutoOpenEnabled, "function");
+
+  context.setSelectionAutoOpenEnabled(true);
+  assert.equal(context.__elements.get("askAutoOpenToggle").textContent, "Auto-open: On");
+
+  context.setSelectionAutoOpenEnabled(false);
+  assert.equal(context.__elements.get("askAutoOpenToggle").textContent, "Auto-open: Off");
 });

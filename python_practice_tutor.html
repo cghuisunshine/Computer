@@ -477,6 +477,25 @@
       flex-wrap: wrap;
     }
 
+    .ask-popup-foot {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .ask-popup-link {
+      border: none;
+      background: transparent;
+      color: var(--primary);
+      padding: 0;
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: underline;
+    }
+
     @media (max-width: 900px) {
       .grid { grid-template-columns: 1fr; }
       textarea { min-height: 260px; }
@@ -661,6 +680,9 @@
       <div class="ask-answer" id="askAnswerBox">
         <p class="muted">Answers will appear here and use the current tutor state as context.</p>
       </div>
+      <div class="ask-popup-foot">
+        <button class="ask-popup-link" id="askAutoOpenToggle" type="button">Auto-open: On</button>
+      </div>
     </div>
   </section>
 
@@ -670,6 +692,7 @@
     const AI_CHECKPOINT_STORAGE_KEY = "pythonListTutorAiUrl";
     const SESSION_STORAGE_KEY = "pythonListTutorSession";
     const QUESTION_BANK_STORAGE_KEY = "pythonListTutorQuestionBank";
+    const ASK_AUTO_OPEN_STORAGE_KEY = "pythonPracticeTutorAskAutoOpen";
     const BUILTIN_QUESTIONS = [
       {
         id: 1,
@@ -824,6 +847,7 @@
     let lastAiFeedbackText = '';
     let lastAutoAskPrefill = '';
     let askPopupOpen = false;
+    let selectionAutoOpenEnabled = true;
 
     const el = {
       pyStatus: document.getElementById('pyStatus'),
@@ -860,6 +884,7 @@
       askPopup: document.getElementById('askPopup'),
       askPopupHead: document.getElementById('askPopupHead'),
       askPopupCloseBtn: document.getElementById('askPopupCloseBtn'),
+      askAutoOpenToggle: document.getElementById('askAutoOpenToggle'),
       feedbackBox: document.getElementById('feedbackBox'),
       askInput: document.getElementById('askInput'),
       askBtn: document.getElementById('askBtn'),
@@ -1400,6 +1425,38 @@
     function setAskStatus(message, type) {
       el.askStatus.className = 'api-status' + (type ? ` ${type}` : '');
       el.askStatus.textContent = message || '';
+    }
+
+    function renderSelectionAutoOpenToggle() {
+      if (!el.askAutoOpenToggle) return;
+      el.askAutoOpenToggle.textContent = selectionAutoOpenEnabled ? 'Auto-open: On' : 'Auto-open: Off';
+      el.askAutoOpenToggle.setAttribute(
+        'aria-label',
+        selectionAutoOpenEnabled ? 'Disable auto-open on selection' : 'Enable auto-open on selection'
+      );
+    }
+
+    function setSelectionAutoOpenEnabled(next) {
+      selectionAutoOpenEnabled = next !== false;
+      renderSelectionAutoOpenToggle();
+    }
+
+    function saveSelectionAutoOpenPreference() {
+      try {
+        localStorage.setItem(ASK_AUTO_OPEN_STORAGE_KEY, selectionAutoOpenEnabled ? 'true' : 'false');
+      } catch {
+        // ignore persistence errors
+      }
+    }
+
+    function loadSelectionAutoOpenPreference() {
+      try {
+        const stored = localStorage.getItem(ASK_AUTO_OPEN_STORAGE_KEY);
+        if (stored === null) return true;
+        return stored !== 'false';
+      } catch {
+        return true;
+      }
     }
 
     function syncAskPopupVisibility() {
@@ -2026,6 +2083,7 @@ json.dumps(_result)
     }
 
     function prefillAskFromSelection(selectionText) {
+      if (!selectionAutoOpenEnabled) return;
       const trimmed = safeText(selectionText).trim();
       if (!trimmed) return;
 
@@ -2083,6 +2141,7 @@ json.dumps(_result)
       setApiStatus('Ready.', '');
     })();
 
+    setSelectionAutoOpenEnabled(loadSelectionAutoOpenPreference());
     syncAskPopupVisibility();
     installAskPopupDrag();
 
@@ -2101,6 +2160,11 @@ json.dumps(_result)
     el.askSidebarOpenBtn.addEventListener('click', () => setAskPopupOpen(true));
     el.askLauncherBtn.addEventListener('click', () => setAskPopupOpen(true));
     el.askPopupCloseBtn.addEventListener('click', () => setAskPopupOpen(false));
+    el.askAutoOpenToggle.addEventListener('click', () => {
+      setSelectionAutoOpenEnabled(!selectionAutoOpenEnabled);
+      saveSelectionAutoOpenPreference();
+      setAskStatus(selectionAutoOpenEnabled ? 'Auto-open enabled.' : 'Auto-open disabled.', 'warn');
+    });
     el.code.addEventListener('input', persistSessionState);
     el.askBtn.addEventListener('click', handleAsk);
     el.askClearBtn.addEventListener('click', () => clearAskPanel());
