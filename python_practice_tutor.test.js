@@ -25,6 +25,7 @@ function loadTutorScript() {
       value: "",
       disabled: false,
       checked: false,
+      hidden: false,
       style: {},
       className: "",
       dataset: {},
@@ -188,4 +189,24 @@ test("getAskContext narrows the request when the ask text is the current selecti
 
   assert.match(askContext, /Selected focus:/);
   assert.match(askContext, /print each number/i);
+});
+
+test("ask tutor uses a launcher plus popup panel that can be opened and closed", () => {
+  const html = loadTutorHtml();
+
+  assert.match(html, /id="askLauncherBtn"/);
+  assert.match(html, /id="askPopup"/);
+  assert.match(html, /id="askPopupCloseBtn"/);
+  assert.match(html, /Open Ask Tutor/);
+
+  const context = loadTutorScript();
+  assert.equal(typeof context.setAskPopupOpen, "function");
+
+  context.setAskPopupOpen(true);
+  assert.equal(context.__elements.get("askPopup").hidden, false);
+  assert.equal(context.__elements.get("askLauncherBtn").hidden, true);
+
+  context.setAskPopupOpen(false);
+  assert.equal(context.__elements.get("askPopup").hidden, true);
+  assert.equal(context.__elements.get("askLauncherBtn").hidden, false);
 });

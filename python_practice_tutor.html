@@ -387,6 +387,96 @@
       margin: 14px 0;
     }
 
+    .ask-launch-card p:last-of-type {
+      margin-bottom: 0;
+    }
+
+    .ask-launch-note {
+      margin-top: 10px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .ask-launcher {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 50;
+      border: none;
+      border-radius: 999px;
+      background: #0f172a;
+      color: #fff;
+      padding: 12px 16px;
+      box-shadow: 0 16px 36px rgba(15, 23, 42, 0.22);
+    }
+
+    .ask-launcher:hover {
+      background: #111c34;
+    }
+
+    .ask-popup-shell {
+      position: fixed;
+      right: 12px;
+      bottom: 12px;
+      z-index: 60;
+      width: min(420px, calc(100vw - 24px));
+      max-height: calc(100vh - 24px);
+      background: #fff;
+      border: 1px solid rgba(15, 23, 42, 0.14);
+      border-radius: 14px;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.18);
+      overflow: hidden;
+    }
+
+    .ask-popup-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      background: linear-gradient(180deg, #0f172a, #111c34);
+      color: #fff;
+      cursor: grab;
+      user-select: none;
+    }
+
+    .ask-popup-head:active {
+      cursor: grabbing;
+    }
+
+    .ask-popup-title {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+
+    .ask-popup-close {
+      border: none;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      padding: 8px 10px;
+    }
+
+    .ask-popup-close:hover {
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+    .ask-popup-body {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow: auto;
+      max-height: calc(100vh - 88px);
+    }
+
+    .ask-popup-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
     @media (max-width: 900px) {
       .grid { grid-template-columns: 1fr; }
       textarea { min-height: 260px; }
@@ -394,6 +484,10 @@
       .runtime-note { min-width: 0; width: 100%; }
       .field-row { flex-direction: column; align-items: stretch; }
       .jump-row { flex-direction: column; align-items: stretch; }
+      .ask-launcher {
+        right: 12px;
+        bottom: 12px;
+      }
     }
   </style>
 </head>
@@ -515,22 +609,13 @@
 
         <div class="panel-section">
           <h3>Ask Tutor</h3>
-          <div class="checkpoint-box">
-            <label class="field-label" for="askInput">Question</label>
-            <textarea
-              id="askInput"
-              class="ask-input"
-              spellcheck="true"
-              placeholder="Ask about the current question, your code, or selected text..."
-            ></textarea>
-            <div class="btn-row">
-              <button class="primary" id="askBtn" type="button">Ask</button>
-              <button class="secondary" id="askClearBtn" type="button">Clear</button>
+          <div class="checkpoint-box ask-launch-card">
+            <p><strong>Need help with this question?</strong></p>
+            <p class="small muted">Open the floating tutor window to ask about your code, the prompt, or selected output.</p>
+            <div class="field-row">
+              <button class="primary" id="askSidebarOpenBtn" type="button">Open Ask Tutor</button>
             </div>
-            <div class="api-status" id="askStatus">Select text or type a question to ask for help.</div>
-            <div class="ask-answer" id="askAnswerBox">
-              <p class="muted">Answers will appear here and use the current tutor state as context.</p>
-            </div>
+            <div class="ask-launch-note">Selecting relevant text will also open the tutor automatically.</div>
           </div>
         </div>
 
@@ -552,6 +637,32 @@
       </aside>
     </div>
   </div>
+
+  <button class="ask-launcher" id="askLauncherBtn" type="button">Ask Tutor</button>
+
+  <section class="ask-popup-shell" id="askPopup" hidden>
+    <div class="ask-popup-head" id="askPopupHead">
+      <div class="ask-popup-title">Ask Tutor</div>
+      <button class="ask-popup-close" id="askPopupCloseBtn" type="button">Close</button>
+    </div>
+    <div class="ask-popup-body">
+      <label class="field-label" for="askInput">Question</label>
+      <textarea
+        id="askInput"
+        class="ask-input"
+        spellcheck="true"
+        placeholder="Ask about the current question, your code, or selected text..."
+      ></textarea>
+      <div class="ask-popup-actions">
+        <button class="primary" id="askBtn" type="button">Ask</button>
+        <button class="secondary" id="askClearBtn" type="button">Clear</button>
+      </div>
+      <div class="api-status" id="askStatus">Select text or type a question to ask for help.</div>
+      <div class="ask-answer" id="askAnswerBox">
+        <p class="muted">Answers will appear here and use the current tutor state as context.</p>
+      </div>
+    </div>
+  </section>
 
   <script src="https://cdn.jsdelivr.net/pyodide/v0.27.2/full/pyodide.js"></script>
   <script>
@@ -712,6 +823,7 @@
     let lastRunResult = null;
     let lastAiFeedbackText = '';
     let lastAutoAskPrefill = '';
+    let askPopupOpen = false;
 
     const el = {
       pyStatus: document.getElementById('pyStatus'),
@@ -743,6 +855,11 @@
       importBtn: document.getElementById('importBtn'),
       builtinBtn: document.getElementById('builtinBtn'),
       apiStatus: document.getElementById('apiStatus'),
+      askSidebarOpenBtn: document.getElementById('askSidebarOpenBtn'),
+      askLauncherBtn: document.getElementById('askLauncherBtn'),
+      askPopup: document.getElementById('askPopup'),
+      askPopupHead: document.getElementById('askPopupHead'),
+      askPopupCloseBtn: document.getElementById('askPopupCloseBtn'),
       feedbackBox: document.getElementById('feedbackBox'),
       askInput: document.getElementById('askInput'),
       askBtn: document.getElementById('askBtn'),
@@ -1285,6 +1402,102 @@
       el.askStatus.textContent = message || '';
     }
 
+    function syncAskPopupVisibility() {
+      if (el.askPopup) {
+        el.askPopup.hidden = !askPopupOpen;
+      }
+      if (el.askLauncherBtn) {
+        el.askLauncherBtn.hidden = askPopupOpen;
+      }
+    }
+
+    function setAskPopupOpen(next, options = {}) {
+      askPopupOpen = next === true;
+      syncAskPopupVisibility();
+
+      if (!askPopupOpen) {
+        return;
+      }
+
+      const prefillText = safeText(options.prefillText).trim();
+      if (prefillText) {
+        const currentValue = safeText(el.askInput.value).trim();
+        if (!currentValue || currentValue === lastAutoAskPrefill) {
+          el.askInput.value = prefillText;
+          lastAutoAskPrefill = prefillText;
+        }
+        setAskStatus('Ask input prefilled from your selection.', 'warn');
+      }
+
+      if (typeof el.askInput.focus === 'function') {
+        el.askInput.focus();
+      }
+    }
+
+    function installAskPopupDrag() {
+      if (!el.askPopup || !el.askPopupHead) return;
+
+      let dragging = false;
+      let startX = 0;
+      let startY = 0;
+      let startLeft = 0;
+      let startTop = 0;
+
+      function clamp(n, lo, hi) {
+        return Math.min(Math.max(n, lo), hi);
+      }
+
+      function onMove(event) {
+        if (!dragging || !el.askPopup) return;
+        const dx = event.clientX - startX;
+        const dy = event.clientY - startY;
+        const margin = 8;
+        const popupWidth = el.askPopup.offsetWidth || 420;
+        const popupHeight = el.askPopup.offsetHeight || 520;
+        const maxLeft = Math.max(margin, window.innerWidth - popupWidth - margin);
+        const maxTop = Math.max(margin, window.innerHeight - popupHeight - margin);
+        const nextLeft = clamp(startLeft + dx, margin, maxLeft);
+        const nextTop = clamp(startTop + dy, margin, maxTop);
+        el.askPopup.style.left = `${Math.round(nextLeft)}px`;
+        el.askPopup.style.top = `${Math.round(nextTop)}px`;
+        el.askPopup.style.right = 'auto';
+        el.askPopup.style.bottom = 'auto';
+      }
+
+      function stopDrag() {
+        if (!dragging) return;
+        dragging = false;
+        document.removeEventListener('mousemove', onMove, true);
+        document.removeEventListener('mouseup', stopDrag, true);
+      }
+
+      el.askPopupHead.addEventListener('mousedown', (event) => {
+        if (event.button !== 0 || !el.askPopup) return;
+        const target = event.target;
+        if (target && typeof target.closest === 'function' && target.closest('button, textarea, input, select')) {
+          return;
+        }
+
+        const rect = typeof el.askPopup.getBoundingClientRect === 'function'
+          ? el.askPopup.getBoundingClientRect()
+          : { left: window.innerWidth - 432, top: window.innerHeight - 532 };
+
+        dragging = true;
+        startX = event.clientX;
+        startY = event.clientY;
+        startLeft = rect.left;
+        startTop = rect.top;
+        el.askPopup.style.left = `${Math.round(startLeft)}px`;
+        el.askPopup.style.top = `${Math.round(startTop)}px`;
+        el.askPopup.style.right = 'auto';
+        el.askPopup.style.bottom = 'auto';
+
+        document.addEventListener('mousemove', onMove, true);
+        document.addEventListener('mouseup', stopDrag, true);
+        event.preventDefault();
+      }, true);
+    }
+
     function resetAskAnswerBox() {
       el.askAnswerBox.innerHTML = '<p class="muted">Answers will appear here and use the current tutor state as context.</p>';
     }
@@ -1816,14 +2029,7 @@ json.dumps(_result)
       const trimmed = safeText(selectionText).trim();
       if (!trimmed) return;
 
-      const currentValue = safeText(el.askInput.value).trim();
-      if (!currentValue || currentValue === lastAutoAskPrefill) {
-        el.askInput.value = trimmed;
-        lastAutoAskPrefill = trimmed;
-      }
-
-      setAskStatus('Ask input prefilled from your selection.', 'warn');
-      el.askInput.focus();
+      setAskPopupOpen(true, { prefillText: trimmed });
     }
 
     function handleAskSelectionPrefill(event) {
@@ -1877,6 +2083,9 @@ json.dumps(_result)
       setApiStatus('Ready.', '');
     })();
 
+    syncAskPopupVisibility();
+    installAskPopupDrag();
+
     el.runBtn.addEventListener('click', handleRun);
     el.checkBtn.addEventListener('click', handleCheck);
     el.hintBtn.addEventListener('click', handleHint);
@@ -1889,6 +2098,9 @@ json.dumps(_result)
     el.importBtn.addEventListener('click', handleImportQuestions);
     el.builtinBtn.addEventListener('click', handleUseBuiltInSet);
     el.jumpBtn.addEventListener('click', handleJumpToQuestion);
+    el.askSidebarOpenBtn.addEventListener('click', () => setAskPopupOpen(true));
+    el.askLauncherBtn.addEventListener('click', () => setAskPopupOpen(true));
+    el.askPopupCloseBtn.addEventListener('click', () => setAskPopupOpen(false));
     el.code.addEventListener('input', persistSessionState);
     el.askBtn.addEventListener('click', handleAsk);
     el.askClearBtn.addEventListener('click', () => clearAskPanel());
