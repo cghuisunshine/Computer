@@ -1700,6 +1700,26 @@
       return base;
     }
 
+    function getNextSequentialQuestion(currentQuestionId) {
+      const currentIndex = questions.findIndex(question => question.id === currentQuestionId);
+
+      if (currentIndex >= 0) {
+        for (let index = currentIndex + 1; index < questions.length; index += 1) {
+          if (!solvedQuestionIds.includes(questions[index].id)) {
+            return questions[index];
+          }
+        }
+      }
+
+      for (const question of questions) {
+        if (!solvedQuestionIds.includes(question.id)) {
+          return question;
+        }
+      }
+
+      return null;
+    }
+
     function renderQuestion() {
       el.code.disabled = false;
       el.runBtn.disabled = false;
@@ -1993,7 +2013,23 @@ json.dumps(_result)
         setStatus('Solve the current question correctly before moving on.', 'bad');
         return;
       }
-      chooseNextQuestion();
+
+      const nextQuestion = getNextSequentialQuestion(currentQuestion ? currentQuestion.id : null);
+      if (!nextQuestion) {
+        renderCompletionState();
+        return;
+      }
+
+      currentQuestion = nextQuestion;
+      unlockedNext = false;
+      el.nextBtn.disabled = true;
+      if (!usedQuestionIds.includes(nextQuestion.id)) {
+        usedQuestionIds.push(nextQuestion.id);
+      }
+      questionCount += 1;
+      renderQuestion();
+      clearPanels();
+      persistSessionState();
     }
 
     function handleReset() {
