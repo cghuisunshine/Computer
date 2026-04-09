@@ -1,0 +1,218 @@
+[
+  {
+    "title": "Import the json module",
+    "prompt": "Import Python's built-in json module.",
+    "starter": "",
+    "answer": "import json",
+    "hint": "Use the import keyword with the module name.",
+    "level": 1
+  },
+  {
+    "title": "Create a simple dictionary",
+    "prompt": "Create a dictionary variable called data with keys \"name\" and \"age\" and values \"Alice\" and 25.",
+    "starter": "data = ",
+    "answer": "data = {\"name\": \"Alice\", \"age\": 25}",
+    "hint": "Use curly braces with key-value pairs.",
+    "level": 1
+  },
+  {
+    "title": "Convert a dictionary to JSON text",
+    "prompt": "Create data = {\"name\": \"Alice\", \"age\": 25}, convert it to JSON text with json.dumps(), store the result in json_text, and print it.",
+    "starter": "import json\ndata = {\"name\": \"Alice\", \"age\": 25}\n",
+    "answer": "import json\ndata = {\"name\": \"Alice\", \"age\": 25}\njson_text = json.dumps(data)\nprint(json_text)",
+    "hint": "Use json.dumps(data) to create a JSON string.",
+    "level": 1
+  },
+  {
+    "title": "Convert a dictionary with a list to JSON",
+    "prompt": "Create data = {\"name\": \"Alice\", \"skills\": [\"Python\", \"SQL\"]}, convert it to JSON text with json.dumps(), store it in json_text, and print it.",
+    "starter": "import json\ndata = {\"name\": \"Alice\", \"skills\": [\"Python\", \"SQL\"]}\n",
+    "answer": "import json\ndata = {\"name\": \"Alice\", \"skills\": [\"Python\", \"SQL\"]}\njson_text = json.dumps(data)\nprint(json_text)",
+    "hint": "The list can stay inside the dictionary before calling dumps().",
+    "level": 1
+  },
+  {
+    "title": "Pretty-print JSON with indent",
+    "prompt": "Create data = {\"name\": \"Alice\", \"age\": 25}, convert it to formatted JSON with an indent of 2, store it in json_text, and print it.",
+    "starter": "import json\ndata = {\"name\": \"Alice\", \"age\": 25}\n",
+    "answer": "import json\ndata = {\"name\": \"Alice\", \"age\": 25}\njson_text = json.dumps(data, indent=2)\nprint(json_text)",
+    "hint": "Pass indent=2 to json.dumps().",
+    "level": 2
+  },
+  {
+    "title": "Parse JSON text with loads",
+    "prompt": "Given json_text = '{\"name\": \"Alice\", \"age\": 25}', use json.loads() to convert it to a Python object called data, then print data.",
+    "starter": "import json\njson_text = '{\"name\": \"Alice\", \"age\": 25}'\n",
+    "answer": "import json\njson_text = '{\"name\": \"Alice\", \"age\": 25}'\ndata = json.loads(json_text)\nprint(data)",
+    "hint": "Use json.loads(json_text) to parse the string.",
+    "level": 1
+  },
+  {
+    "title": "Check the type after loads",
+    "prompt": "Given json_text = '{\"name\": \"Alice\", \"age\": 25}', convert it to data with json.loads() and print type(data).",
+    "starter": "import json\njson_text = '{\"name\": \"Alice\", \"age\": 25}'\n",
+    "answer": "import json\njson_text = '{\"name\": \"Alice\", \"age\": 25}'\ndata = json.loads(json_text)\nprint(type(data))",
+    "hint": "After loads(), the JSON object becomes a Python dictionary.",
+    "level": 1
+  },
+  {
+    "title": "Access a value after loads",
+    "prompt": "Given json_text = '{\"name\": \"Alice\", \"age\": 25}', convert it to data with json.loads() and print the value of the \"name\" key.",
+    "starter": "import json\njson_text = '{\"name\": \"Alice\", \"age\": 25}'\n",
+    "answer": "import json\njson_text = '{\"name\": \"Alice\", \"age\": 25}'\ndata = json.loads(json_text)\nprint(data[\"name\"])",
+    "hint": "Use dictionary key access after calling json.loads().",
+    "level": 1
+  },
+  {
+    "title": "Create a file-reading snippet",
+    "prompt": "Write code to open a file called data.json for reading with UTF-8 encoding, load it into a variable called data using json.load(), and print data.",
+    "starter": "import json\n",
+    "answer": "import json\nwith open(\"data.json\", \"r\", encoding=\"utf-8\") as f:\n    data = json.load(f)\nprint(data)",
+    "hint": "Use with open(..., \"r\", encoding=\"utf-8\") as f: and then json.load(f).",
+    "level": 2
+  },
+  {
+    "title": "Read JSON and print one key",
+    "prompt": "Write code to open data.json for reading with UTF-8 encoding, load it into data with json.load(), and print data[\"city\"].",
+    "starter": "import json\n",
+    "answer": "import json\nwith open(\"data.json\", \"r\", encoding=\"utf-8\") as f:\n    data = json.load(f)\nprint(data[\"city\"])",
+    "hint": "Load the file first, then access the city key.",
+    "level": 2
+  },
+  {
+    "title": "Write JSON to a file",
+    "prompt": "Create data = {\"name\": \"Bob\", \"age\": 30, \"city\": \"Vancouver\"}. Write it to output.json with json.dump() using indent=2.",
+    "starter": "import json\ndata = {\"name\": \"Bob\", \"age\": 30, \"city\": \"Vancouver\"}\n",
+    "answer": "import json\ndata = {\"name\": \"Bob\", \"age\": 30, \"city\": \"Vancouver\"}\nwith open(\"output.json\", \"w\", encoding=\"utf-8\") as f:\n    json.dump(data, f, indent=2)",
+    "hint": "Use json.dump(data, f, indent=2) inside a with open(..., \"w\") block.",
+    "level": 2
+  },
+  {
+    "title": "Convert True and None to JSON",
+    "prompt": "Create data = {\"is_student\": False, \"address\": None}, convert it to JSON text with json.dumps(), store the result in json_text, and print it.",
+    "starter": "import json\ndata = {\"is_student\": False, \"address\": None}\n",
+    "answer": "import json\ndata = {\"is_student\": False, \"address\": None}\njson_text = json.dumps(data)\nprint(json_text)",
+    "hint": "Use normal Python values in the dictionary, then call dumps().",
+    "level": 2
+  },
+  {
+    "title": "Convert a list of dictionaries to JSON",
+    "prompt": "Create a variable called students with [{\"name\": \"Alice\", \"grade\": 90}, {\"name\": \"Bob\", \"grade\": 85}], convert it to formatted JSON with indent=2, store it in json_text, and print it.",
+    "starter": "import json\nstudents = [{\"name\": \"Alice\", \"grade\": 90}, {\"name\": \"Bob\", \"grade\": 85}]\n",
+    "answer": "import json\nstudents = [{\"name\": \"Alice\", \"grade\": 90}, {\"name\": \"Bob\", \"grade\": 85}]\njson_text = json.dumps(students, indent=2)\nprint(json_text)",
+    "hint": "The whole list can be passed directly into json.dumps().",
+    "level": 2
+  },
+  {
+    "title": "Create nested JSON text",
+    "prompt": "Create a string variable called json_text that stores this JSON text: {\"company\": \"OpenAI\", \"employees\": [{\"name\": \"Alice\", \"role\": \"Engineer\"}, {\"name\": \"Bob\", \"role\": \"Designer\"}]}.",
+    "starter": "json_text = ",
+    "answer": "json_text = '{\"company\": \"OpenAI\", \"employees\": [{\"name\": \"Alice\", \"role\": \"Engineer\"}, {\"name\": \"Bob\", \"role\": \"Designer\"}]}'",
+    "hint": "Store the whole JSON text as one Python string.",
+    "level": 2
+  },
+  {
+    "title": "Print a nested top-level value",
+    "prompt": "Given json_text = '{\"company\": \"OpenAI\", \"employees\": [{\"name\": \"Alice\", \"role\": \"Engineer\"}, {\"name\": \"Bob\", \"role\": \"Designer\"}]}' and import json, convert it to data and print the company name.",
+    "starter": "import json\njson_text = '{\"company\": \"OpenAI\", \"employees\": [{\"name\": \"Alice\", \"role\": \"Engineer\"}, {\"name\": \"Bob\", \"role\": \"Designer\"}]}'\n",
+    "answer": "import json\njson_text = '{\"company\": \"OpenAI\", \"employees\": [{\"name\": \"Alice\", \"role\": \"Engineer\"}, {\"name\": \"Bob\", \"role\": \"Designer\"}]}'\ndata = json.loads(json_text)\nprint(data[\"company\"])",
+    "hint": "Use json.loads() first, then dictionary key access.",
+    "level": 2
+  },
+  {
+    "title": "Print the first employee name",
+    "prompt": "Given json_text = '{\"company\": \"OpenAI\", \"employees\": [{\"name\": \"Alice\", \"role\": \"Engineer\"}, {\"name\": \"Bob\", \"role\": \"Designer\"}]}' and import json, convert it to data and print the first employee's name.",
+    "starter": "import json\njson_text = '{\"company\": \"OpenAI\", \"employees\": [{\"name\": \"Alice\", \"role\": \"Engineer\"}, {\"name\": \"Bob\", \"role\": \"Designer\"}]}'\n",
+    "answer": "import json\njson_text = '{\"company\": \"OpenAI\", \"employees\": [{\"name\": \"Alice\", \"role\": \"Engineer\"}, {\"name\": \"Bob\", \"role\": \"Designer\"}]}'\ndata = json.loads(json_text)\nprint(data[\"employees\"][0][\"name\"])",
+    "hint": "Go into the employees list at index 0, then access the name key.",
+    "level": 3
+  },
+  {
+    "title": "Print the second employee role",
+    "prompt": "Given json_text = '{\"company\": \"OpenAI\", \"employees\": [{\"name\": \"Alice\", \"role\": \"Engineer\"}, {\"name\": \"Bob\", \"role\": \"Designer\"}]}' and import json, convert it to data and print the second employee's role.",
+    "starter": "import json\njson_text = '{\"company\": \"OpenAI\", \"employees\": [{\"name\": \"Alice\", \"role\": \"Engineer\"}, {\"name\": \"Bob\", \"role\": \"Designer\"}]}'\n",
+    "answer": "import json\njson_text = '{\"company\": \"OpenAI\", \"employees\": [{\"name\": \"Alice\", \"role\": \"Engineer\"}, {\"name\": \"Bob\", \"role\": \"Designer\"}]}'\ndata = json.loads(json_text)\nprint(data[\"employees\"][1][\"role\"])",
+    "hint": "Use index 1 for the second employee.",
+    "level": 3
+  },
+  {
+    "title": "Catch invalid JSON safely",
+    "prompt": "Given json_text = '{\"name\": \"Alice\", \"age\": 25}', write code that tries to parse it with json.loads() and prints \"Valid JSON:\" followed by the data. If parsing fails, print \"Invalid JSON\".",
+    "starter": "import json\njson_text = '{\"name\": \"Alice\", \"age\": 25}'\n",
+    "answer": "import json\njson_text = '{\"name\": \"Alice\", \"age\": 25}'\ntry:\n    data = json.loads(json_text)\n    print(\"Valid JSON:\", data)\nexcept json.JSONDecodeError:\n    print(\"Invalid JSON\")",
+    "hint": "Use try/except with json.JSONDecodeError.",
+    "level": 3
+  },
+  {
+    "title": "Use ensure_ascii False",
+    "prompt": "Create data = {\"name\": \"张三\", \"city\": \"温哥华\"} and print it as formatted JSON without escaping the Chinese characters.",
+    "starter": "import json\ndata = {\"name\": \"张三\", \"city\": \"温哥华\"}\n",
+    "answer": "import json\ndata = {\"name\": \"张三\", \"city\": \"温哥华\"}\nprint(json.dumps(data, ensure_ascii=False, indent=2))",
+    "hint": "Pass ensure_ascii=False to json.dumps().",
+    "level": 2
+  },
+  {
+    "title": "Sort JSON keys",
+    "prompt": "Create data = {\"b\": 2, \"a\": 1, \"c\": 3} and print it as formatted JSON with the keys sorted alphabetically.",
+    "starter": "import json\ndata = {\"b\": 2, \"a\": 1, \"c\": 3}\n",
+    "answer": "import json\ndata = {\"b\": 2, \"a\": 1, \"c\": 3}\nprint(json.dumps(data, indent=2, sort_keys=True))",
+    "hint": "Use sort_keys=True in json.dumps().",
+    "level": 2
+  },
+  {
+    "title": "Create the student object",
+    "prompt": "Create a dictionary called student with name \"Peter\", age 16, subjects [\"Math\", \"Science\", \"English\"], and graduated False.",
+    "starter": "student = ",
+    "answer": "student = {\"name\": \"Peter\", \"age\": 16, \"subjects\": [\"Math\", \"Science\", \"English\"], \"graduated\": False}",
+    "hint": "Use a dictionary with a list for the subjects key.",
+    "level": 1
+  },
+  {
+    "title": "Convert the student object to JSON",
+    "prompt": "Create the student dictionary with name \"Peter\", age 16, subjects [\"Math\", \"Science\", \"English\"], and graduated False. Then convert it to formatted JSON with indent=2, store it in json_text, and print it.",
+    "starter": "import json\nstudent = {\"name\": \"Peter\", \"age\": 16, \"subjects\": [\"Math\", \"Science\", \"English\"], \"graduated\": False}\n",
+    "answer": "import json\nstudent = {\"name\": \"Peter\", \"age\": 16, \"subjects\": [\"Math\", \"Science\", \"English\"], \"graduated\": False}\njson_text = json.dumps(student, indent=2)\nprint(json_text)",
+    "hint": "Use json.dumps(student, indent=2).",
+    "level": 2
+  },
+  {
+    "title": "Save the student object to a file",
+    "prompt": "Create the student dictionary with name \"Peter\", age 16, subjects [\"Math\", \"Science\", \"English\"], and graduated False. Write it to student.json with indent=2 and ensure_ascii=False.",
+    "starter": "import json\nstudent = {\"name\": \"Peter\", \"age\": 16, \"subjects\": [\"Math\", \"Science\", \"English\"], \"graduated\": False}\n",
+    "answer": "import json\nstudent = {\"name\": \"Peter\", \"age\": 16, \"subjects\": [\"Math\", \"Science\", \"English\"], \"graduated\": False}\nwith open(\"student.json\", \"w\", encoding=\"utf-8\") as f:\n    json.dump(student, f, indent=2, ensure_ascii=False)",
+    "hint": "Use json.dump() with both indent=2 and ensure_ascii=False.",
+    "level": 3
+  },
+  {
+    "title": "Read the student object back",
+    "prompt": "Write code to open student.json for reading with UTF-8 encoding, load it into loaded_student with json.load(), and print loaded_student.",
+    "starter": "import json\n",
+    "answer": "import json\nwith open(\"student.json\", \"r\", encoding=\"utf-8\") as f:\n    loaded_student = json.load(f)\nprint(loaded_student)",
+    "hint": "Use json.load(f) inside a with open(..., \"r\") block.",
+    "level": 2
+  },
+  {
+    "title": "Print one value from the loaded student file",
+    "prompt": "Write code to open student.json for reading with UTF-8 encoding, load it into loaded_student with json.load(), and print loaded_student[\"name\"].",
+    "starter": "import json\n",
+    "answer": "import json\nwith open(\"student.json\", \"r\", encoding=\"utf-8\") as f:\n    loaded_student = json.load(f)\nprint(loaded_student[\"name\"])",
+    "hint": "Load the file first, then access the name key.",
+    "level": 2
+  },
+  {
+    "title": "Dump and load the exercise object",
+    "prompt": "Create person = {\"name\": \"Anna\", \"age\": 22, \"hobbies\": [\"reading\", \"drawing\"]}. Convert it to formatted JSON text with indent=2, store it in text, then convert it back into data with json.loads(). Finally print data[\"hobbies\"][1].",
+    "starter": "import json\nperson = {\"name\": \"Anna\", \"age\": 22, \"hobbies\": [\"reading\", \"drawing\"]}\n",
+    "answer": "import json\nperson = {\"name\": \"Anna\", \"age\": 22, \"hobbies\": [\"reading\", \"drawing\"]}\ntext = json.dumps(person, indent=2)\ndata = json.loads(text)\nprint(data[\"hobbies\"][1])",
+    "hint": "Use dumps() first, then loads(), then index into the hobbies list.",
+    "level": 3
+  },
+  {
+    "title": "Build a full JSON workflow",
+    "prompt": "Create data = {\"name\": \"Bob\", \"age\": 30, \"city\": \"Vancouver\"}. Convert it to formatted JSON text with indent=2 and store it in json_text. Write the same dictionary to output.json with indent=2. Then print json_text.",
+    "starter": "import json\ndata = {\"name\": \"Bob\", \"age\": 30, \"city\": \"Vancouver\"}\n",
+    "answer": "import json\ndata = {\"name\": \"Bob\", \"age\": 30, \"city\": \"Vancouver\"}\njson_text = json.dumps(data, indent=2)\nwith open(\"output.json\", \"w\", encoding=\"utf-8\") as f:\n    json.dump(data, f, indent=2)\nprint(json_text)",
+    "hint": "Use json.dumps() for the string version and json.dump() for the file version.",
+    "level": 3
+  }
+]
