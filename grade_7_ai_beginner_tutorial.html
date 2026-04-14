@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI for Beginners - Grade 7</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232b7de9'/%3E%3Ctext x='32' y='40' text-anchor='middle' font-size='30' font-family='Arial' fill='white'%3EAI%3C/text%3E%3C/svg%3E" />
+  <style>
+    :root {
+      --bg: #f6fbff;
+      --card: #ffffff;
+      --ink: #1f2d3d;
+      --muted: #5f6f81;
+      --accent: #2b7de9;
+      --accent-soft: #e8f1ff;
+      --accent-strong: #12457a;
+      --good: #1f8a4c;
+      --bad: #b42318;
+      --border: #d8e4f0;
+      --shadow: 0 8px 24px rgba(31, 45, 61, 0.08);
+      --warm: #ffbe5c;
+      --warm-soft: #fff2d8;
+      --purple: #6d5efc;
+      --purple-soft: #efeefe;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(180deg, #eef7ff 0%, #f9fcff 100%);
+      color: var(--ink);
+      line-height: 1.65;
+    }
+
+    .wrap {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #2b7de9, #6aa7ff);
+      color: white;
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: 2.2rem;
+    }
+
+    .hero p {
+      margin: 8px 0;
+      font-size: 1.08rem;
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      margin-bottom: 10px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 18px;
+      margin-top: 20px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+      margin-top: 20px;
+    }
+
+    h2 {
+      margin-top: 0;
+      color: var(--accent-strong);
+    }
+
+    h3 {
+      color: #1d5ea8;
+      margin-bottom: 8px;
+    }
+
+    ul {
+      padding-left: 22px;
+    }
+
+    .formula {
+      background: var(--accent-soft);
+      border-left: 5px solid var(--accent);
+      padding: 14px 16px;
+      border-radius: 14px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      overflow-x: auto;
+    }
+
+    .mini {
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .flow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-top: 12px;
+    }
+
+    .pill {
+      background: #f2f7fd;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-weight: bold;
+    }
+
+    .arrow {
+      font-size: 1.3rem;
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .example-box {
+      background: #fbfdff;
+      border: 1px dashed #a9c7ea;
+      border-radius: 16px;
+      padding: 16px;
+      margin-top: 12px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      overflow: hidden;
+      border-radius: 14px;
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      text-align: left;
+    }
+
+    th {
+      background: #eef6ff;
+    }
+
+    .visual-block {
+      margin-top: 18px;
+      background: linear-gradient(180deg, #f8fbff 0%, #eef6ff 100%);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    .visual-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .visual-title strong {
+      color: var(--accent-strong);
+    }
+
+    .caption {
+      color: var(--muted);
+      font-size: 0.94rem;
+      margin-top: 10px;
+      margin-bottom: 0;
+    }
+
+    .control-panel {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+      margin-bottom: 10px;
+    }
+
+    .control-card {
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+    }
+
+    .control-card label {
+      display: block;
+      font-weight: bold;
+      color: var(--accent-strong);
+      margin-bottom: 6px;
+    }
+
+    .readout {
+      margin-top: 6px;
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+
+    .formula-note {
+      margin-top: 12px;
+      background: rgba(255, 255, 255, 0.86);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-weight: bold;
+      color: var(--accent-strong);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 12px;
+    }
+
+    input[type="text"],
+    input[type="range"] {
+      width: 100%;
+    }
+
+    input[type="text"] {
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      margin-top: 8px;
+    }
+
+    input[type="range"] {
+      accent-color: var(--accent);
+      margin-top: 6px;
+    }
+
+    .graph-svg {
+      width: 100%;
+      height: auto;
+      display: block;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 14px;
+      border: 1px solid #cfe0f2;
+    }
+
+    .step-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .step-card {
+      background: rgba(255, 255, 255, 0.86);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      text-align: center;
+      font-weight: bold;
+      color: var(--muted);
+    }
+
+    .step-card.active {
+      background: #e3f2ff;
+      border-color: #86baf0;
+      color: var(--accent-strong);
+    }
+
+    .compare-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 14px;
+      margin-top: 12px;
+    }
+
+    .mini-card {
+      background: rgba(255, 255, 255, 0.86);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    .mini-card h3 {
+      margin-top: 0;
+    }
+
+    .token-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .token {
+      padding: 8px 10px;
+      border-radius: 999px;
+      font-weight: bold;
+      font-size: 0.92rem;
+      border: 1px solid var(--border);
+      background: #fff;
+    }
+
+    .token.good {
+      background: #dff7e9;
+      color: var(--good);
+      border-color: #94d8af;
+    }
+
+    .token.predict {
+      background: #fff2d8;
+      color: #a96500;
+      border-color: #ffc76b;
+    }
+
+    .network-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(220px, 0.9fr);
+      gap: 14px;
+      align-items: center;
+      margin-top: 12px;
+    }
+
+    .network-readout {
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    .quiz-item {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      margin-top: 14px;
+      background: #fcfeff;
+    }
+
+    button {
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 0.98rem;
+      cursor: pointer;
+      margin-top: 10px;
+      margin-right: 8px;
+    }
+
+    button:hover {
+      opacity: 0.92;
+    }
+
+    .secondary-button {
+      background: #ffffff;
+      color: var(--accent-strong);
+      border: 1px solid var(--border);
+    }
+
+    .answer {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .good { color: var(--good); }
+    .bad { color: var(--bad); }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      padding: 28px 0 10px;
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 760px) {
+      .network-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .hero h1 { font-size: 1.8rem; }
+      .wrap { padding: 14px; }
+      .card { padding: 16px; }
+      .visual-title { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <div class="badge">Grade 7 Friendly Lesson</div>
+      <h1>AI for Beginners</h1>
+      <p><strong>Big idea:</strong> AI learns patterns from examples using math.</p>
+      <p>This page explains AI in an intuitive way and with simple math you can understand.</p>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <h2>What is AI?</h2>
+        <p>AI stands for <strong>Artificial Intelligence</strong>. It helps computers do things that seem smart, like recognizing pictures, answering questions, and finding patterns.</p>
+        <div class="formula">AI = a pattern-finding machine</div>
+      </div>
+
+      <div class="card">
+        <h2>Normal Programming vs AI</h2>
+        <p><strong>Normal programming:</strong> a human writes the exact rule.</p>
+        <p><strong>AI:</strong> the computer learns the rule from many examples.</p>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>How AI Works</h2>
+      <div class="flow">
+        <div class="pill">Input</div>
+        <div class="arrow">→</div>
+        <div class="pill">Model</div>
+        <div class="arrow">→</div>
+        <div class="pill">Output</div>
+      </div>
+      <p class="mini">Example: study hours → formula → predicted test score</p>
+      <div class="visual-block">
+        <div class="visual-title">
+          <strong>Follow the job of each part</strong>
+          <span class="mini">A computer keeps turning information into decisions.</span>
+        </div>
+        <svg id="pipelineDiagram" class="graph-svg" viewBox="0 0 640 220" role="img" aria-label="Diagram showing input, model, and output"></svg>
+        <p class="caption">The input is the information we give the AI. The model is the rule it learned. The output is the answer it gives back.</p>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>A Simple AI Example</h2>
+      <p>Suppose we want AI to predict a student's test score from study time.</p>
+      <table>
+        <tr><th>Hours Studied</th><th>Score</th></tr>
+        <tr><td>1</td><td>55</td></tr>
+        <tr><td>2</td><td>65</td></tr>
+        <tr><td>3</td><td>75</td></tr>
+        <tr><td>4</td><td>85</td></tr>
+      </table>
+      <div class="example-box">
+        <p>One possible rule is:</p>
+        <div class="formula">score = 10 × hours + 45</div>
+        <p>Check it: if hours = 3, then score = 10 × 3 + 45 = 75</p>
+      </div>
+      <div class="visual-block">
+        <div class="visual-title">
+          <strong>See the pattern on a graph</strong>
+          <span class="mini">Move the slider to test a new study time.</span>
+        </div>
+        <div class="control-panel">
+          <div class="control-card">
+            <label for="hoursPredictSlider">Hours studied</label>
+            <input id="hoursPredictSlider" type="range" min="0" max="6" step="1" value="3" />
+            <div id="hoursPredictReadout" class="readout">3 hours → predicted 75</div>
+          </div>
+        </div>
+        <svg id="studyGraph" class="graph-svg" viewBox="0 0 640 320" role="img" aria-label="Line graph of study hours and score"></svg>
+        <p class="caption">The blue dots are examples. The gold dot moves when you test a new number of hours.</p>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <h2>What is a Model?</h2>
+        <p>A <strong>model</strong> is the rule or formula the AI uses after learning.</p>
+        <div class="formula">score = 10 × hours + 45</div>
+      </div>
+
+      <div class="card">
+        <h2>What is a Weight?</h2>
+        <p>A <strong>weight</strong> tells the AI how important something is.</p>
+        <div class="formula">output = weight × input + bias</div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Weights and Bias</h2>
+      <p>In the formula below:</p>
+      <div class="formula">y = 4x + 2</div>
+      <ul>
+        <li><strong>4</strong> is the weight</li>
+        <li><strong>2</strong> is the bias</li>
+      </ul>
+      <p>The bias is like the starting point. The weight tells how strongly the input changes the output.</p>
+      <div class="visual-block">
+        <div class="visual-title">
+          <strong>Move the line yourself</strong>
+          <span class="mini">Watch slope and starting point change.</span>
+        </div>
+        <div class="control-panel">
+          <div class="control-card">
+            <label for="weightSlider">Weight</label>
+            <input id="weightSlider" type="range" min="-3" max="5" step="1" value="4" />
+            <div id="weightReadout" class="readout">Weight: 4</div>
+          </div>
+          <div class="control-card">
+            <label for="biasSlider">Bias</label>
+            <input id="biasSlider" type="range" min="-4" max="6" step="1" value="2" />
+            <div id="biasReadout" class="readout">Bias: 2</div>
+          </div>
+        </div>
+        <svg id="weightBiasGraph" class="graph-svg" viewBox="0 0 640 320" role="img" aria-label="Graph showing how weight and bias change a line"></svg>
+        <p class="caption">The line tilts more when the weight gets bigger. The whole line slides up or down when the bias changes.</p>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>How AI Learns</h2>
+      <p>AI learning is really:</p>
+      <div class="flow">
+        <div class="pill">Guess</div>
+        <div class="arrow">→</div>
+        <div class="pill">Measure Error</div>
+        <div class="arrow">→</div>
+        <div class="pill">Adjust Numbers</div>
+        <div class="arrow">→</div>
+        <div class="pill">Try Again</div>
+      </div>
+      <div class="example-box">
+        <p>If the AI predicts <strong>70</strong> but the real answer is <strong>80</strong>, the error is:</p>
+        <div class="formula">error = 80 - 70 = 10</div>
+        <p>Then the AI changes its numbers to do better next time.</p>
+      </div>
+      <div class="visual-block">
+        <div class="visual-title">
+          <strong>Step through one learning cycle</strong>
+          <span class="mini">Each click moves the AI closer to the target.</span>
+        </div>
+        <div class="control-panel">
+          <div class="control-card">
+            <div id="learningReadout" class="readout">Iteration 0 | Output: 52 | Error: 28</div>
+            <div class="readout">Toy model: keep <strong>hours = 4</strong> and target score <strong>80</strong>.</div>
+            <button id="learningLoopButton" type="button">Run next iteration</button>
+            <button id="learningResetButton" type="button" class="secondary-button">Reset demo</button>
+          </div>
+        </div>
+        <div id="learningLoopDemo" class="step-grid" aria-live="polite"></div>
+        <div id="learningFormulaReadout" class="formula-note">Model form: guess = weight × hours + bias</div>
+        <div class="table-wrap">
+          <table id="learningIterationTable" aria-live="polite"></table>
+        </div>
+        <div class="example-box">
+          <p><strong>Strategy in this demo:</strong> if the guess is too low, increase weight and/or bias. After each iteration, the model uses the same formula again and checks whether the error is getting smaller.</p>
+          <p>This page uses a simple preplanned sequence so the pattern is easy to see. A more realistic update rule uses the error to decide how much to change the parameters:</p>
+          <div class="formula">weight = weight + learning_rate × error × hours<br />bias = bias + learning_rate × error</div>
+          <p class="mini">That means big errors cause bigger changes, and tiny errors cause smaller changes.</p>
+        </div>
+        <svg id="learningLoopGraph" class="graph-svg" viewBox="0 0 640 210" role="img" aria-label="Bar chart showing guess and target"></svg>
+        <p class="caption">Good learning means the gap between the guess and the target keeps shrinking.</p>
+      </div>
+      <div class="visual-block">
+        <div class="visual-title">
+          <strong>One model for many examples</strong>
+          <span class="mini">Now the same shared weight and bias must try to fit every row.</span>
+        </div>
+        <div class="control-panel">
+          <div class="control-card">
+            <label for="batchWeightSlider">Shared weight</label>
+            <input id="batchWeightSlider" type="range" min="6" max="14" step="1" value="10" />
+            <div id="batchWeightReadout" class="readout">Weight: 10</div>
+          </div>
+          <div class="control-card">
+            <label for="batchBiasSlider">Shared bias</label>
+            <input id="batchBiasSlider" type="range" min="35" max="55" step="1" value="45" />
+            <div id="batchBiasReadout" class="readout">Bias: 45</div>
+          </div>
+        </div>
+        <div id="batchErrorReadout" class="formula-note">Total absolute error: 0</div>
+        <div id="batchFormulaReadout" class="readout">Shared model: prediction = 10 × hours + 45</div>
+        <div class="table-wrap">
+          <table id="batchLearningTable" aria-live="polite"></table>
+        </div>
+        <svg id="batchLearningGraph" class="graph-svg" viewBox="0 0 640 300" role="img" aria-label="Graph showing one shared model against many data points"></svg>
+        <div class="example-box">
+          <p>When AI has many data points, it cannot pick a different rule for each one. It must find one shared weight and bias that make the total error as small as possible.</p>
+          <p class="mini">Try moving the sliders away from the best-fit line and watch the row errors and total absolute error grow.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Classification and Prediction</h2>
+      <p>Some AI jobs put things into groups. Other AI jobs estimate a number.</p>
+      <div class="compare-grid">
+        <div class="mini-card">
+          <h3>Classification</h3>
+          <p>This means putting something into a category.</p>
+          <ul>
+            <li>cat or dog</li>
+            <li>spam or not spam</li>
+            <li>happy or sad</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h3>Prediction</h3>
+          <p>This means guessing a number or future result.</p>
+          <ul>
+            <li>test score</li>
+            <li>temperature</li>
+            <li>house price</li>
+          </ul>
+        </div>
+      </div>
+      <div class="visual-block">
+        <div class="visual-title">
+          <strong>Switch examples</strong>
+          <span class="mini">Use the button to compare the two job types.</span>
+        </div>
+        <button id="classificationToggle" type="button">Show next example</button>
+        <div id="classificationPredictionDemo" class="compare-grid" aria-live="polite"></div>
+        <p class="caption">Classification chooses a label. Prediction chooses a number on a scale.</p>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>What is a Neural Network?</h2>
+      <p>A neural network is a bigger AI model made of many small math parts working together.</p>
+      <p>Each small part can do something like this:</p>
+      <div class="formula">output = weight1 × input1 + weight2 × input2 + bias</div>
+      <p>Even advanced AI is built from many simple multiplication and addition steps.</p>
+      <div class="visual-block">
+        <div class="visual-title">
+          <strong>Build one tiny neuron</strong>
+          <span class="mini">Slide the inputs and see the output change.</span>
+        </div>
+        <div class="network-grid">
+          <svg id="neuralNetworkDemo" class="graph-svg" viewBox="0 0 420 250" role="img" aria-label="Simple neural network diagram"></svg>
+          <div class="network-readout">
+            <label for="inputOneSlider">Input 1</label>
+            <input id="inputOneSlider" type="range" min="0" max="10" step="1" value="4" />
+            <div id="inputOneReadout" class="readout">Input 1: 4</div>
+
+            <label for="inputTwoSlider">Input 2</label>
+            <input id="inputTwoSlider" type="range" min="0" max="10" step="1" value="3" />
+            <div id="inputTwoReadout" class="readout">Input 2: 3</div>
+
+            <div id="networkFormulaReadout" class="readout">Output = 2 × 4 + 1 × 3 + 1 = 12</div>
+          </div>
+        </div>
+        <p class="caption">A real neural network has many more inputs and many more layers, but every part still does math like this.</p>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Why AI Feels Magical</h2>
+      <p>AI can look magical because it uses lots of data and lots of repeated calculations. But underneath, it is mostly pattern matching with math.</p>
+      <div class="formula">numbers + formulas + examples + practice = AI learning</div>
+      <div class="token-row">
+        <span class="token">numbers</span>
+        <span class="token">examples</span>
+        <span class="token">practice</span>
+        <span class="token good">better guesses</span>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Mini Quiz</h2>
+
+      <div class="quiz-item">
+        <h3>1. What is the best simple description of AI?</h3>
+        <label><input type="radio" name="q1" value="a"> A machine that only follows one fixed rule forever</label><br>
+        <label><input type="radio" name="q1" value="b"> A pattern-finding machine</label><br>
+        <label><input type="radio" name="q1" value="c"> A type of animal brain</label><br>
+        <button onclick="checkQ1()">Check</button>
+        <div id="a1" class="answer"></div>
+      </div>
+
+      <div class="quiz-item">
+        <h3>2. In y = 4x + 2, what is the bias?</h3>
+        <label><input type="radio" name="q2" value="a"> 4</label><br>
+        <label><input type="radio" name="q2" value="b"> x</label><br>
+        <label><input type="radio" name="q2" value="c"> 2</label><br>
+        <button onclick="checkQ2()">Check</button>
+        <div id="a2" class="answer"></div>
+      </div>
+
+      <div class="quiz-item">
+        <h3>3. If score = 10 × hours + 45, what is the predicted score for 2 hours?</h3>
+        <input type="text" id="q3" placeholder="Type your answer here">
+        <button onclick="checkQ3()">Check</button>
+        <div id="a3" class="answer"></div>
+      </div>
+
+      <div class="quiz-item">
+        <h3>4. Fill in the missing idea: AI learns by guess → error → adjust → _____</h3>
+        <input type="text" id="q4" placeholder="Type one or two words">
+        <button onclick="checkQ4()">Check</button>
+        <div id="a4" class="answer"></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Final Summary</h2>
+      <p>AI is a way of teaching computers to learn patterns from examples instead of only following fixed rules. At the beginner level, AI is about <strong>inputs</strong>, <strong>outputs</strong>, <strong>formulas</strong>, <strong>weights</strong>, <strong>bias</strong>, and improving by reducing <strong>error</strong>.</p>
+    </section>
+
+    <footer>
+      AI Beginner Tutorial • Student-friendly Grade 7 lesson page
+    </footer>
+  </div>
+
+  <script>
+    const svgNs = "http://www.w3.org/2000/svg";
+    const studyPoints = [
+      { x: 1, y: 55 },
+      { x: 2, y: 65 },
+      { x: 3, y: 75 },
+      { x: 4, y: 85 },
+    ];
+    const learningIterations = [
+      { iteration: 0, hours: 4, weight: 8, bias: 20 },
+      { iteration: 1, hours: 4, weight: 10, bias: 24 },
+      { iteration: 2, hours: 4, weight: 11, bias: 26 },
+      { iteration: 3, hours: 4, weight: 12, bias: 28 },
+      { iteration: 4, hours: 4, weight: 12, bias: 32 },
+    ].map((entry) => {
+      const output = entry.weight * entry.hours + entry.bias;
+      return {
+        ...entry,
+        output,
+        error: 80 - output,
+      };
+    });
+    const learningState = {
+      target: 80,
+      currentIteration: 0,
+    };
+    const classificationExamples = [
+      {
+        title: "Photo sorter",
+        classificationLabel: "Classification chooses a box",
+        classTokens: ["striped fur", "pointy ears", "long tail", "cat"],
+        predictionLabel: "Prediction chooses a number",
+        predictScale: { label: "Likely test score", min: 0, max: 100, value: 78 },
+      },
+      {
+        title: "School message checker",
+        classificationLabel: "Classification picks a label",
+        classTokens: ["contains prize claim", "contains link", "spam"],
+        predictionLabel: "Prediction estimates a measurement",
+        predictScale: { label: "Tomorrow's temperature", min: 0, max: 40, value: 23 },
+      },
+      {
+        title: "Mood and music helper",
+        classificationLabel: "Classification picks a feeling",
+        classTokens: ["smile", "relaxed face", "happy"],
+        predictionLabel: "Prediction estimates a count",
+        predictScale: { label: "Minutes of study time", min: 0, max: 120, value: 45 },
+      },
+    ];
+    const batchLearningPoints = [
+      { hours: 1, target: 55 },
+      { hours: 2, target: 65 },
+      { hours: 3, target: 75 },
+      { hours: 4, target: 85 },
+    ];
+    let classificationIndex = 0;
+
+    function createSvgText(x, y, text, options = {}) {
+      return `<text x="${x}" y="${y}" font-size="${options.size || 14}" fill="${options.fill || "#1f2d3d"}" font-weight="${options.weight || "400"}" text-anchor="${options.anchor || "start"}">${text}</text>`;
+    }
+
+    function createCircle(cx, cy, r, fill, stroke = "none") {
+      return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${fill}" stroke="${stroke}" />`;
+    }
+
+    function createLine(x1, y1, x2, y2, stroke, width = 2, dash = "") {
+      const dashPart = dash ? ` stroke-dasharray="${dash}"` : "";
+      return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${stroke}" stroke-width="${width}"${dashPart} />`;
+    }
+
+    function createRect(x, y, width, height, fill, stroke, radius = 16) {
+      return `<rect x="${x}" y="${y}" width="${width}" height="${height}" rx="${radius}" fill="${fill}" stroke="${stroke}" />`;
+    }
+
+    function createArrowMarker() {
+      return `
+        <defs>
+          <marker id="arrowHead" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+            <path d="M0,0 L10,5 L0,10 Z" fill="#2b7de9"></path>
+          </marker>
+        </defs>
+      `;
+    }
+
+    function graphPointX(value, min, max, left, width) {
+      return left + ((value - min) / (max - min)) * width;
+    }
+
+    function graphPointY(value, min, max, top, height) {
+      return top + height - ((value - min) / (max - min)) * height;
+    }
+
+    function formatLearningFormula(entry) {
+      return `guess = ${entry.weight} × ${entry.hours} + ${entry.bias} = ${entry.output}`;
+    }
+
+    function renderPipelineDiagram() {
+      const svg = document.getElementById("pipelineDiagram");
+      if (!svg) return;
+
+      svg.innerHTML = `
+        ${createArrowMarker()}
+        ${createRect(24, 56, 160, 108, "#ffffff", "#b9d3ee")}
+        ${createRect(240, 36, 160, 148, "#fff4da", "#f0c36a")}
+        ${createRect(456, 56, 160, 108, "#efeefe", "#b6aff8")}
+        ${createLine(184, 110, 240, 110, "#2b7de9", 4)}
+        ${createLine(400, 110, 456, 110, "#2b7de9", 4)}
+        <line x1="184" y1="110" x2="240" y2="110" stroke="#2b7de9" stroke-width="4" marker-end="url(#arrowHead)"></line>
+        <line x1="400" y1="110" x2="456" y2="110" stroke="#2b7de9" stroke-width="4" marker-end="url(#arrowHead)"></line>
+        ${createSvgText(104, 92, "Input", { anchor: "middle", weight: "700", size: 20, fill: "#12457a" })}
+        ${createSvgText(104, 122, "Study hours", { anchor: "middle", size: 15 })}
+        ${createSvgText(104, 146, "or photo pixels", { anchor: "middle", size: 15 })}
+        ${createSvgText(320, 78, "Model", { anchor: "middle", weight: "700", size: 20, fill: "#7b5200" })}
+        ${createSvgText(320, 112, "Looks for patterns", { anchor: "middle", size: 15 })}
+        ${createSvgText(320, 136, "using learned rules", { anchor: "middle", size: 15 })}
+        ${createSvgText(320, 160, "like formulas", { anchor: "middle", size: 15 })}
+        ${createSvgText(536, 92, "Output", { anchor: "middle", weight: "700", size: 20, fill: "#4538b3" })}
+        ${createSvgText(536, 122, "Predicted score", { anchor: "middle", size: 15 })}
+        ${createSvgText(536, 146, "or answer", { anchor: "middle", size: 15 })}
+      `;
+    }
+
+    function renderStudyGraph() {
+      const svg = document.getElementById("studyGraph");
+      const slider = document.getElementById("hoursPredictSlider");
+      const readout = document.getElementById("hoursPredictReadout");
+      if (!svg || !slider || !readout) return;
+
+      const hours = Number(slider.value);
+      const predicted = 10 * hours + 45;
+      const left = 70;
+      const top = 28;
+      const width = 500;
+      const height = 220;
+
+      let markup = "";
+      for (let h = 0; h <= 6; h += 1) {
+        const x = graphPointX(h, 0, 6, left, width);
+        markup += createLine(x, top, x, top + height, "#dfeaf6", 1);
+        markup += createSvgText(x, top + height + 24, String(h), { anchor: "middle", size: 13, fill: "#5f6f81" });
+      }
+      for (let score = 40; score <= 100; score += 10) {
+        const y = graphPointY(score, 40, 100, top, height);
+        markup += createLine(left, y, left + width, y, "#dfeaf6", 1);
+        markup += createSvgText(left - 14, y + 5, String(score), { anchor: "end", size: 13, fill: "#5f6f81" });
+      }
+
+      const x1 = graphPointX(0, 0, 6, left, width);
+      const y1 = graphPointY(45, 40, 100, top, height);
+      const x2 = graphPointX(5.5, 0, 6, left, width);
+      const y2 = graphPointY(100, 40, 100, top, height);
+      markup += createLine(x1, y1, x2, y2, "#2b7de9", 4);
+
+      studyPoints.forEach((point) => {
+        markup += createCircle(
+          graphPointX(point.x, 0, 6, left, width),
+          graphPointY(point.y, 40, 100, top, height),
+          7,
+          "#12457a",
+          "#ffffff"
+        );
+      });
+
+      markup += createCircle(
+        graphPointX(hours, 0, 6, left, width),
+        graphPointY(predicted, 40, 100, top, height),
+        8,
+        "#ffbe5c",
+        "#7b5200"
+      );
+      markup += createLine(
+        graphPointX(hours, 0, 6, left, width),
+        graphPointY(predicted, 40, 100, top, height),
+        graphPointX(hours, 0, 6, left, width),
+        top + height,
+        "#f0c36a",
+        2,
+        "6 6"
+      );
+
+      svg.innerHTML = `
+        ${markup}
+        ${createLine(left, top + height, left + width + 8, top + height, "#12457a", 2)}
+        ${createLine(left, top + height + 2, left, top - 6, "#12457a", 2)}
+        ${createSvgText(320, 18, "Study hours and score pattern", { anchor: "middle", weight: "700", size: 18, fill: "#12457a" })}
+        ${createSvgText(320, 300, "Hours studied", { anchor: "middle", weight: "700", fill: "#12457a" })}
+        ${createSvgText(26, 156, "Score", { anchor: "middle", weight: "700", fill: "#12457a" })}
+      `;
+
+      readout.textContent = `${hours} hours -> predicted ${predicted}`;
+    }
+
+    function renderWeightBiasGraph() {
+      const svg = document.getElementById("weightBiasGraph");
+      const weightSlider = document.getElementById("weightSlider");
+      const biasSlider = document.getElementById("biasSlider");
+      const weightReadout = document.getElementById("weightReadout");
+      const biasReadout = document.getElementById("biasReadout");
+      if (!svg || !weightSlider || !biasSlider || !weightReadout || !biasReadout) return;
+
+      const weight = Number(weightSlider.value);
+      const bias = Number(biasSlider.value);
+      const left = 70;
+      const top = 28;
+      const width = 500;
+      const height = 220;
+      let markup = "";
+
+      for (let x = -5; x <= 5; x += 1) {
+        const drawX = graphPointX(x, -5, 5, left, width);
+        markup += createLine(drawX, top, drawX, top + height, "#e2edf8", 1);
+        markup += createSvgText(drawX, top + height + 24, String(x), { anchor: "middle", size: 12, fill: "#5f6f81" });
+      }
+
+      for (let y = -10; y <= 10; y += 2) {
+        const drawY = graphPointY(y, -10, 10, top, height);
+        markup += createLine(left, drawY, left + width, drawY, "#e2edf8", 1);
+        markup += createSvgText(left - 14, drawY + 4, String(y), { anchor: "end", size: 12, fill: "#5f6f81" });
+      }
+
+      markup += createLine(left, graphPointY(0, -10, 10, top, height), left + width, graphPointY(0, -10, 10, top, height), "#12457a", 2);
+      markup += createLine(graphPointX(0, -5, 5, left, width), top, graphPointX(0, -5, 5, left, width), top + height, "#12457a", 2);
+
+      const xStart = -5;
+      const yStart = weight * xStart + bias;
+      const xEnd = 5;
+      const yEnd = weight * xEnd + bias;
+      markup += createLine(
+        graphPointX(xStart, -5, 5, left, width),
+        graphPointY(yStart, -10, 10, top, height),
+        graphPointX(xEnd, -5, 5, left, width),
+        graphPointY(yEnd, -10, 10, top, height),
+        "#6d5efc",
+        4
+      );
+      markup += createCircle(
+        graphPointX(0, -5, 5, left, width),
+        graphPointY(bias, -10, 10, top, height),
+        8,
+        "#ffbe5c",
+        "#7b5200"
+      );
+
+      svg.innerHTML = `
+        ${markup}
+        ${createSvgText(320, 18, `y = ${weight}x + ${bias}`, { anchor: "middle", weight: "700", size: 18, fill: "#12457a" })}
+        ${createSvgText(320, 300, "x", { anchor: "middle", weight: "700", fill: "#12457a" })}
+        ${createSvgText(34, 150, "y", { anchor: "middle", weight: "700", fill: "#12457a" })}
+        ${createSvgText(452, 52, "Bias point", { anchor: "middle", size: 14, fill: "#7b5200" })}
+      `;
+
+      weightReadout.textContent = `Weight: ${weight}`;
+      biasReadout.textContent = `Bias: ${bias}`;
+    }
+
+    function renderLearningLoop() {
+      const container = document.getElementById("learningLoopDemo");
+      const readout = document.getElementById("learningReadout");
+      const formulaReadout = document.getElementById("learningFormulaReadout");
+      const graph = document.getElementById("learningLoopGraph");
+      if (!container || !readout || !formulaReadout || !graph) return;
+
+      const entry = learningIterations[learningState.currentIteration];
+      const error = Math.abs(entry.error);
+      readout.textContent = `Iteration ${entry.iteration} | Output: ${entry.output} | Error: ${error}`;
+      formulaReadout.textContent = `Model form: guess = weight × hours + bias | Current formula: ${formatLearningFormula(entry)}`;
+
+      container.innerHTML = `
+        <div class="step-card active">Hours = ${entry.hours}</div>
+        <div class="step-card active">Weight = ${entry.weight}</div>
+        <div class="step-card active">Bias = ${entry.bias}</div>
+        <div class="step-card active">Target = ${learningState.target}</div>
+      `;
+
+      const guessBarWidth = (entry.output / 100) * 430;
+      const targetBarWidth = (learningState.target / 100) * 430;
+      graph.innerHTML = `
+        ${createRect(76, 42, 460, 126, "#ffffff", "#d8e4f0")}
+        ${createRect(104, 74, guessBarWidth, 28, "#ffbe5c", "#f0c36a", 8)}
+        ${createRect(104, 122, targetBarWidth, 28, "#2b7de9", "#7eb0ec", 8)}
+        ${createSvgText(54, 92, "Output", { anchor: "end", weight: "700", fill: "#7b5200" })}
+        ${createSvgText(54, 140, "Target", { anchor: "end", weight: "700", fill: "#12457a" })}
+        ${createSvgText(320, 24, "Each iteration changes the model parameters", { anchor: "middle", weight: "700", size: 18, fill: "#12457a" })}
+        ${createSvgText(110 + guessBarWidth, 92, String(entry.output), { size: 13, fill: "#7b5200" })}
+        ${createSvgText(110 + targetBarWidth, 140, String(learningState.target), { size: 13, fill: "#12457a" })}
+        ${createSvgText(320, 190, `Current error: ${error}`, { anchor: "middle", weight: "700", fill: error === 0 ? "#1f8a4c" : "#b42318" })}
+      `;
+    }
+
+    function renderLearningIterationTable() {
+      const table = document.getElementById("learningIterationTable");
+      if (!table) return;
+
+      const rows = learningIterations
+        .slice(0, learningState.currentIteration + 1)
+        .map((entry) => `
+          <tr>
+            <td>${entry.iteration}</td>
+            <td>${formatLearningFormula(entry)}</td>
+            <td>${entry.weight}</td>
+            <td>${entry.bias}</td>
+            <td>${entry.output}</td>
+            <td>${Math.abs(entry.error)}</td>
+          </tr>
+        `)
+        .join("");
+
+      table.innerHTML = `
+        <tr>
+          <th>Iteration</th>
+          <th>Formula</th>
+          <th>Weight</th>
+          <th>Bias</th>
+          <th>Output</th>
+          <th>Error</th>
+        </tr>
+        ${rows}
+      `;
+    }
+
+    function runLearningStep() {
+      if (learningState.currentIteration < learningIterations.length - 1) {
+        learningState.currentIteration += 1;
+      }
+      renderLearningLoop();
+      renderLearningIterationTable();
+    }
+
+    function resetLearningLoop() {
+      learningState.currentIteration = 0;
+      renderLearningLoop();
+      renderLearningIterationTable();
+    }
+
+    function renderClassificationPrediction() {
+      const container = document.getElementById("classificationPredictionDemo");
+      if (!container) return;
+
+      const example = classificationExamples[classificationIndex];
+      const percent = ((example.predictScale.value - example.predictScale.min) / (example.predictScale.max - example.predictScale.min)) * 100;
+      container.innerHTML = `
+        <div class="mini-card">
+          <h3>${example.title}</h3>
+          <p><strong>${example.classificationLabel}</strong></p>
+          <div class="token-row">
+            ${example.classTokens.map((token, index) => `
+              <span class="token${index === example.classTokens.length - 1 ? " good" : ""}">${token}</span>
+            `).join("")}
+          </div>
+        </div>
+        <div class="mini-card">
+          <h3>${example.predictScale.label}</h3>
+          <p><strong>${example.predictionLabel}</strong></p>
+          <svg class="graph-svg" viewBox="0 0 300 120" role="img" aria-label="Prediction number line">
+            ${createLine(28, 70, 272, 70, "#12457a", 4)}
+            ${createCircle(28 + (244 * percent) / 100, 70, 9, "#ffbe5c", "#7b5200")}
+            ${createSvgText(28, 95, String(example.predictScale.min), { anchor: "middle", size: 12, fill: "#5f6f81" })}
+            ${createSvgText(272, 95, String(example.predictScale.max), { anchor: "middle", size: 12, fill: "#5f6f81" })}
+            ${createSvgText(28 + (244 * percent) / 100, 42, String(example.predictScale.value), { anchor: "middle", weight: "700", fill: "#7b5200" })}
+          </svg>
+          <div class="token-row">
+            <span class="token predict">prediction: ${example.predictScale.value}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderBatchLearningDemo() {
+      const weightSlider = document.getElementById("batchWeightSlider");
+      const biasSlider = document.getElementById("batchBiasSlider");
+      const weightReadout = document.getElementById("batchWeightReadout");
+      const biasReadout = document.getElementById("batchBiasReadout");
+      const errorReadout = document.getElementById("batchErrorReadout");
+      const formulaReadout = document.getElementById("batchFormulaReadout");
+      const table = document.getElementById("batchLearningTable");
+      const graph = document.getElementById("batchLearningGraph");
+      if (!weightSlider || !biasSlider || !weightReadout || !biasReadout || !errorReadout || !formulaReadout || !table || !graph) return;
+
+      const weight = Number(weightSlider.value);
+      const bias = Number(biasSlider.value);
+      const rows = batchLearningPoints.map((point) => {
+        const prediction = weight * point.hours + bias;
+        const error = point.target - prediction;
+        return { ...point, prediction, error };
+      });
+      const totalAbsoluteError = rows.reduce((sum, row) => sum + Math.abs(row.error), 0);
+
+      weightReadout.textContent = `Weight: ${weight}`;
+      biasReadout.textContent = `Bias: ${bias}`;
+      errorReadout.textContent = `Total absolute error: ${totalAbsoluteError}`;
+      formulaReadout.textContent = `Shared model: prediction = ${weight} × hours + ${bias}`;
+
+      table.innerHTML = `
+        <tr>
+          <th>Hours</th>
+          <th>Target</th>
+          <th>Prediction</th>
+          <th>Error</th>
+        </tr>
+        ${rows.map((row) => `
+          <tr>
+            <td>${row.hours}</td>
+            <td>${row.target}</td>
+            <td>${row.prediction}</td>
+            <td>${row.error}</td>
+          </tr>
+        `).join("")}
+      `;
+
+      const left = 70;
+      const top = 28;
+      const width = 500;
+      const height = 200;
+      let markup = "";
+      for (let h = 0; h <= 5; h += 1) {
+        const x = graphPointX(h, 0, 5, left, width);
+        markup += createLine(x, top, x, top + height, "#dfeaf6", 1);
+        if (h < 5) {
+          markup += createSvgText(x, top + height + 24, String(h), { anchor: "middle", size: 13, fill: "#5f6f81" });
+        }
+      }
+      for (let score = 40; score <= 90; score += 10) {
+        const y = graphPointY(score, 40, 90, top, height);
+        markup += createLine(left, y, left + width, y, "#dfeaf6", 1);
+        markup += createSvgText(left - 14, y + 5, String(score), { anchor: "end", size: 13, fill: "#5f6f81" });
+      }
+
+      const x1 = graphPointX(0, 0, 5, left, width);
+      const y1 = graphPointY(bias, 40, 90, top, height);
+      const x2 = graphPointX(4.5, 0, 5, left, width);
+      const y2 = graphPointY(weight * 4.5 + bias, 40, 90, top, height);
+      markup += createLine(x1, y1, x2, y2, "#6d5efc", 4);
+
+      rows.forEach((row) => {
+        markup += createCircle(
+          graphPointX(row.hours, 0, 5, left, width),
+          graphPointY(row.target, 40, 90, top, height),
+          7,
+          "#12457a",
+          "#ffffff"
+        );
+        markup += createCircle(
+          graphPointX(row.hours, 0, 5, left, width),
+          graphPointY(row.prediction, 40, 90, top, height),
+          6,
+          "#ffbe5c",
+          "#7b5200"
+        );
+        markup += createLine(
+          graphPointX(row.hours, 0, 5, left, width),
+          graphPointY(row.target, 40, 90, top, height),
+          graphPointX(row.hours, 0, 5, left, width),
+          graphPointY(row.prediction, 40, 90, top, height),
+          "#f0c36a",
+          2,
+          "6 4"
+        );
+      });
+
+      graph.innerHTML = `
+        ${markup}
+        ${createLine(left, top + height, left + width + 8, top + height, "#12457a", 2)}
+        ${createLine(left, top + height + 2, left, top - 6, "#12457a", 2)}
+        ${createSvgText(320, 18, "One shared model against many data points", { anchor: "middle", weight: "700", size: 18, fill: "#12457a" })}
+        ${createSvgText(320, 278, "Hours studied", { anchor: "middle", weight: "700", fill: "#12457a" })}
+        ${createSvgText(30, 150, "Score", { anchor: "middle", weight: "700", fill: "#12457a" })}
+      `;
+    }
+
+    function renderNeuralNetwork() {
+      const svg = document.getElementById("neuralNetworkDemo");
+      const inputOne = document.getElementById("inputOneSlider");
+      const inputTwo = document.getElementById("inputTwoSlider");
+      const inputOneReadout = document.getElementById("inputOneReadout");
+      const inputTwoReadout = document.getElementById("inputTwoReadout");
+      const formulaReadout = document.getElementById("networkFormulaReadout");
+      if (!svg || !inputOne || !inputTwo || !inputOneReadout || !inputTwoReadout || !formulaReadout) return;
+
+      const one = Number(inputOne.value);
+      const two = Number(inputTwo.value);
+      const bias = 1;
+      const output = 2 * one + two + bias;
+
+      svg.innerHTML = `
+        ${createLine(110, 80, 230, 124, "#2b7de9", 4)}
+        ${createLine(110, 170, 230, 126, "#6d5efc", 4)}
+        ${createLine(230, 124, 332, 124, "#ff9d2f", 4)}
+        ${createCircle(90, 80, 36, "#e8f1ff", "#8cb9ea")}
+        ${createCircle(90, 170, 36, "#efeefe", "#b6aff8")}
+        ${createCircle(230, 124, 42, "#fff2d8", "#f0c36a")}
+        ${createCircle(350, 124, 36, "#dff7e9", "#94d8af")}
+        ${createSvgText(90, 86, String(one), { anchor: "middle", weight: "700", size: 20, fill: "#12457a" })}
+        ${createSvgText(90, 176, String(two), { anchor: "middle", weight: "700", size: 20, fill: "#4538b3" })}
+        ${createSvgText(230, 118, "sum", { anchor: "middle", weight: "700", size: 16, fill: "#7b5200" })}
+        ${createSvgText(230, 144, "+ bias", { anchor: "middle", size: 13, fill: "#7b5200" })}
+        ${createSvgText(350, 130, String(output), { anchor: "middle", weight: "700", size: 20, fill: "#1f8a4c" })}
+        ${createSvgText(74, 32, "input 1", { anchor: "middle", weight: "700", size: 14, fill: "#12457a" })}
+        ${createSvgText(74, 222, "input 2", { anchor: "middle", weight: "700", size: 14, fill: "#4538b3" })}
+        ${createSvgText(352, 32, "output", { anchor: "middle", weight: "700", size: 14, fill: "#1f8a4c" })}
+        ${createSvgText(164, 88, "x2", { anchor: "middle", weight: "700", size: 14, fill: "#12457a" })}
+        ${createSvgText(166, 170, "x1", { anchor: "middle", weight: "700", size: 14, fill: "#4538b3" })}
+      `;
+
+      inputOneReadout.textContent = `Input 1: ${one}`;
+      inputTwoReadout.textContent = `Input 2: ${two}`;
+      formulaReadout.textContent = `Output = 2 x ${one} + 1 x ${two} + 1 = ${output}`;
+    }
+
+    function checkQ1() {
+      const selected = document.querySelector('input[name="q1"]:checked');
+      const out = document.getElementById('a1');
+      if (!selected) {
+        out.textContent = 'Please choose an answer first.';
+        out.className = 'answer bad';
+        return;
+      }
+      if (selected.value === 'b') {
+        out.textContent = 'Correct! AI can be thought of as a pattern-finding machine.';
+        out.className = 'answer good';
+      } else {
+        out.textContent = 'Not quite. The best answer is: a pattern-finding machine.';
+        out.className = 'answer bad';
+      }
+    }
+
+    function checkQ2() {
+      const selected = document.querySelector('input[name="q2"]:checked');
+      const out = document.getElementById('a2');
+      if (!selected) {
+        out.textContent = 'Please choose an answer first.';
+        out.className = 'answer bad';
+        return;
+      }
+      if (selected.value === 'c') {
+        out.textContent = 'Correct! In y = 4x + 2, the bias is 2.';
+        out.className = 'answer good';
+      } else {
+        out.textContent = 'Not quite. The bias is 2.';
+        out.className = 'answer bad';
+      }
+    }
+
+    function checkQ3() {
+      const val = document.getElementById('q3').value.trim();
+      const out = document.getElementById('a3');
+      if (val === '') {
+        out.textContent = 'Please type an answer first.';
+        out.className = 'answer bad';
+        return;
+      }
+      if (Number(val) === 65) {
+        out.textContent = 'Correct! 10 x 2 + 45 = 65.';
+        out.className = 'answer good';
+      } else {
+        out.textContent = 'Try again. Calculate 10 x 2 + 45.';
+        out.className = 'answer bad';
+      }
+    }
+
+    function checkQ4() {
+      const val = document.getElementById('q4').value.trim().toLowerCase();
+      const out = document.getElementById('a4');
+      const okay = ['try again', 'guess again', 'repeat', 'try'];
+      if (val === '') {
+        out.textContent = 'Please type an answer first.';
+        out.className = 'answer bad';
+        return;
+      }
+      if (okay.includes(val)) {
+        out.textContent = 'Correct! The cycle continues by trying again.';
+        out.className = 'answer good';
+      } else {
+        out.textContent = 'A good answer is: try again.';
+        out.className = 'answer bad';
+      }
+    }
+
+    renderPipelineDiagram();
+    renderStudyGraph();
+    renderWeightBiasGraph();
+    renderLearningLoop();
+    renderLearningIterationTable();
+    renderBatchLearningDemo();
+    renderClassificationPrediction();
+    renderNeuralNetwork();
+
+    document.getElementById("hoursPredictSlider").addEventListener("input", renderStudyGraph);
+    document.getElementById("weightSlider").addEventListener("input", renderWeightBiasGraph);
+    document.getElementById("biasSlider").addEventListener("input", renderWeightBiasGraph);
+    document.getElementById("learningLoopButton").addEventListener("click", runLearningStep);
+    document.getElementById("learningResetButton").addEventListener("click", resetLearningLoop);
+    document.getElementById("batchWeightSlider").addEventListener("input", renderBatchLearningDemo);
+    document.getElementById("batchBiasSlider").addEventListener("input", renderBatchLearningDemo);
+    document.getElementById("classificationToggle").addEventListener("click", () => {
+      classificationIndex = (classificationIndex + 1) % classificationExamples.length;
+      renderClassificationPrediction();
+    });
+    document.getElementById("inputOneSlider").addEventListener("input", renderNeuralNetwork);
+    document.getElementById("inputTwoSlider").addEventListener("input", renderNeuralNetwork);
+  </script>
+</body>
+</html>
