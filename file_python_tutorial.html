@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Python File Operation Tutorial</title>
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --accent: #2563eb;
+      --border: #e5e7eb;
+      --code-bg: #0f172a;
+      --code-text: #e5e7eb;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(180deg, #eef4ff 0%, var(--bg) 220px);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 32px 20px 60px;
+    }
+
+    .hero {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 32px;
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #dbeafe;
+      color: #1d4ed8;
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 1.15;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .toc, .section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .toc h2, .section h2 {
+      margin-top: 0;
+      font-size: 1.5rem;
+    }
+
+    .toc ol {
+      margin: 0;
+      padding-left: 22px;
+      columns: 2;
+      gap: 24px;
+    }
+
+    .toc li {
+      margin: 8px 0;
+      break-inside: avoid;
+    }
+
+    .toc a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .toc a:hover {
+      text-decoration: underline;
+    }
+
+    p, li {
+      font-size: 1rem;
+    }
+
+    .note {
+      background: #eff6ff;
+      border-left: 4px solid var(--accent);
+      padding: 14px 16px;
+      border-radius: 10px;
+      margin: 14px 0;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin: 16px 0;
+    }
+
+    .mini-card {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      background: #fcfdff;
+    }
+
+    .mini-card h3 {
+      margin-top: 0;
+      font-size: 1.05rem;
+    }
+
+    pre {
+      margin: 14px 0;
+      background: var(--code-bg);
+      color: var(--code-text);
+      padding: 16px;
+      border-radius: 14px;
+      overflow-x: auto;
+      font-size: 0.95rem;
+      line-height: 1.55;
+    }
+
+    code {
+      font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+    }
+
+    .inline-code {
+      background: #eef2ff;
+      color: #312e81;
+      padding: 2px 7px;
+      border-radius: 8px;
+      font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+      font-size: 0.95em;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      overflow: hidden;
+      border-radius: 12px;
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      padding: 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f8fafc;
+    }
+
+    .footer {
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.95rem;
+      margin-top: 28px;
+    }
+
+    @media (max-width: 720px) {
+      .toc ol {
+        columns: 1;
+      }
+
+      .hero, .toc, .section {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="hero">
+      <div class="badge">Beginner-Friendly Tutorial</div>
+      <h1>Python File Operations</h1>
+      <p class="subtitle">
+        Learn how to open, read, write, append, and manage files in Python using <span class="inline-code">open()</span>, <span class="inline-code">with</span>, and common file-handling patterns.
+      </p>
+    </section>
+
+    <section class="toc">
+      <h2>Contents</h2>
+      <ol>
+        <li><a href="#intro">What file operations are</a></li>
+        <li><a href="#open-file">Open a file</a></li>
+        <li><a href="#with-open">Better way: use with</a></li>
+        <li><a href="#write-file">Write to a file</a></li>
+        <li><a href="#append-file">Append to a file</a></li>
+        <li><a href="#read-all">Read the whole file</a></li>
+        <li><a href="#read-lines">Read line by line</a></li>
+        <li><a href="#readlines">Read all lines into a list</a></li>
+        <li><a href="#writelines">Write a list of lines</a></li>
+        <li><a href="#modes">Common file modes</a></li>
+        <li><a href="#exists">File exists check</a></li>
+        <li><a href="#manage-files">Delete and rename a file</a></li>
+        <li><a href="#copy-file">Copy one file to another</a></li>
+        <li><a href="#utf8">UTF-8 text files</a></li>
+        <li><a href="#practical">Full small example</a></li>
+        <li><a href="#mistake">Common mistake</a></li>
+        <li><a href="#thonny">For Thonny</a></li>
+        <li><a href="#practice">Beginner practice example</a></li>
+        <li><a href="#summary">Summary</a></li>
+      </ol>
+    </section>
+
+    <section class="section" id="intro">
+      <h2>1. What file operations are</h2>
+      <p>
+        File operations let Python programs read data from files and write data back to files. This is useful for saving notes, loading text, storing results, or keeping simple records.
+      </p>
+      <p>
+        The basic tool is the built-in <span class="inline-code">open()</span> function.
+      </p>
+      <pre><code>f = open("test.txt", "r")</code></pre>
+      <div class="note">
+        In most beginner programs, you work with text files first. Python can also work with binary files such as images by using binary modes like <span class="inline-code">"rb"</span> and <span class="inline-code">"wb"</span>.
+      </div>
+    </section>
+
+    <section class="section" id="open-file">
+      <h2>2. Open a file</h2>
+      <p>This example opens a file, reads all of its content, prints it, and then closes the file manually.</p>
+      <pre><code>f = open("test.txt", "r")
+content = f.read()
+print(content)
+f.close()</code></pre>
+    </section>
+
+    <section class="section" id="with-open">
+      <h2>3. Better way: use with</h2>
+      <p>Using <span class="inline-code">with</span> is safer because Python closes the file automatically when the block finishes.</p>
+      <pre><code>with open("test.txt", "r") as f:
+    content = f.read()
+    print(content)</code></pre>
+      <div class="note">
+        Use <span class="inline-code">with open(...)</span> whenever possible. It is the standard pattern in real Python code.
+      </div>
+    </section>
+
+    <section class="section" id="write-file">
+      <h2>4. Write to a file</h2>
+      <p>Mode <span class="inline-code">"w"</span> writes a file from the beginning and overwrites old content.</p>
+      <pre><code>with open("test.txt", "w") as f:
+    f.write("Hello\n")
+    f.write("Python\n")</code></pre>
+      <p>After this, <span class="inline-code">test.txt</span> will contain:</p>
+      <pre><code>Hello
+Python</code></pre>
+    </section>
+
+    <section class="section" id="append-file">
+      <h2>5. Append to a file</h2>
+      <p>Mode <span class="inline-code">"a"</span> adds content to the end of an existing file without deleting the old content.</p>
+      <pre><code>with open("test.txt", "a") as f:
+    f.write("More text\n")</code></pre>
+    </section>
+
+    <section class="section" id="read-all">
+      <h2>6. Read the whole file</h2>
+      <p>Use <span class="inline-code">read()</span> when you want the full file as one string.</p>
+      <pre><code>with open("test.txt", "r") as f:
+    data = f.read()
+    print(data)</code></pre>
+    </section>
+
+    <section class="section" id="read-lines">
+      <h2>7. Read line by line</h2>
+      <p>Looping through the file is useful when the file is large or when you want to process one line at a time.</p>
+      <pre><code>with open("test.txt", "r") as f:
+    for line in f:
+        print(line.strip())</code></pre>
+      <p><span class="inline-code">strip()</span> removes the ending <span class="inline-code">\n</span>.</p>
+    </section>
+
+    <section class="section" id="readlines">
+      <h2>8. Read all lines into a list</h2>
+      <p>Use <span class="inline-code">readlines()</span> when you want a list where each item is one line from the file.</p>
+      <pre><code>with open("test.txt", "r") as f:
+    lines = f.readlines()
+
+print(lines)</code></pre>
+      <p>Example result:</p>
+      <pre><code>['Hello\n', 'Python\n', 'More text\n']</code></pre>
+    </section>
+
+    <section class="section" id="writelines">
+      <h2>9. Write a list of lines</h2>
+      <p>You can write many lines at once with <span class="inline-code">writelines()</span>.</p>
+      <pre><code>lines = ["apple\n", "banana\n", "orange\n"]
+
+with open("fruits.txt", "w") as f:
+    f.writelines(lines)</code></pre>
+    </section>
+
+    <section class="section" id="modes">
+      <h2>10. Common file modes</h2>
+      <div class="grid">
+        <div class="mini-card">
+          <h3>Reading and writing</h3>
+          <ul>
+            <li><span class="inline-code">"r"</span>: read</li>
+            <li><span class="inline-code">"w"</span>: write and overwrite</li>
+            <li><span class="inline-code">"a"</span>: append at the end</li>
+            <li><span class="inline-code">"x"</span>: create a new file</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h3>Binary mode</h3>
+          <ul>
+            <li><span class="inline-code">"rb"</span>: read binary data</li>
+            <li><span class="inline-code">"wb"</span>: write binary data</li>
+            <li>Useful for images, audio, and other non-text files</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="exists">
+      <h2>11. File exists check</h2>
+      <p>Before reading or deleting a file, it is often safer to check whether the file exists.</p>
+      <pre><code>import os
+
+if os.path.exists("test.txt"):
+    print("File exists")
+else:
+    print("File does not exist")</code></pre>
+    </section>
+
+    <section class="section" id="manage-files">
+      <h2>12. Delete and rename a file</h2>
+      <p>Python can also manage files with the <span class="inline-code">os</span> module.</p>
+      <p>Delete a file:</p>
+      <pre><code>import os
+
+if os.path.exists("test.txt"):
+    os.remove("test.txt")
+    print("Deleted")
+else:
+    print("Not found")</code></pre>
+      <p>Rename a file:</p>
+      <pre><code>import os
+
+os.rename("old.txt", "new.txt")</code></pre>
+    </section>
+
+    <section class="section" id="copy-file">
+      <h2>13. Copy one file to another</h2>
+      <p>A simple way to copy a text file is to read from one file and write the same content into another.</p>
+      <pre><code>with open("source.txt", "r") as f1:
+    data = f1.read()
+
+with open("target.txt", "w") as f2:
+    f2.write(data)</code></pre>
+    </section>
+
+    <section class="section" id="utf8">
+      <h2>14. UTF-8 text files</h2>
+      <p>For Chinese or other non-English text, it is safer to specify <span class="inline-code">encoding="utf-8"</span>.</p>
+      <pre><code>with open("notes.txt", "r", encoding="utf-8") as f:
+    print(f.read())</code></pre>
+      <p>Write example:</p>
+      <pre><code>with open("notes.txt", "w", encoding="utf-8") as f:
+    f.write("你好\nHello\n")</code></pre>
+    </section>
+
+    <section class="section" id="practical">
+      <h2>15. Full small example</h2>
+      <pre><code>filename = "demo.txt"
+
+# write
+with open(filename, "w", encoding="utf-8") as f:
+    f.write("Line 1\n")
+    f.write("Line 2\n")
+
+# read
+with open(filename, "r", encoding="utf-8") as f:
+    for line in f:
+        print(line.strip())</code></pre>
+      <p>Output:</p>
+      <pre><code>Line 1
+Line 2</code></pre>
+    </section>
+
+    <section class="section" id="mistake">
+      <h2>16. Common mistake</h2>
+      <p>This code will fail if the file does not exist:</p>
+      <pre><code>with open("abc.txt", "r") as f:
+    print(f.read())</code></pre>
+      <p>Safer version:</p>
+      <pre><code>import os
+
+filename = "abc.txt"
+
+if os.path.exists(filename):
+    with open(filename, "r", encoding="utf-8") as f:
+        print(f.read())
+else:
+    print("File not found")</code></pre>
+      <div class="note">
+        Reading with mode <span class="inline-code">"r"</span> requires the file to already exist. If it does not, Python raises an error.
+      </div>
+    </section>
+
+    <section class="section" id="thonny">
+      <h2>17. For Thonny</h2>
+      <p>If you run Python in Thonny, the file is usually created in the current working folder. You can check it with:</p>
+      <pre><code>import os
+print(os.getcwd())</code></pre>
+      <p>That shows where your file is being read or written.</p>
+    </section>
+
+    <section class="section" id="practice">
+      <h2>18. Beginner practice example</h2>
+      <pre><code>name = input("Enter your name: ")
+
+with open("names.txt", "a", encoding="utf-8") as f:
+    f.write(name + "\n")
+
+with open("names.txt", "r", encoding="utf-8") as f:
+    print("\nAll names:")
+    print(f.read())</code></pre>
+      <div class="note">
+        This is a good beginner exercise because it uses input, append mode, and reading from a file in one small program.
+      </div>
+    </section>
+
+    <section class="section" id="summary">
+      <h2>19. Summary</h2>
+      <ul>
+        <li>Use <span class="inline-code">with open(...)</span> whenever possible.</li>
+        <li>Use <span class="inline-code">"r"</span> to read, <span class="inline-code">"w"</span> to overwrite, and <span class="inline-code">"a"</span> to append.</li>
+        <li>Use <span class="inline-code">encoding="utf-8"</span> for text with Chinese or other Unicode characters.</li>
+        <li>Use <span class="inline-code">os.path.exists()</span> before reading or deleting when the file may not exist.</li>
+      </ul>
+    </section>
+
+    <p class="footer">Built as a standalone HTML tutorial page for learning Python file operations.</p>
+  </div>
+</body>
+</html>

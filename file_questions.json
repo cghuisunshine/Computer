@@ -1,0 +1,218 @@
+[
+  {
+    "title": "Open a file and close it manually",
+    "prompt": "Open a file called test.txt in read mode, store its content in a variable called content, print content, and close the file.",
+    "starter": "",
+    "answer": "f = open(\"test.txt\", \"r\")\ncontent = f.read()\nprint(content)\nf.close()",
+    "hint": "Use open(), then read(), then close().",
+    "level": 1
+  },
+  {
+    "title": "Read a file with with open",
+    "prompt": "Use with open() to open test.txt in read mode, store the content in content, and print it.",
+    "starter": "",
+    "answer": "with open(\"test.txt\", \"r\") as f:\n    content = f.read()\n    print(content)",
+    "hint": "Use with open(\"test.txt\", \"r\") as f: and then f.read().",
+    "level": 1
+  },
+  {
+    "title": "Write two lines to a file",
+    "prompt": "Use with open() to open test.txt in write mode and write the lines \"Hello\\n\" and \"Python\\n\" to it.",
+    "starter": "",
+    "answer": "with open(\"test.txt\", \"w\") as f:\n    f.write(\"Hello\\n\")\n    f.write(\"Python\\n\")",
+    "hint": "Open the file with mode \"w\" and call write() twice.",
+    "level": 1
+  },
+  {
+    "title": "Append text to a file",
+    "prompt": "Use with open() to open test.txt in append mode and add the line \"More text\\n\".",
+    "starter": "",
+    "answer": "with open(\"test.txt\", \"a\") as f:\n    f.write(\"More text\\n\")",
+    "hint": "Append mode uses \"a\".",
+    "level": 1
+  },
+  {
+    "title": "Read the whole file",
+    "prompt": "Use with open() to open test.txt in read mode, store the full file in a variable called data, and print data.",
+    "starter": "",
+    "answer": "with open(\"test.txt\", \"r\") as f:\n    data = f.read()\n    print(data)",
+    "hint": "Use f.read() to get the whole file as one string.",
+    "level": 1
+  },
+  {
+    "title": "Read a file line by line",
+    "prompt": "Use with open() to open test.txt in read mode and print each line without the ending newline character.",
+    "starter": "",
+    "answer": "with open(\"test.txt\", \"r\") as f:\n    for line in f:\n        print(line.strip())",
+    "hint": "Loop through the file and use strip() on each line.",
+    "level": 2
+  },
+  {
+    "title": "Read all lines into a list",
+    "prompt": "Use with open() to open test.txt in read mode, store all lines in a variable called lines with readlines(), and print lines.",
+    "starter": "",
+    "answer": "with open(\"test.txt\", \"r\") as f:\n    lines = f.readlines()\n\nprint(lines)",
+    "hint": "Use f.readlines() to get a list of lines.",
+    "level": 1
+  },
+  {
+    "title": "Write a list of lines",
+    "prompt": "Create lines = [\"apple\\n\", \"banana\\n\", \"orange\\n\"]. Then open fruits.txt in write mode and write the whole list to the file with writelines().",
+    "starter": "lines = [\"apple\\n\", \"banana\\n\", \"orange\\n\"]\n",
+    "answer": "lines = [\"apple\\n\", \"banana\\n\", \"orange\\n\"]\nwith open(\"fruits.txt\", \"w\") as f:\n    f.writelines(lines)",
+    "hint": "Use writelines(lines) inside a with open(..., \"w\") block.",
+    "level": 2
+  },
+  {
+    "title": "Open a file in binary read mode",
+    "prompt": "Use with open() to open photo.jpg in binary read mode, store the bytes in a variable called data, and print data.",
+    "starter": "",
+    "answer": "with open(\"photo.jpg\", \"rb\") as f:\n    data = f.read()\n    print(data)",
+    "hint": "Binary read mode is \"rb\".",
+    "level": 2
+  },
+  {
+    "title": "Create a new file with x mode",
+    "prompt": "Use open() to create a new file called notes.txt with mode \"x\", then close it.",
+    "starter": "",
+    "answer": "f = open(\"notes.txt\", \"x\")\nf.close()",
+    "hint": "The mode \"x\" creates a new file and fails if it already exists.",
+    "level": 1
+  },
+  {
+    "title": "Check whether a file exists",
+    "prompt": "Import os. Then check whether test.txt exists. If it does, print \"File exists\". Otherwise print \"File does not exist\".",
+    "starter": "import os\n",
+    "answer": "import os\nif os.path.exists(\"test.txt\"):\n    print(\"File exists\")\nelse:\n    print(\"File does not exist\")",
+    "hint": "Use os.path.exists(\"test.txt\").",
+    "level": 1
+  },
+  {
+    "title": "Delete a file if it exists",
+    "prompt": "Import os. If test.txt exists, delete it with os.remove() and print \"Deleted\". Otherwise print \"Not found\".",
+    "starter": "import os\n",
+    "answer": "import os\nif os.path.exists(\"test.txt\"):\n    os.remove(\"test.txt\")\n    print(\"Deleted\")\nelse:\n    print(\"Not found\")",
+    "hint": "Check with os.path.exists() before calling os.remove().",
+    "level": 2
+  },
+  {
+    "title": "Rename a file",
+    "prompt": "Import os and rename old.txt to new.txt.",
+    "starter": "import os\n",
+    "answer": "import os\nos.rename(\"old.txt\", \"new.txt\")",
+    "hint": "Use os.rename(old_name, new_name).",
+    "level": 1
+  },
+  {
+    "title": "Copy one file to another",
+    "prompt": "Read all text from source.txt into data, then write data into target.txt.",
+    "starter": "",
+    "answer": "with open(\"source.txt\", \"r\") as f1:\n    data = f1.read()\n\nwith open(\"target.txt\", \"w\") as f2:\n    f2.write(data)",
+    "hint": "Read from the first file, then write the same data to the second file.",
+    "level": 2
+  },
+  {
+    "title": "Read a UTF-8 file",
+    "prompt": "Use with open() to open notes.txt in read mode with UTF-8 encoding and print its content.",
+    "starter": "",
+    "answer": "with open(\"notes.txt\", \"r\", encoding=\"utf-8\") as f:\n    print(f.read())",
+    "hint": "Add encoding=\"utf-8\" to open().",
+    "level": 1
+  },
+  {
+    "title": "Write Unicode text to a UTF-8 file",
+    "prompt": "Use with open() to open notes.txt in write mode with UTF-8 encoding and write the text \"你好\\nHello\\n\".",
+    "starter": "",
+    "answer": "with open(\"notes.txt\", \"w\", encoding=\"utf-8\") as f:\n    f.write(\"你好\\nHello\\n\")",
+    "hint": "Use write mode and set encoding to UTF-8.",
+    "level": 2
+  },
+  {
+    "title": "Write the demo file using a variable",
+    "prompt": "Create filename = \"demo.txt\". Then open that file in write mode with UTF-8 encoding and write \"Line 1\\n\" and \"Line 2\\n\".",
+    "starter": "filename = \"demo.txt\"\n",
+    "answer": "filename = \"demo.txt\"\nwith open(filename, \"w\", encoding=\"utf-8\") as f:\n    f.write(\"Line 1\\n\")\n    f.write(\"Line 2\\n\")",
+    "hint": "Pass the filename variable into open().",
+    "level": 2
+  },
+  {
+    "title": "Read the demo file line by line",
+    "prompt": "Create filename = \"demo.txt\". Then open it in read mode with UTF-8 encoding and print each line without the ending newline.",
+    "starter": "filename = \"demo.txt\"\n",
+    "answer": "filename = \"demo.txt\"\nwith open(filename, \"r\", encoding=\"utf-8\") as f:\n    for line in f:\n        print(line.strip())",
+    "hint": "Loop over the file and use strip() on each line.",
+    "level": 2
+  },
+  {
+    "title": "Read a file safely if it exists",
+    "prompt": "Import os. Create filename = \"abc.txt\". If the file exists, open it in read mode with UTF-8 encoding and print its content. Otherwise print \"File not found\".",
+    "starter": "import os\nfilename = \"abc.txt\"\n",
+    "answer": "import os\nfilename = \"abc.txt\"\nif os.path.exists(filename):\n    with open(filename, \"r\", encoding=\"utf-8\") as f:\n        print(f.read())\nelse:\n    print(\"File not found\")",
+    "hint": "Check os.path.exists(filename) before reading.",
+    "level": 2
+  },
+  {
+    "title": "Print the current working directory",
+    "prompt": "Import os and print the current working directory.",
+    "starter": "import os\n",
+    "answer": "import os\nprint(os.getcwd())",
+    "hint": "Use os.getcwd().",
+    "level": 1
+  },
+  {
+    "title": "Append a user name to names.txt",
+    "prompt": "Ask the user for their name with input(\"Enter your name: \"). Then open names.txt in append mode with UTF-8 encoding and write the name followed by a newline.",
+    "starter": "",
+    "answer": "name = input(\"Enter your name: \")\n\nwith open(\"names.txt\", \"a\", encoding=\"utf-8\") as f:\n    f.write(name + \"\\n\")",
+    "hint": "Use input() first, then append with mode \"a\".",
+    "level": 2
+  },
+  {
+    "title": "Read and print all saved names",
+    "prompt": "Open names.txt in read mode with UTF-8 encoding, print \"\\nAll names:\", and then print the full file content.",
+    "starter": "",
+    "answer": "with open(\"names.txt\", \"r\", encoding=\"utf-8\") as f:\n    print(\"\\nAll names:\")\n    print(f.read())",
+    "hint": "Read the file inside the with block after printing the heading.",
+    "level": 1
+  },
+  {
+    "title": "Build the beginner practice program",
+    "prompt": "Ask the user for their name, append it to names.txt with UTF-8 encoding, then reopen names.txt and print \"\\nAll names:\" followed by the full file content.",
+    "starter": "",
+    "answer": "name = input(\"Enter your name: \")\n\nwith open(\"names.txt\", \"a\", encoding=\"utf-8\") as f:\n    f.write(name + \"\\n\")\n\nwith open(\"names.txt\", \"r\", encoding=\"utf-8\") as f:\n    print(\"\\nAll names:\")\n    print(f.read())",
+    "hint": "Use two with open() blocks: one for appending, one for reading.",
+    "level": 3
+  },
+  {
+    "title": "Read the first line from a lines list",
+    "prompt": "Open test.txt in read mode, store all lines in lines with readlines(), and print the first item in the list.",
+    "starter": "",
+    "answer": "with open(\"test.txt\", \"r\") as f:\n    lines = f.readlines()\n\nprint(lines[0])",
+    "hint": "After readlines(), use index 0 for the first line.",
+    "level": 2
+  },
+  {
+    "title": "Build a write then read workflow",
+    "prompt": "Create filename = \"demo.txt\". Write \"Line 1\\n\" and \"Line 2\\n\" to it with UTF-8 encoding, then reopen it in read mode with UTF-8 encoding and print each line without the ending newline.",
+    "starter": "filename = \"demo.txt\"\n",
+    "answer": "filename = \"demo.txt\"\nwith open(filename, \"w\", encoding=\"utf-8\") as f:\n    f.write(\"Line 1\\n\")\n    f.write(\"Line 2\\n\")\n\nwith open(filename, \"r\", encoding=\"utf-8\") as f:\n    for line in f:\n        print(line.strip())",
+    "hint": "Write first, then open the same file again for reading.",
+    "level": 3
+  },
+  {
+    "title": "Write and then append to the same file",
+    "prompt": "Open test.txt in write mode and write \"Hello\\n\". Then open the same file in append mode and add \"More text\\n\".",
+    "starter": "",
+    "answer": "with open(\"test.txt\", \"w\") as f:\n    f.write(\"Hello\\n\")\n\nwith open(\"test.txt\", \"a\") as f:\n    f.write(\"More text\\n\")",
+    "hint": "Use one with block for mode \"w\" and another for mode \"a\".",
+    "level": 2
+  },
+  {
+    "title": "Write a fruit list and read it back",
+    "prompt": "Create lines = [\"apple\\n\", \"banana\\n\", \"orange\\n\"]. Write it to fruits.txt with writelines(), then reopen fruits.txt in read mode and print the full content.",
+    "starter": "lines = [\"apple\\n\", \"banana\\n\", \"orange\\n\"]\n",
+    "answer": "lines = [\"apple\\n\", \"banana\\n\", \"orange\\n\"]\nwith open(\"fruits.txt\", \"w\") as f:\n    f.writelines(lines)\n\nwith open(\"fruits.txt\", \"r\") as f:\n    print(f.read())",
+    "hint": "Use writelines() first, then reopen the file and use read().",
+    "level": 3
+  }
+]
