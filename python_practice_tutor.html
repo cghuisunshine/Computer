@@ -387,16 +387,6 @@
       margin: 14px 0;
     }
 
-    .ask-launch-card p:last-of-type {
-      margin-bottom: 0;
-    }
-
-    .ask-launch-note {
-      margin-top: 10px;
-      font-size: 13px;
-      color: var(--muted);
-    }
-
     .ask-launcher {
       position: fixed;
       right: 18px;
@@ -623,18 +613,6 @@
           <h3>AI Feedback</h3>
           <div class="feedback-box" id="feedbackBox">
             <p class="muted">After checking, this area will show the AI grading result and coaching notes.</p>
-          </div>
-        </div>
-
-        <div class="panel-section">
-          <h3>Ask Tutor</h3>
-          <div class="checkpoint-box ask-launch-card">
-            <p><strong>Need help with this question?</strong></p>
-            <p class="small muted">Open the floating tutor window to ask about your code, the prompt, or selected output.</p>
-            <div class="field-row">
-              <button class="primary" id="askSidebarOpenBtn" type="button">Open Ask Tutor</button>
-            </div>
-            <div class="ask-launch-note">Selecting relevant text will also open the tutor automatically.</div>
           </div>
         </div>
 
@@ -879,7 +857,6 @@
       importBtn: document.getElementById('importBtn'),
       builtinBtn: document.getElementById('builtinBtn'),
       apiStatus: document.getElementById('apiStatus'),
-      askSidebarOpenBtn: document.getElementById('askSidebarOpenBtn'),
       askLauncherBtn: document.getElementById('askLauncherBtn'),
       askPopup: document.getElementById('askPopup'),
       askPopupHead: document.getElementById('askPopupHead'),
@@ -2193,7 +2170,6 @@ json.dumps(_result)
     el.importBtn.addEventListener('click', handleImportQuestions);
     el.builtinBtn.addEventListener('click', handleUseBuiltInSet);
     el.jumpBtn.addEventListener('click', handleJumpToQuestion);
-    el.askSidebarOpenBtn.addEventListener('click', () => setAskPopupOpen(true));
     el.askLauncherBtn.addEventListener('click', () => setAskPopupOpen(true));
     el.askPopupCloseBtn.addEventListener('click', () => setAskPopupOpen(false));
     el.askAutoOpenToggle.addEventListener('click', () => {
