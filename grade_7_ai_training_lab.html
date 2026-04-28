@@ -423,6 +423,10 @@
             <tbody></tbody>
           </table>
 
+          <div class="graph-wrap" style="margin-top:12px;">
+            <svg id="manualGraph" viewBox="0 0 520 340" role="img" aria-label="Manual training graph"></svg>
+          </div>
+
           <div class="stat-grid">
             <div class="stat">
               <span>Total absolute error</span>
@@ -511,6 +515,9 @@
             </thead>
             <tbody></tbody>
           </table>
+          <div class="graph-wrap" style="margin-top:12px;">
+            <svg id="iceGraph" viewBox="0 0 520 340" role="img" aria-label="Ice cream sales graph"></svg>
+          </div>
           <div class="stat" style="margin-top:12px;">
             <span>Total absolute error</span>
             <strong id="iceTotalError">0</strong>
@@ -608,6 +615,50 @@
       return weight * input + bias;
     }
 
+    function graphX(value, min, max) {
+      return 60 + ((value - min) / (max - min)) * 410;
+    }
+
+    function graphY(value, min, max) {
+      return 310 - ((value - min) / (max - min)) * 280;
+    }
+
+    function renderModelGraph(svgId, rows, weight, bias, config) {
+      const svg = document.getElementById(svgId);
+      const xTicks = config.xTicks;
+      const yTicks = config.yTicks;
+      const lineY1 = prediction(weight, bias, config.xMin);
+      const lineY2 = prediction(weight, bias, config.xMax);
+
+      let grid = '';
+      xTicks.forEach(tick => {
+        const x = graphX(tick, config.xMin, config.xMax);
+        grid += `<line x1="${x}" y1="30" x2="${x}" y2="310" stroke="#e5e7eb" />`;
+        grid += `<text x="${x - 8}" y="329" font-size="12" fill="#64748b">${tick}</text>`;
+      });
+      yTicks.forEach(tick => {
+        const y = graphY(tick, config.yMin, config.yMax);
+        grid += `<line x1="60" y1="${y}" x2="470" y2="${y}" stroke="#e5e7eb" />`;
+        grid += `<text x="18" y="${y + 4}" font-size="12" fill="#64748b">${tick}</text>`;
+      });
+
+      const points = rows.map(row => `
+        <circle cx="${graphX(row.x, config.xMin, config.xMax)}" cy="${graphY(row.y, config.yMin, config.yMax)}" r="7" fill="#2563eb" />
+        <text x="${graphX(row.x, config.xMin, config.xMax) + 10}" y="${graphY(row.y, config.yMin, config.yMax) - 8}" font-size="12" fill="#1d4ed8">(${row.x}, ${row.y})</text>
+      `).join('');
+
+      svg.innerHTML = `
+        ${grid}
+        <line x1="60" y1="310" x2="480" y2="310" stroke="#0f172a" stroke-width="2" />
+        <line x1="60" y1="30" x2="60" y2="310" stroke="#0f172a" stroke-width="2" />
+        <text x="210" y="333" font-size="13" fill="#334155">${config.xLabel}</text>
+        <text x="8" y="22" font-size="13" fill="#334155">${config.yLabel}</text>
+        <line x1="${graphX(config.xMin, config.xMin, config.xMax)}" y1="${graphY(lineY1, config.yMin, config.yMax)}" x2="${graphX(config.xMax, config.xMin, config.xMax)}" y2="${graphY(lineY2, config.yMin, config.yMax)}" stroke="#f59e0b" stroke-width="5" stroke-linecap="round" />
+        ${points}
+        <text x="235" y="55" font-size="14" fill="#92400e" font-weight="700">AI model line</text>
+      `;
+    }
+
     function renderManual() {
       const w = Number(manualWeight.value);
       const b = Number(manualBias.value);
@@ -634,6 +685,16 @@
       document.getElementById('manualBiasStat').textContent = b;
       document.getElementById('manualTotalError').textContent = total.toFixed(0);
       document.getElementById('manualFormula').textContent = `prediction = ${w} × hours + ${b}`;
+      renderModelGraph('manualGraph', studyData, w, b, {
+        xMin: 0,
+        xMax: 5,
+        yMin: 30,
+        yMax: 100,
+        xTicks: [0, 1, 2, 3, 4, 5],
+        yTicks: [40, 50, 60, 70, 80, 90, 100],
+        xLabel: 'Hours studied',
+        yLabel: 'Score'
+      });
     }
 
     function setPerfectManual() {
@@ -666,6 +727,16 @@
       document.getElementById('iceBiasValue').textContent = b;
       document.getElementById('iceTotalError').textContent = total.toFixed(1);
       document.getElementById('iceFormula').textContent = `sales = ${w.toFixed(1)} × temperature + ${b}`;
+      renderModelGraph('iceGraph', iceData, w, b, {
+        xMin: 5,
+        xMax: 30,
+        yMin: 0,
+        yMax: 70,
+        xTicks: [5, 10, 15, 20, 25, 30],
+        yTicks: [0, 10, 20, 30, 40, 50, 60, 70],
+        xLabel: 'Temperature',
+        yLabel: 'Sales'
+      });
     }
 
     function setPerfectIce() {
@@ -678,6 +749,9 @@
     let trainBias = 30;
     let round = 0;
     const learningRate = 0.01;
+    const autoTrainStepCount = 20;
+    const autoTrainDelayMs = 250;
+    let autoTrainTimer = null;
 
     function totalSquaredError(w, b) {
       return studyData.reduce((sum, row) => {
@@ -707,12 +781,32 @@
     }
 
     function autoTrain() {
-      for (let i = 0; i < 20; i++) {
-        trainOneStep();
+      if (autoTrainTimer) {
+        return;
       }
+
+      let stepsRemaining = autoTrainStepCount;
+
+      function runNextAutoStep() {
+        trainOneStep();
+        stepsRemaining -= 1;
+
+        if (stepsRemaining > 0) {
+          autoTrainTimer = setTimeout(runNextAutoStep, autoTrainDelayMs);
+        } else {
+          autoTrainTimer = null;
+        }
+      }
+
+      runNextAutoStep();
     }
 
     function resetTraining() {
+      if (autoTrainTimer) {
+        clearTimeout(autoTrainTimer);
+        autoTrainTimer = null;
+      }
+
       trainWeight = 2;
       trainBias = 30;
       round = 0;
