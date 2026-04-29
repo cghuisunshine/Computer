@@ -248,6 +248,12 @@
       margin-top: 10px;
     }
 
+    .threshold-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -381,7 +387,7 @@
     }
 
     @media (max-width: 820px) {
-      .hero-grid, .two-col, .three-col, .stat-grid, .step-flow {
+      .hero-grid, .two-col, .three-col, .stat-grid, .threshold-grid, .step-flow {
         grid-template-columns: 1fr;
       }
 
@@ -514,9 +520,22 @@
             <span>Total squared error</span>
             <strong id="trainErrorStat">0</strong>
           </div>
+          <div class="threshold-grid">
+            <div>
+              <label for="trainErrorThreshold">Optimization error goal</label>
+              <input id="trainErrorThreshold" type="range" min="0" max="500" step="10" value="30" />
+              <p><span class="pill">stop below <span id="trainErrorThresholdValue">30</span></span></p>
+            </div>
+            <div>
+              <label for="trainRoundLimit">Round limit</label>
+              <input id="trainRoundLimit" type="range" min="5" max="10000" step="5" value="500" />
+              <p><span class="pill">stop after <span id="trainRoundLimitValue">500</span> rounds</span></p>
+            </div>
+          </div>
           <div class="button-row">
             <button class="good" onclick="trainOneStep()">Train One Step</button>
             <button onclick="autoTrain()">Auto Train 20 Steps</button>
+            <button onclick="autoTrainUntilOptimized()">Auto Train Until Optimized</button>
             <button class="secondary" onclick="resetTraining()">Reset</button>
           </div>
           <p class="note">This page uses a simple learning rule. It is not the full version used by big AI systems, but the idea is the same: use error to improve the model.</p>
@@ -661,7 +680,13 @@
       'Ready to train. The first model is not very good yet.': '准备开始训练。第一个模型还不太好。',
       'Round': '轮次',
       'Total squared error': '总平方误差',
+      'Optimization error goal': '优化误差目标',
+      'stop below': '低于时停止',
+      'Round limit': '轮数上限',
+      'stop after': '达到后停止',
+      'rounds': '轮',
       'Auto Train 20 Steps': '自动训练 20 步',
+      'Auto Train Until Optimized': '自动训练到优化',
       'Reset': '重置',
       'This page uses a simple learning rule. It is not the full version used by big AI systems, but the idea is the same: use error to improve the model.': '本页使用一个简单的学习规则。它不是大型 AI 系统使用的完整版本，但思想相同：用误差改进模型。',
       '4. Practice Challenge: Ice Cream Sales': '4. 练习挑战：冰淇淋销量',
@@ -797,6 +822,8 @@
     const manualBias = document.getElementById('manualBias');
     const iceWeight = document.getElementById('iceWeight');
     const iceBias = document.getElementById('iceBias');
+    const trainErrorThreshold = document.getElementById('trainErrorThreshold');
+    const trainRoundLimit = document.getElementById('trainRoundLimit');
 
     function prediction(weight, bias, input) {
       return weight * input + bias;
@@ -946,6 +973,8 @@
     const learningRate = 0.01;
     const autoTrainStepCount = 20;
     const autoTrainDelayMs = 250;
+    const defaultOptimizedErrorThreshold = 30;
+    const defaultOptimizedStepLimit = 10000;
     let autoTrainTimer = null;
 
     function totalSquaredError(w, b) {
@@ -953,6 +982,16 @@
         const err = prediction(w, b, row.x) - row.y;
         return sum + err * err;
       }, 0);
+    }
+
+    function getOptimizationErrorThreshold() {
+      const value = Number(trainErrorThreshold.value);
+      return Number.isFinite(value) ? value : defaultOptimizedErrorThreshold;
+    }
+
+    function getOptimizationStepLimit() {
+      const value = Number(trainRoundLimit.value);
+      return Number.isFinite(value) ? value : defaultOptimizedStepLimit;
     }
 
     function trainOneStep() {
@@ -975,18 +1014,15 @@
       renderTraining();
     }
 
-    function autoTrain() {
+    function runAutoTraining(shouldContinue) {
       if (autoTrainTimer) {
         return;
       }
 
-      let stepsRemaining = autoTrainStepCount;
-
       function runNextAutoStep() {
         trainOneStep();
-        stepsRemaining -= 1;
 
-        if (stepsRemaining > 0) {
+        if (shouldContinue()) {
           autoTrainTimer = setTimeout(runNextAutoStep, autoTrainDelayMs);
         } else {
           autoTrainTimer = null;
@@ -994,6 +1030,24 @@
       }
 
       runNextAutoStep();
+    }
+
+    function autoTrain() {
+      let stepsRemaining = autoTrainStepCount;
+
+      runAutoTraining(() => {
+        stepsRemaining -= 1;
+        return stepsRemaining > 0;
+      });
+    }
+
+    function autoTrainUntilOptimized() {
+      let stepsRun = 0;
+
+      runAutoTraining(() => {
+        stepsRun += 1;
+        return totalSquaredError(trainWeight, trainBias) >= getOptimizationErrorThreshold() && stepsRun < getOptimizationStepLimit();
+      });
     }
 
     function resetTraining() {
@@ -1053,6 +1107,8 @@
       document.getElementById('trainWeightStat').textContent = trainWeight.toFixed(1);
       document.getElementById('trainBiasStat').textContent = trainBias.toFixed(1);
       document.getElementById('trainErrorStat').textContent = err.toFixed(1);
+      document.getElementById('trainErrorThresholdValue').textContent = getOptimizationErrorThreshold();
+      document.getElementById('trainRoundLimitValue').textContent = getOptimizationStepLimit();
 
       const message = document.getElementById('trainMessage');
       if (err < 30) {
@@ -1103,6 +1159,8 @@
     manualBias.addEventListener('input', renderManual);
     iceWeight.addEventListener('input', renderIce);
     iceBias.addEventListener('input', renderIce);
+    trainErrorThreshold.addEventListener('input', renderTraining);
+    trainRoundLimit.addEventListener('input', renderTraining);
     document.querySelectorAll('.lang-btn[data-lang-mode]').forEach(button => {
       button.addEventListener('click', () => setLanguageMode(button.dataset.langMode));
     });
