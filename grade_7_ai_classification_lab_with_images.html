@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Classification Lab - Grade 7 AI</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --ink: #1f2937;
+      --muted: #6b7280;
+      --blue: #2563eb;
+      --blue-light: #dbeafe;
+      --green: #16a34a;
+      --green-light: #dcfce7;
+      --gold: #f59e0b;
+      --gold-light: #fef3c7;
+      --red: #dc2626;
+      --red-light: #fee2e2;
+      --purple: #7c3aed;
+      --purple-light: #ede9fe;
+      --line: #e5e7eb;
+      --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, #e0f2fe 0, transparent 28%),
+        radial-gradient(circle at top right, #ede9fe 0, transparent 25%),
+        var(--bg);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    header, main {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding-left: 18px;
+      padding-right: 18px;
+    }
+
+    header {
+      padding-top: 42px;
+      padding-bottom: 20px;
+    }
+
+    main {
+      padding-bottom: 44px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: var(--blue-light);
+      color: #1d4ed8;
+      font-size: .92rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.1rem, 5vw, 4rem);
+      line-height: 1.05;
+      letter-spacing: -.04em;
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: clamp(1.55rem, 3vw, 2.2rem);
+      letter-spacing: -.03em;
+    }
+
+    h3 {
+      margin: 0 0 8px;
+      font-size: 1.15rem;
+    }
+
+    p {
+      margin: 0 0 14px;
+    }
+
+    .subtitle {
+      max-width: 800px;
+      font-size: 1.15rem;
+      color: var(--muted);
+      margin-top: 18px;
+    }
+
+    .hero-grid,
+    .three-col,
+    .stat-grid,
+    .step-flow,
+    .example-grid,
+    .image-strip {
+      display: grid;
+      gap: 14px;
+    }
+
+    .hero-grid,
+    .three-col,
+    .stat-grid,
+    .image-strip {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .step-flow {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .example-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1.02fr .98fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .mini-card,
+    .section,
+    .quiz-card,
+    .example-card,
+    .illustration-card {
+      background: rgba(255,255,255,.92);
+      border: 1px solid rgba(226,232,240,.95);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .mini-card,
+    .example-card,
+    .illustration-card {
+      padding: 18px;
+    }
+
+    .section {
+      margin-top: 22px;
+      padding: clamp(18px, 3vw, 28px);
+    }
+
+    .mini-card strong {
+      display: block;
+      font-size: 1.08rem;
+      margin-bottom: 4px;
+    }
+
+    .formula {
+      display: inline-block;
+      padding: 12px 16px;
+      border-radius: 16px;
+      background: #111827;
+      color: #f9fafb;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: .98rem;
+      margin: 8px 0 12px;
+    }
+
+    .note {
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: var(--gold-light);
+      border: 1px solid #fde68a;
+    }
+
+    .success-box {
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: var(--green-light);
+      border: 1px solid #86efac;
+      color: #166534;
+      font-weight: 700;
+    }
+
+    .warning-box {
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: var(--red-light);
+      border: 1px solid #fecaca;
+      color: #991b1b;
+      font-weight: 700;
+    }
+
+    .step {
+      padding: 16px;
+      border-radius: 18px;
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      text-align: center;
+      font-weight: 800;
+    }
+
+    .step span {
+      display: block;
+      font-size: 2rem;
+      margin-bottom: 6px;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--purple-light);
+      color: #5b21b6;
+      font-weight: 800;
+      font-size: .9rem;
+    }
+
+    .control-panel {
+      display: grid;
+      gap: 14px;
+      padding: 16px;
+      border-radius: 20px;
+      background: #f8fafc;
+      border: 1px solid var(--line);
+    }
+
+    .feature-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+    }
+
+    .feature-item input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--blue);
+    }
+
+    .score-box {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .stat {
+      padding: 14px;
+      border-radius: 18px;
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      text-align: center;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.45rem;
+      color: var(--blue);
+    }
+
+    .cat-bg strong { color: #7c3aed; }
+    .dog-bg strong { color: #2563eb; }
+    .spam-bg strong { color: #dc2626; }
+    .ham-bg strong { color: #16a34a; }
+
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 11px 16px;
+      font-weight: 800;
+      cursor: pointer;
+      background: var(--blue);
+      color: white;
+      box-shadow: 0 8px 16px rgba(37,99,235,.2);
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 20px rgba(37,99,235,.25);
+    }
+
+    button.secondary {
+      background: #475569;
+      box-shadow: none;
+    }
+
+    button.good {
+      background: var(--green);
+      box-shadow: 0 8px 16px rgba(22,163,74,.2);
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .result-card {
+      padding: 18px;
+      border-radius: 20px;
+      background: white;
+      border: 1px solid var(--line);
+    }
+
+    .big-result {
+      font-size: 1.4rem;
+      font-weight: 900;
+      margin: 8px 0 6px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 16px;
+      background: white;
+    }
+
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid var(--line);
+      text-align: center;
+    }
+
+    th {
+      background: #eff6ff;
+      color: #1d4ed8;
+    }
+
+    tr:last-child td { border-bottom: 0; }
+
+    .tag {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: .88rem;
+    }
+
+    .tag.cat { background: #ede9fe; color: #6d28d9; }
+    .tag.dog { background: #dbeafe; color: #1d4ed8; }
+    .tag.spam { background: #fee2e2; color: #b91c1c; }
+    .tag.notspam { background: #dcfce7; color: #166534; }
+
+    .quiz-card {
+      padding: 18px;
+      margin-top: 12px;
+    }
+
+    .choice {
+      display: block;
+      width: 100%;
+      text-align: left;
+      margin: 8px 0;
+      background: #f8fafc;
+      color: var(--ink);
+      border: 1px solid var(--line);
+      box-shadow: none;
+    }
+
+    .choice:hover {
+      background: #eff6ff;
+    }
+
+    .feedback {
+      min-height: 28px;
+      margin-top: 10px;
+      font-weight: 800;
+    }
+
+    .correct { color: var(--green); }
+    .wrong { color: var(--red); }
+
+    .footer {
+      text-align: center;
+      margin-top: 26px;
+      color: var(--muted);
+      font-size: .95rem;
+    }
+
+    .illustration {
+      width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto 12px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, #f8fbff, #eef5ff);
+      border: 1px solid #e2e8f0;
+    }
+
+    .small-illustration {
+      max-width: 230px;
+      margin-bottom: 10px;
+    }
+
+    .centered {
+      text-align: center;
+    }
+
+    @media (max-width: 900px) {
+      .hero-grid, .three-col, .stat-grid, .step-flow, .two-col, .example-grid, .score-box, .image-strip {
+        grid-template-columns: 1fr;
+      }
+
+      header {
+        padding-top: 26px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="badge">Grade 7 Friendly Lesson 3</div>
+    <h1>Classification Lab</h1>
+    <p class="subtitle">
+      In this lesson, AI does not predict a number. Instead, it chooses a label.
+      Examples: <strong>cat or dog</strong>, <strong>spam or not spam</strong>.
+    </p>
+
+    <div class="image-strip" style="margin-top:18px;">
+      <div class="illustration-card centered">
+        <svg class="illustration small-illustration" viewBox="0 0 220 160" aria-label="Cat illustration">
+          <rect x="0" y="0" width="220" height="160" rx="18" fill="#f8fafc"/>
+          <circle cx="110" cy="82" r="46" fill="#ddd6fe"/>
+          <polygon points="78,48 92,20 108,50" fill="#c4b5fd"/>
+          <polygon points="112,50 128,20 142,48" fill="#c4b5fd"/>
+          <circle cx="94" cy="80" r="5" fill="#111827"/>
+          <circle cx="126" cy="80" r="5" fill="#111827"/>
+          <polygon points="110,92 103,100 117,100" fill="#f472b6"/>
+          <line x1="70" y1="94" x2="100" y2="96" stroke="#6b7280" stroke-width="2"/>
+          <line x1="70" y1="102" x2="100" y2="100" stroke="#6b7280" stroke-width="2"/>
+          <line x1="120" y1="96" x2="150" y2="94" stroke="#6b7280" stroke-width="2"/>
+          <line x1="120" y1="100" x2="150" y2="102" stroke="#6b7280" stroke-width="2"/>
+          <path d="M103 105 Q110 112 117 105" fill="none" stroke="#111827" stroke-width="2"/>
+          <text x="110" y="143" text-anchor="middle" font-size="16" font-weight="700" fill="#6d28d9">Cat</text>
+        </svg>
+        <strong>Image clue</strong>
+        Cat-like features can help the AI choose the label “cat”.
+      </div>
+
+      <div class="illustration-card centered">
+        <svg class="illustration small-illustration" viewBox="0 0 220 160" aria-label="Dog illustration">
+          <rect x="0" y="0" width="220" height="160" rx="18" fill="#f8fafc"/>
+          <circle cx="110" cy="82" r="44" fill="#bfdbfe"/>
+          <ellipse cx="76" cy="65" rx="18" ry="26" fill="#93c5fd"/>
+          <ellipse cx="144" cy="65" rx="18" ry="26" fill="#93c5fd"/>
+          <circle cx="94" cy="81" r="5" fill="#111827"/>
+          <circle cx="126" cy="81" r="5" fill="#111827"/>
+          <ellipse cx="110" cy="97" rx="10" ry="7" fill="#111827"/>
+          <path d="M96 108 Q110 120 124 108" fill="none" stroke="#111827" stroke-width="2"/>
+          <path d="M129 111 Q140 120 136 130" fill="none" stroke="#ef4444" stroke-width="4" stroke-linecap="round"/>
+          <text x="110" y="143" text-anchor="middle" font-size="16" font-weight="700" fill="#1d4ed8">Dog</text>
+        </svg>
+        <strong>Image clue</strong>
+        Dog-like features can help the AI choose the label “dog”.
+      </div>
+
+      <div class="illustration-card centered">
+        <svg class="illustration small-illustration" viewBox="0 0 220 160" aria-label="Email classifier illustration">
+          <rect x="0" y="0" width="220" height="160" rx="18" fill="#f8fafc"/>
+          <rect x="36" y="34" width="148" height="94" rx="14" fill="#ffffff" stroke="#cbd5e1"/>
+          <path d="M36 48 L110 92 L184 48" fill="none" stroke="#94a3b8" stroke-width="3"/>
+          <rect x="54" y="56" width="48" height="20" rx="10" fill="#fee2e2"/>
+          <text x="78" y="70" text-anchor="middle" font-size="12" font-weight="700" fill="#b91c1c">SPAM?</text>
+          <rect x="118" y="56" width="48" height="20" rx="10" fill="#dcfce7"/>
+          <text x="142" y="70" text-anchor="middle" font-size="12" font-weight="700" fill="#166534">SAFE?</text>
+          <circle cx="110" cy="109" r="13" fill="#dbeafe"/>
+          <path d="M104 109 L108 113 L116 104" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <text x="110" y="143" text-anchor="middle" font-size="16" font-weight="700" fill="#0f172a">Message labels</text>
+        </svg>
+        <strong>Image clue</strong>
+        AI can also classify messages as spam or not spam.
+      </div>
+    </div>
+
+    <div class="hero-grid">
+      <div class="mini-card">
+        <strong>What is classification?</strong>
+        Classification means putting something into a group or category.
+      </div>
+      <div class="mini-card">
+        <strong>Main idea</strong>
+        The AI looks at features, gives each label a score, and chooses the highest score.
+      </div>
+      <div class="mini-card">
+        <strong>Your mission</strong>
+        Test simple classifiers and see how AI decides between labels.
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <h2>1. Quick Review: Regression vs Classification</h2>
+      <div class="three-col">
+        <div class="mini-card">
+          <strong>Regression</strong>
+          Predicts a number, like a score, price, or temperature.
+        </div>
+        <div class="mini-card">
+          <strong>Classification</strong>
+          Predicts a label, like cat, dog, spam, or not spam.
+        </div>
+        <div class="mini-card">
+          <strong>Features</strong>
+          Features are clues the AI uses, such as “has whiskers” or “contains FREE”.
+        </div>
+      </div>
+
+      <div class="step-flow" style="margin-top:14px;">
+        <div class="step"><span>1</span>Look at features</div>
+        <div class="step"><span>2</span>Give each label a score</div>
+        <div class="step"><span>3</span>Compare scores</div>
+        <div class="step"><span>4</span>Choose a label</div>
+      </div>
+
+      <p class="note" style="margin-top:14px;">
+        A classifier does not “know” like a person. It uses patterns from examples and makes its best guess.
+      </p>
+    </section>
+
+    <section class="section">
+      <h2>2. Cat or Dog Classifier</h2>
+      <p>
+        Turn features on or off. The simple AI will give a <strong>cat score</strong> and a <strong>dog score</strong>.
+        Then it will choose a label.
+      </p>
+
+      <div class="two-col">
+        <div class="control-panel">
+          <svg class="illustration" viewBox="0 0 520 180" aria-label="Cat and dog comparison illustration">
+            <rect x="0" y="0" width="520" height="180" rx="20" fill="#f8fbff"/>
+            <text x="135" y="28" text-anchor="middle" font-size="18" font-weight="700" fill="#6d28d9">Cat features</text>
+            <text x="385" y="28" text-anchor="middle" font-size="18" font-weight="700" fill="#1d4ed8">Dog features</text>
+
+            <circle cx="135" cy="92" r="42" fill="#ddd6fe"/>
+            <polygon points="106,60 118,35 131,60" fill="#c4b5fd"/>
+            <polygon points="139,60 152,35 164,60" fill="#c4b5fd"/>
+            <circle cx="122" cy="89" r="4.5" fill="#111827"/>
+            <circle cx="148" cy="89" r="4.5" fill="#111827"/>
+            <polygon points="135,99 129,106 141,106" fill="#f472b6"/>
+            <line x1="100" y1="99" x2="126" y2="101" stroke="#6b7280" stroke-width="2"/>
+            <line x1="100" y1="107" x2="126" y2="105" stroke="#6b7280" stroke-width="2"/>
+            <line x1="144" y1="101" x2="170" y2="99" stroke="#6b7280" stroke-width="2"/>
+            <line x1="144" y1="105" x2="170" y2="107" stroke="#6b7280" stroke-width="2"/>
+            <text x="135" y="150" text-anchor="middle" font-size="14" fill="#6b7280">meow • whiskers</text>
+
+            <circle cx="385" cy="92" r="40" fill="#bfdbfe"/>
+            <ellipse cx="355" cy="76" rx="15" ry="22" fill="#93c5fd"/>
+            <ellipse cx="415" cy="76" rx="15" ry="22" fill="#93c5fd"/>
+            <circle cx="372" cy="90" r="4.5" fill="#111827"/>
+            <circle cx="398" cy="90" r="4.5" fill="#111827"/>
+            <ellipse cx="385" cy="103" rx="9" ry="6" fill="#111827"/>
+            <path d="M372 113 Q385 123 398 113" fill="none" stroke="#111827" stroke-width="2"/>
+            <text x="385" y="150" text-anchor="middle" font-size="14" fill="#6b7280">bark • fetch • wag tail</text>
+
+            <line x1="255" y1="45" x2="255" y2="145" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="6 6"/>
+          </svg>
+
+          <div class="feature-list">
+            <label class="feature-item"><input type="checkbox" id="fMeow"> Has a meow sound</label>
+            <label class="feature-item"><input type="checkbox" id="fBark"> Has a bark sound</label>
+            <label class="feature-item"><input type="checkbox" id="fWhiskers"> Has whiskers</label>
+            <label class="feature-item"><input type="checkbox" id="fPointyEars"> Has pointy ears</label>
+            <label class="feature-item"><input type="checkbox" id="fWagTail"> Wags tail a lot</label>
+            <label class="feature-item"><input type="checkbox" id="fFetch"> Likes playing fetch</label>
+          </div>
+
+          <div class="button-row">
+            <button onclick="runAnimalClassifier()">Classify</button>
+            <button class="secondary" onclick="loadAnimalExample('cat')">Try a Cat Example</button>
+            <button class="secondary" onclick="loadAnimalExample('dog')">Try a Dog Example</button>
+            <button class="secondary" onclick="resetAnimalFeatures()">Reset</button>
+          </div>
+        </div>
+
+        <div class="result-card">
+          <div class="score-box">
+            <div class="stat cat-bg">
+              <span>Cat score</span>
+              <strong id="catScore">0</strong>
+            </div>
+            <div class="stat dog-bg">
+              <span>Dog score</span>
+              <strong id="dogScore">0</strong>
+            </div>
+          </div>
+
+          <div class="big-result" id="animalLabel">Prediction: —</div>
+          <p id="animalReason">Choose some features, then press Classify.</p>
+          <div class="formula">label = the class with the higher score</div>
+          <table>
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th>Helps Cat</th>
+                <th>Helps Dog</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Meow</td><td>+4</td><td>0</td></tr>
+              <tr><td>Bark</td><td>0</td><td>+4</td></tr>
+              <tr><td>Whiskers</td><td>+2</td><td>0</td></tr>
+              <tr><td>Pointy ears</td><td>+1</td><td>+1</td></tr>
+              <tr><td>Wags tail</td><td>0</td><td>+2</td></tr>
+              <tr><td>Likes fetch</td><td>0</td><td>+3</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>3. Spam or Not Spam Classifier</h2>
+      <p>
+        Now try a message classifier. This kind of AI looks for patterns in text to decide whether a message is spam.
+      </p>
+
+      <div class="two-col">
+        <div class="control-panel">
+          <svg class="illustration" viewBox="0 0 520 190" aria-label="Spam classifier illustration">
+            <rect x="0" y="0" width="520" height="190" rx="20" fill="#f8fbff"/>
+            <rect x="45" y="40" width="180" height="110" rx="18" fill="#ffffff" stroke="#cbd5e1"/>
+            <path d="M45 54 L135 104 L225 54" fill="none" stroke="#94a3b8" stroke-width="3"/>
+            <text x="135" y="28" text-anchor="middle" font-size="18" font-weight="700" fill="#0f172a">Incoming message</text>
+            <rect x="70" y="70" width="65" height="24" rx="12" fill="#fee2e2"/>
+            <text x="102" y="86" text-anchor="middle" font-size="12" font-weight="700" fill="#b91c1c">FREE</text>
+            <rect x="143" y="70" width="58" height="24" rx="12" fill="#fee2e2"/>
+            <text x="172" y="86" text-anchor="middle" font-size="12" font-weight="700" fill="#b91c1c">LINK</text>
+            <text x="135" y="126" text-anchor="middle" font-size="13" fill="#6b7280">AI checks clues</text>
+
+            <path d="M252 95 H310" fill="none" stroke="#94a3b8" stroke-width="4" marker-end="url(#arrow)"/>
+            <defs>
+              <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+                <polygon points="0,0 8,4 0,8" fill="#94a3b8"/>
+              </marker>
+            </defs>
+
+            <rect x="325" y="42" width="145" height="42" rx="18" fill="#fee2e2" stroke="#fecaca"/>
+            <text x="397" y="68" text-anchor="middle" font-size="18" font-weight="700" fill="#b91c1c">Spam</text>
+            <rect x="325" y="106" width="145" height="42" rx="18" fill="#dcfce7" stroke="#86efac"/>
+            <text x="397" y="132" text-anchor="middle" font-size="18" font-weight="700" fill="#166534">Not Spam</text>
+          </svg>
+
+          <div class="feature-list">
+            <label class="feature-item"><input type="checkbox" id="sFree"> Contains “FREE” or “WIN”</label>
+            <label class="feature-item"><input type="checkbox" id="sUrgent"> Uses “urgent” or “act now”</label>
+            <label class="feature-item"><input type="checkbox" id="sLink"> Has a suspicious link</label>
+            <label class="feature-item"><input type="checkbox" id="sUnknown"> From an unknown sender</label>
+            <label class="feature-item"><input type="checkbox" id="sTeacher"> From your teacher or school</label>
+            <label class="feature-item"><input type="checkbox" id="sHomework"> Talks about real homework/classwork</label>
+          </div>
+
+          <div class="button-row">
+            <button onclick="runSpamClassifier()">Classify</button>
+            <button class="secondary" onclick="loadSpamExample('spam')">Try a Spam Example</button>
+            <button class="secondary" onclick="loadSpamExample('notspam')">Try a Normal Example</button>
+            <button class="secondary" onclick="resetSpamFeatures()">Reset</button>
+          </div>
+        </div>
+
+        <div class="result-card">
+          <div class="score-box">
+            <div class="stat spam-bg">
+              <span>Spam score</span>
+              <strong id="spamScore">0</strong>
+            </div>
+            <div class="stat ham-bg">
+              <span>Not-spam score</span>
+              <strong id="notSpamScore">0</strong>
+            </div>
+          </div>
+
+          <div class="big-result" id="spamLabel">Prediction: —</div>
+          <p id="spamReason">Choose some message features, then press Classify.</p>
+          <div class="formula">more spam clues → higher spam score</div>
+          <table>
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th>Helps Spam</th>
+                <th>Helps Not Spam</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>FREE / WIN</td><td>+3</td><td>0</td></tr>
+              <tr><td>Urgent / Act now</td><td>+2</td><td>0</td></tr>
+              <tr><td>Suspicious link</td><td>+3</td><td>0</td></tr>
+              <tr><td>Unknown sender</td><td>+2</td><td>0</td></tr>
+              <tr><td>Teacher / school sender</td><td>0</td><td>+3</td></tr>
+              <tr><td>Real homework content</td><td>0</td><td>+3</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>4. Try the Examples</h2>
+      <p>See whether you can predict the correct label before checking the answer.</p>
+
+      <div class="example-grid">
+        <div class="example-card">
+          <svg class="illustration small-illustration" viewBox="0 0 220 120" aria-label="Cat example image">
+            <rect width="220" height="120" rx="18" fill="#f8fafc"/>
+            <circle cx="110" cy="60" r="34" fill="#ddd6fe"/>
+            <polygon points="86,36 96,15 108,38" fill="#c4b5fd"/>
+            <polygon points="112,38 124,15 134,36" fill="#c4b5fd"/>
+            <circle cx="98" cy="58" r="4" fill="#111827"/>
+            <circle cx="122" cy="58" r="4" fill="#111827"/>
+            <polygon points="110,68 104,75 116,75" fill="#f472b6"/>
+            <line x1="80" y1="68" x2="102" y2="70" stroke="#6b7280" stroke-width="2"/>
+            <line x1="118" y1="70" x2="140" y2="68" stroke="#6b7280" stroke-width="2"/>
+          </svg>
+          <h3>Example A</h3>
+          <p><strong>Animal features:</strong> meow, whiskers, pointy ears</p>
+          <p>What should the label be?</p>
+          <div class="button-row">
+            <button class="choice" onclick="showExampleAnswer('ex1', true, 'Correct! This should be labeled CAT.')">Cat</button>
+            <button class="choice" onclick="showExampleAnswer('ex1', false, 'Not quite. Meow + whiskers strongly suggest CAT.')">Dog</button>
+          </div>
+          <div id="ex1" class="feedback"></div>
+        </div>
+
+        <div class="example-card">
+          <svg class="illustration small-illustration" viewBox="0 0 220 120" aria-label="Spam example image">
+            <rect width="220" height="120" rx="18" fill="#f8fafc"/>
+            <rect x="36" y="22" width="148" height="76" rx="12" fill="#fff" stroke="#cbd5e1"/>
+            <path d="M36 36 L110 75 L184 36" fill="none" stroke="#94a3b8" stroke-width="2.5"/>
+            <rect x="52" y="45" width="46" height="18" rx="9" fill="#fee2e2"/>
+            <text x="75" y="58" text-anchor="middle" font-size="11" font-weight="700" fill="#b91c1c">FREE</text>
+            <rect x="106" y="45" width="44" height="18" rx="9" fill="#fee2e2"/>
+            <text x="128" y="58" text-anchor="middle" font-size="11" font-weight="700" fill="#b91c1c">WIN</text>
+            <text x="110" y="86" text-anchor="middle" font-size="12" fill="#6b7280">unknown sender + link</text>
+          </svg>
+          <h3>Example B</h3>
+          <p><strong>Message features:</strong> “FREE prize”, unknown sender, suspicious link</p>
+          <p>What should the label be?</p>
+          <div class="button-row">
+            <button class="choice" onclick="showExampleAnswer('ex2', true, 'Correct! These are strong SPAM clues.')">Spam</button>
+            <button class="choice" onclick="showExampleAnswer('ex2', false, 'Not quite. FREE + unknown sender + suspicious link are classic SPAM clues.')">Not Spam</button>
+          </div>
+          <div id="ex2" class="feedback"></div>
+        </div>
+
+        <div class="example-card">
+          <svg class="illustration small-illustration" viewBox="0 0 220 120" aria-label="Dog example image">
+            <rect width="220" height="120" rx="18" fill="#f8fafc"/>
+            <circle cx="110" cy="60" r="32" fill="#bfdbfe"/>
+            <ellipse cx="85" cy="48" rx="13" ry="18" fill="#93c5fd"/>
+            <ellipse cx="135" cy="48" rx="13" ry="18" fill="#93c5fd"/>
+            <circle cx="98" cy="58" r="4" fill="#111827"/>
+            <circle cx="122" cy="58" r="4" fill="#111827"/>
+            <ellipse cx="110" cy="70" rx="8" ry="5.5" fill="#111827"/>
+            <path d="M98 78 Q110 88 122 78" fill="none" stroke="#111827" stroke-width="2"/>
+            <path d="M127 80 Q136 89 132 98" fill="none" stroke="#ef4444" stroke-width="4" stroke-linecap="round"/>
+          </svg>
+          <h3>Example C</h3>
+          <p><strong>Animal features:</strong> bark, wag tail, likes fetch</p>
+          <p>What should the label be?</p>
+          <div class="button-row">
+            <button class="choice" onclick="showExampleAnswer('ex3', false, 'Not quite. Bark + wagging tail + fetch strongly suggest DOG.')">Cat</button>
+            <button class="choice" onclick="showExampleAnswer('ex3', true, 'Correct! This should be labeled DOG.')">Dog</button>
+          </div>
+          <div id="ex3" class="feedback"></div>
+        </div>
+
+        <div class="example-card">
+          <svg class="illustration small-illustration" viewBox="0 0 220 120" aria-label="Not spam example image">
+            <rect width="220" height="120" rx="18" fill="#f8fafc"/>
+            <rect x="36" y="22" width="148" height="76" rx="12" fill="#fff" stroke="#cbd5e1"/>
+            <path d="M36 36 L110 75 L184 36" fill="none" stroke="#94a3b8" stroke-width="2.5"/>
+            <rect x="52" y="45" width="56" height="18" rx="9" fill="#dcfce7"/>
+            <text x="80" y="58" text-anchor="middle" font-size="11" font-weight="700" fill="#166534">TEACHER</text>
+            <rect x="114" y="45" width="50" height="18" rx="9" fill="#dcfce7"/>
+            <text x="139" y="58" text-anchor="middle" font-size="11" font-weight="700" fill="#166534">HW</text>
+            <path d="M94 83 L102 90 L120 72" fill="none" stroke="#16a34a" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <h3>Example D</h3>
+          <p><strong>Message features:</strong> from teacher, real homework, no suspicious link</p>
+          <p>What should the label be?</p>
+          <div class="button-row">
+            <button class="choice" onclick="showExampleAnswer('ex4', false, 'Not quite. Teacher + real homework are strong NOT-SPAM clues.')">Spam</button>
+            <button class="choice" onclick="showExampleAnswer('ex4', true, 'Correct! This should be NOT SPAM.')">Not Spam</button>
+          </div>
+          <div id="ex4" class="feedback"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>5. Why Classification Can Make Mistakes</h2>
+      <div class="three-col">
+        <div class="mini-card">
+          <strong>Too few features</strong>
+          If the AI does not get enough clues, it may guess the wrong label.
+        </div>
+        <div class="mini-card">
+          <strong>Confusing examples</strong>
+          Some cases look similar. A classifier may not be 100% sure.
+        </div>
+        <div class="mini-card">
+          <strong>Biased training data</strong>
+          If the training examples are poor, the model can learn bad patterns.
+        </div>
+      </div>
+
+      <p class="warning-box" style="margin-top:14px;">
+        Real AI systems should be checked by humans, especially when the decision is important.
+      </p>
+    </section>
+
+    <section class="section">
+      <h2>6. Check Your Understanding</h2>
+
+      <div class="quiz-card">
+        <h3>1. What is classification?</h3>
+        <button class="choice" onclick="checkChoice(this, false, 'q1')">Predicting a number like 72</button>
+        <button class="choice" onclick="checkChoice(this, true, 'q1')">Choosing a label like cat or dog</button>
+        <button class="choice" onclick="checkChoice(this, false, 'q1')">Deleting features</button>
+        <div id="q1" class="feedback"></div>
+      </div>
+
+      <div class="quiz-card">
+        <h3>2. Which one is an example of classification?</h3>
+        <button class="choice" onclick="checkChoice(this, false, 'q2')">Predicting tomorrow's temperature</button>
+        <button class="choice" onclick="checkChoice(this, true, 'q2')">Deciding whether an email is spam</button>
+        <button class="choice" onclick="checkChoice(this, false, 'q2')">Estimating a test score</button>
+        <div id="q2" class="feedback"></div>
+      </div>
+
+      <div class="quiz-card">
+        <h3>3. If a message says “FREE prize” and has a suspicious link, which score should rise more?</h3>
+        <input id="quizText1" type="text" placeholder="Type: spam or not spam" />
+        <div class="button-row">
+          <button onclick="checkTextAnswer('quizText1', 'q3', ['spam'], 'Correct! Those are spam clues.')">Check</button>
+        </div>
+        <div id="q3" class="feedback"></div>
+      </div>
+
+      <div class="quiz-card">
+        <h3>4. Fill in the blank: AI makes a classification by comparing ________ for different labels.</h3>
+        <input id="quizText2" type="text" placeholder="Type one word" />
+        <div class="button-row">
+          <button onclick="checkTextAnswer('quizText2', 'q4', ['scores', 'score'], 'Correct! It compares scores for each label.')">Check</button>
+        </div>
+        <div id="q4" class="feedback"></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Final Summary</h2>
+      <p>
+        Classification means choosing a category or label. In this lesson, you saw how simple AI can decide between
+        <span class="tag cat">cat</span> and <span class="tag dog">dog</span>,
+        or between <span class="tag spam">spam</span> and <span class="tag notspam">not spam</span>.
+      </p>
+      <div class="formula">features → scores → chosen label</div>
+      <p class="success-box">Next lesson idea: How Chatbots Work — from words and tokens to responses.</p>
+    </section>
+
+    <div class="footer">Classification Lab • Grade 7 beginner-friendly interactive lesson</div>
+  </main>
+
+  <script>
+    function getAnimalFeatures() {
+      return {
+        meow: document.getElementById('fMeow').checked,
+        bark: document.getElementById('fBark').checked,
+        whiskers: document.getElementById('fWhiskers').checked,
+        pointyEars: document.getElementById('fPointyEars').checked,
+        wagTail: document.getElementById('fWagTail').checked,
+        fetch: document.getElementById('fFetch').checked
+      };
+    }
+
+    function runAnimalClassifier() {
+      const f = getAnimalFeatures();
+      let cat = 0;
+      let dog = 0;
+      const reasons = [];
+
+      if (f.meow) { cat += 4; reasons.push('meow helps cat'); }
+      if (f.bark) { dog += 4; reasons.push('bark helps dog'); }
+      if (f.whiskers) { cat += 2; reasons.push('whiskers help cat'); }
+      if (f.pointyEars) { cat += 1; dog += 1; reasons.push('pointy ears can fit both'); }
+      if (f.wagTail) { dog += 2; reasons.push('wagging tail helps dog'); }
+      if (f.fetch) { dog += 3; reasons.push('fetch helps dog'); }
+
+      document.getElementById('catScore').textContent = cat;
+      document.getElementById('dogScore').textContent = dog;
+
+      let label = 'Unsure';
+      let reasonText = 'The scores are tied, so this simple classifier is not sure.';
+
+      if (cat > dog) {
+        label = 'Prediction: Cat';
+        reasonText = 'Cat score is higher because ' + reasons.join(', ') + '.';
+      } else if (dog > cat) {
+        label = 'Prediction: Dog';
+        reasonText = 'Dog score is higher because ' + reasons.join(', ') + '.';
+      } else if (cat === 0 && dog === 0) {
+        reasonText = 'No features selected yet. The classifier needs clues.';
+      }
+
+      document.getElementById('animalLabel').textContent = label;
+      document.getElementById('animalReason').textContent = reasonText;
+    }
+
+    function resetAnimalFeatures() {
+      ['fMeow','fBark','fWhiskers','fPointyEars','fWagTail','fFetch'].forEach(id => {
+        document.getElementById(id).checked = false;
+      });
+      document.getElementById('catScore').textContent = '0';
+      document.getElementById('dogScore').textContent = '0';
+      document.getElementById('animalLabel').textContent = 'Prediction: —';
+      document.getElementById('animalReason').textContent = 'Choose some features, then press Classify.';
+    }
+
+    function loadAnimalExample(type) {
+      resetAnimalFeatures();
+      if (type === 'cat') {
+        document.getElementById('fMeow').checked = true;
+        document.getElementById('fWhiskers').checked = true;
+        document.getElementById('fPointyEars').checked = true;
+      } else {
+        document.getElementById('fBark').checked = true;
+        document.getElementById('fWagTail').checked = true;
+        document.getElementById('fFetch').checked = true;
+      }
+      runAnimalClassifier();
+    }
+
+    function getSpamFeatures() {
+      return {
+        free: document.getElementById('sFree').checked,
+        urgent: document.getElementById('sUrgent').checked,
+        link: document.getElementById('sLink').checked,
+        unknown: document.getElementById('sUnknown').checked,
+        teacher: document.getElementById('sTeacher').checked,
+        homework: document.getElementById('sHomework').checked
+      };
+    }
+
+    function runSpamClassifier() {
+      const f = getSpamFeatures();
+      let spam = 0;
+      let notspam = 0;
+      const reasons = [];
+
+      if (f.free) { spam += 3; reasons.push('FREE/WIN helps spam'); }
+      if (f.urgent) { spam += 2; reasons.push('urgent language helps spam'); }
+      if (f.link) { spam += 3; reasons.push('suspicious link helps spam'); }
+      if (f.unknown) { spam += 2; reasons.push('unknown sender helps spam'); }
+      if (f.teacher) { notspam += 3; reasons.push('teacher/school helps not spam'); }
+      if (f.homework) { notspam += 3; reasons.push('real homework helps not spam'); }
+
+      document.getElementById('spamScore').textContent = spam;
+      document.getElementById('notSpamScore').textContent = notspam;
+
+      let label = 'Prediction: —';
+      let reasonText = 'Choose message features, then press Classify.';
+
+      if (spam > notspam) {
+        label = 'Prediction: Spam';
+        reasonText = 'Spam score is higher because ' + reasons.join(', ') + '.';
+      } else if (notspam > spam) {
+        label = 'Prediction: Not Spam';
+        reasonText = 'Not-spam score is higher because ' + reasons.join(', ') + '.';
+      } else if (spam === notspam && (spam > 0 || notspam > 0)) {
+        label = 'Prediction: Unsure';
+        reasonText = 'The scores are tied, so this simple classifier is unsure.';
+      }
+
+      document.getElementById('spamLabel').textContent = label;
+      document.getElementById('spamReason').textContent = reasonText;
+    }
+
+    function resetSpamFeatures() {
+      ['sFree','sUrgent','sLink','sUnknown','sTeacher','sHomework'].forEach(id => {
+        document.getElementById(id).checked = false;
+      });
+      document.getElementById('spamScore').textContent = '0';
+      document.getElementById('notSpamScore').textContent = '0';
+      document.getElementById('spamLabel').textContent = 'Prediction: —';
+      document.getElementById('spamReason').textContent = 'Choose some message features, then press Classify.';
+    }
+
+    function loadSpamExample(type) {
+      resetSpamFeatures();
+      if (type === 'spam') {
+        document.getElementById('sFree').checked = true;
+        document.getElementById('sLink').checked = true;
+        document.getElementById('sUnknown').checked = true;
+      } else {
+        document.getElementById('sTeacher').checked = true;
+        document.getElementById('sHomework').checked = true;
+      }
+      runSpamClassifier();
+    }
+
+    function showExampleAnswer(id, isCorrect, message) {
+      const box = document.getElementById(id);
+      box.textContent = message;
+      box.className = 'feedback ' + (isCorrect ? 'correct' : 'wrong');
+    }
+
+    function checkChoice(button, isCorrect, feedbackId) {
+      const feedback = document.getElementById(feedbackId);
+      if (isCorrect) {
+        feedback.textContent = 'Correct!';
+        feedback.className = 'feedback correct';
+      } else {
+        feedback.textContent = 'Not quite. Try again.';
+        feedback.className = 'feedback wrong';
+      }
+    }
+
+    function checkTextAnswer(inputId, feedbackId, validAnswers, successText) {
+      const value = document.getElementById(inputId).value.trim().toLowerCase();
+      const feedback = document.getElementById(feedbackId);
+      if (validAnswers.includes(value)) {
+        feedback.textContent = successText;
+        feedback.className = 'feedback correct';
+      } else {
+        feedback.textContent = 'Try again.';
+        feedback.className = 'feedback wrong';
+      }
+    }
+  </script>
+</body>
+</html>
