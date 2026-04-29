@@ -64,6 +64,26 @@
       margin-bottom: 14px;
     }
 
+    .lang-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 14px 0 18px;
+    }
+
+    .lang-btn {
+      background: #ffffff;
+      color: var(--ink);
+      border: 1px solid var(--line);
+      box-shadow: none;
+    }
+
+    .lang-btn.is-active {
+      background: var(--blue);
+      color: #ffffff;
+      border-color: var(--blue);
+    }
+
     h1 {
       margin: 0;
       font-size: clamp(2.1rem, 5vw, 4rem);
@@ -375,6 +395,11 @@
   <header>
     <div class="badge">Grade 7 Friendly Lesson 2</div>
     <h1>AI Training Lab</h1>
+    <div class="lang-controls" role="group" aria-label="Language mode">
+      <button type="button" class="lang-btn is-active" data-lang-mode="en" aria-pressed="true">English</button>
+      <button type="button" class="lang-btn" data-lang-mode="bi" aria-pressed="false">English + 中文</button>
+      <button type="button" class="lang-btn" data-lang-mode="zh" aria-pressed="false">中文</button>
+    </div>
     <p class="subtitle">Teach a computer a simple pattern by changing weight and bias. Your goal is to make the model's error smaller.</p>
 
     <div class="hero-grid">
@@ -592,6 +617,168 @@
   </main>
 
   <script>
+    const LANG_STORAGE_KEY = 'grade7AiTrainingLabLang';
+    const TRANSLATIONS = {
+      'English': '英文',
+      'English + 中文': '英文 + 中文',
+      '中文': '中文',
+      'Grade 7 Friendly Lesson 2': '七年级友好课程 2',
+      'AI Training Lab': 'AI 训练实验室',
+      "Teach a computer a simple pattern by changing weight and bias. Your goal is to make the model's error smaller.": '通过改变权重和偏置，教电脑学习一个简单规律。你的目标是让模型误差变小。',
+      'Big idea': '核心概念',
+      'AI training means improving guesses from examples.': 'AI 训练就是从例子中改进猜测。',
+      'Main formula': '主要公式',
+      'prediction = weight × input + bias': '预测 = 权重 × 输入 + 偏置',
+      'Your mission': '你的任务',
+      'Find numbers that make the total error small.': '找出能让总误差变小的数字。',
+      '1. Quick Review': '1. 快速复习',
+      'In the first lesson, you learned that AI is a pattern-finding machine. It uses examples to learn a rule.': '在第一课中，你学到 AI 像一台寻找规律的机器。它用例子学习规则。',
+      'Guess': '猜测',
+      'Measure Error': '测量误差',
+      'Adjust Numbers': '调整数字',
+      'Try Again': '再试一次',
+      'Training': '训练',
+      'does not mean the computer magically understands. It means the computer keeps adjusting numbers until the predictions get better.': '不是说电脑突然真正理解了。它的意思是电脑不断调整数字，直到预测变得更好。',
+      '2. Manual Training: Move the Sliders': '2. 手动训练：移动滑块',
+      'The table shows examples. The AI must find one shared rule for all rows.': '表格显示了一些例子。AI 必须为所有行找到一个共同规则。',
+      'Hours studied': '学习小时数',
+      'Real score': '真实分数',
+      'AI prediction': 'AI 预测',
+      'Error': '误差',
+      'Total absolute error': '总绝对误差',
+      'Current weight': '当前权重',
+      'Current bias': '当前偏置',
+      'Weight': '权重',
+      'Bias': '偏置',
+      'weight =': '权重 =',
+      'bias =': '偏置 =',
+      'Challenge: Can you make the total error become': '挑战：你能让总误差变成',
+      'Show best model': '显示最佳模型',
+      '3. Watch AI Train Itself': '3. 观察 AI 自己训练',
+      'Now the computer will adjust the weight and bias by itself. Click': '现在电脑会自己调整权重和偏置。点击',
+      'Train One Step': '训练一步',
+      'many times and watch the error shrink.': '多次，观察误差变小。',
+      'Ready to train. The first model is not very good yet.': '准备开始训练。第一个模型还不太好。',
+      'Round': '轮次',
+      'Total squared error': '总平方误差',
+      'Auto Train 20 Steps': '自动训练 20 步',
+      'Reset': '重置',
+      'This page uses a simple learning rule. It is not the full version used by big AI systems, but the idea is the same: use error to improve the model.': '本页使用一个简单的学习规则。它不是大型 AI 系统使用的完整版本，但思想相同：用误差改进模型。',
+      '4. Practice Challenge: Ice Cream Sales': '4. 练习挑战：冰淇淋销量',
+      'Try a new pattern. This model predicts ice cream sales from temperature.': '试一个新规律。这个模型根据温度预测冰淇淋销量。',
+      'Temperature °C': '温度 °C',
+      'Real sales': '真实销量',
+      'Prediction': '预测',
+      'sales =': '销量 =',
+      'Goal: find a model with total error': '目标：找到总误差为',
+      '5. Check Your Understanding': '5. 检查你的理解',
+      'Answer these questions after you finish the training labs.': '完成训练实验后回答这些问题。',
+      '1. What does AI training mean?': '1. AI 训练是什么意思？',
+      'Making the computer memorize one answer only': '让电脑只记住一个答案',
+      'Changing the model to make predictions better': '改变模型，让预测更好',
+      'Deleting all the examples': '删除所有例子',
+      '2. In prediction = weight × input + bias, what does the weight do?': '2. 在“预测 = 权重 × 输入 + 偏置”中，权重有什么作用？',
+      'It controls how strongly the input changes the prediction': '它控制输入对预测的影响有多强',
+      'It is always the final answer': '它永远是最终答案',
+      'It means the computer is heavy': '它表示电脑很重',
+      '3. If the real answer is 80 and the prediction is 72, what is the error?': '3. 如果真实答案是 80，预测是 72，误差是多少？',
+      'Type your answer': '输入你的答案',
+      'Check': '检查',
+      '4. Fill in the blank: Good training usually makes the error get ________.': '4. 填空：好的训练通常会让误差变得 ________。',
+      'Type one word': '输入一个词',
+      'Final Summary': '最后总结',
+      'AI training is a cycle: make a prediction, compare it with the real answer, measure the error, and adjust the model. In this lesson, you trained simple models by changing weight and bias.': 'AI 训练是一个循环：做预测、与真实答案比较、测量误差、调整模型。在本课中，你通过改变权重和偏置训练了简单模型。',
+      'better model = smaller error': '更好的模型 = 更小的误差',
+      'Next lesson idea: Classification Lab — teach AI to choose a label, such as cat vs dog or spam vs not spam.': '下一课建议：分类实验室——教 AI 选择标签，例如猫或狗、垃圾邮件或非垃圾邮件。',
+      'AI Training Lab • Grade 7 beginner-friendly interactive lesson': 'AI 训练实验室 • 七年级初学者友好互动课程',
+      'Score': '分数',
+      'Sales': '销量',
+      'Temperature': '温度',
+      'AI model line': 'AI 模型线',
+      'Great! The error is now very small. The model is close to the pattern.': '太好了！现在误差很小。模型接近规律了。',
+      'Good progress. The model line is moving closer to the blue example points.': '进展不错。模型线正在接近蓝色例子点。',
+      'Keep training. The model still needs to reduce its error.': '继续训练。模型还需要降低误差。',
+      'Correct!': '正确！',
+      'Not quite. Try again.': '还不对。再试一次。',
+      'Correct! 80 - 72 = 8.': '正确！80 - 72 = 8。',
+      'Try again. Use real answer - prediction.': '再试一次。用真实答案 - 预测。',
+      'Correct! Good training makes error smaller.': '正确！好的训练会让误差变小。',
+      'Hint: the model improves when the error goes down.': '提示：当误差下降时，模型会改进。'
+    };
+
+    let currentLanguageMode = 'en';
+    const originalTextNodes = new WeakMap();
+    const originalPlaceholders = new WeakMap();
+
+    function normalizeText(text) {
+      return String(text).replace(/\s+/g, ' ').trim();
+    }
+
+    function translateText(text) {
+      const key = normalizeText(text);
+      const translated = TRANSLATIONS[key];
+      if (!translated || currentLanguageMode === 'en') {
+        return key || text;
+      }
+      return currentLanguageMode === 'zh' ? translated : `${key} / ${translated}`;
+    }
+
+    function translateTextNode(node) {
+      if (!originalTextNodes.has(node)) {
+        originalTextNodes.set(node, node.textContent);
+      }
+      const original = originalTextNodes.get(node);
+      const key = normalizeText(original);
+      if (!key || !TRANSLATIONS[key]) {
+        return;
+      }
+      const leading = original.match(/^\s*/)[0];
+      const trailing = original.match(/\s*$/)[0];
+      node.textContent = `${leading}${translateText(key)}${trailing}`;
+    }
+
+    function applyLanguageMode() {
+      const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+        acceptNode(node) {
+          const parent = node.parentElement;
+          if (!parent || ['SCRIPT', 'STYLE'].includes(parent.tagName)) {
+            return NodeFilter.FILTER_REJECT;
+          }
+          return normalizeText(node.textContent) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+        }
+      });
+      const nodes = [];
+      while (walker.nextNode()) {
+        nodes.push(walker.currentNode);
+      }
+      nodes.forEach(translateTextNode);
+
+      document.querySelectorAll('input[placeholder]').forEach(input => {
+        if (!originalPlaceholders.has(input)) {
+          originalPlaceholders.set(input, input.getAttribute('placeholder'));
+        }
+        const original = originalPlaceholders.get(input);
+        input.setAttribute('placeholder', translateText(original));
+      });
+    }
+
+    function setLanguageMode(mode) {
+      currentLanguageMode = ['en', 'bi', 'zh'].includes(mode) ? mode : 'en';
+      document.documentElement.lang = currentLanguageMode === 'zh' ? 'zh-Hans' : 'en';
+      document.querySelectorAll('.lang-btn[data-lang-mode]').forEach(button => {
+        const active = button.dataset.langMode === currentLanguageMode;
+        button.classList.toggle('is-active', active);
+        button.setAttribute('aria-pressed', active ? 'true' : 'false');
+      });
+      applyLanguageMode();
+      renderManual();
+      renderIce();
+      renderTraining();
+      try {
+        localStorage.setItem(LANG_STORAGE_KEY, currentLanguageMode);
+      } catch {}
+    }
+
     const studyData = [
       { x: 1, y: 55 },
       { x: 2, y: 65 },
@@ -651,11 +838,11 @@
         ${grid}
         <line x1="60" y1="310" x2="480" y2="310" stroke="#0f172a" stroke-width="2" />
         <line x1="60" y1="30" x2="60" y2="310" stroke="#0f172a" stroke-width="2" />
-        <text x="210" y="333" font-size="13" fill="#334155">${config.xLabel}</text>
-        <text x="8" y="22" font-size="13" fill="#334155">${config.yLabel}</text>
+        <text x="210" y="333" font-size="13" fill="#334155">${translateText(config.xLabel)}</text>
+        <text x="8" y="22" font-size="13" fill="#334155">${translateText(config.yLabel)}</text>
         <line x1="${graphX(config.xMin, config.xMin, config.xMax)}" y1="${graphY(lineY1, config.yMin, config.yMax)}" x2="${graphX(config.xMax, config.xMin, config.xMax)}" y2="${graphY(lineY2, config.yMin, config.yMax)}" stroke="#f59e0b" stroke-width="5" stroke-linecap="round" />
         ${points}
-        <text x="235" y="55" font-size="14" fill="#92400e" font-weight="700">AI model line</text>
+        <text x="235" y="55" font-size="14" fill="#92400e" font-weight="700">${translateText('AI model line')}</text>
       `;
     }
 
@@ -684,7 +871,11 @@
       document.getElementById('manualWeightStat').textContent = w;
       document.getElementById('manualBiasStat').textContent = b;
       document.getElementById('manualTotalError').textContent = total.toFixed(0);
-      document.getElementById('manualFormula').textContent = `prediction = ${w} × hours + ${b}`;
+      document.getElementById('manualFormula').textContent = currentLanguageMode === 'zh'
+        ? `预测 = ${w} × 学习小时数 + ${b}`
+        : currentLanguageMode === 'bi'
+          ? `prediction = ${w} × hours + ${b} / 预测 = ${w} × 学习小时数 + ${b}`
+          : `prediction = ${w} × hours + ${b}`;
       renderModelGraph('manualGraph', studyData, w, b, {
         xMin: 0,
         xMax: 5,
@@ -726,7 +917,11 @@
       document.getElementById('iceWeightValue').textContent = w.toFixed(1);
       document.getElementById('iceBiasValue').textContent = b;
       document.getElementById('iceTotalError').textContent = total.toFixed(1);
-      document.getElementById('iceFormula').textContent = `sales = ${w.toFixed(1)} × temperature + ${b}`;
+      document.getElementById('iceFormula').textContent = currentLanguageMode === 'zh'
+        ? `销量 = ${w.toFixed(1)} × 温度 + ${b}`
+        : currentLanguageMode === 'bi'
+          ? `sales = ${w.toFixed(1)} × temperature + ${b} / 销量 = ${w.toFixed(1)} × 温度 + ${b}`
+          : `sales = ${w.toFixed(1)} × temperature + ${b}`;
       renderModelGraph('iceGraph', iceData, w, b, {
         xMin: 5,
         xMax: 30,
@@ -847,11 +1042,11 @@
         ${grid}
         <line x1="60" y1="310" x2="480" y2="310" stroke="#0f172a" stroke-width="2" />
         <line x1="60" y1="30" x2="60" y2="310" stroke="#0f172a" stroke-width="2" />
-        <text x="215" y="333" font-size="13" fill="#334155">Hours studied</text>
-        <text x="8" y="22" font-size="13" fill="#334155">Score</text>
+        <text x="215" y="333" font-size="13" fill="#334155">${translateText('Hours studied')}</text>
+        <text x="8" y="22" font-size="13" fill="#334155">${translateText('Score')}</text>
         <line x1="${mapX(0.5)}" y1="${mapY(y1)}" x2="${mapX(4.5)}" y2="${mapY(y2)}" stroke="#f59e0b" stroke-width="5" stroke-linecap="round" />
         ${points}
-        <text x="235" y="55" font-size="14" fill="#92400e" font-weight="700">AI model line</text>
+        <text x="235" y="55" font-size="14" fill="#92400e" font-weight="700">${translateText('AI model line')}</text>
       `;
 
       document.getElementById('roundStat').textContent = round;
@@ -861,21 +1056,21 @@
 
       const message = document.getElementById('trainMessage');
       if (err < 30) {
-        message.textContent = 'Great! The error is now very small. The model is close to the pattern.';
+        message.textContent = translateText('Great! The error is now very small. The model is close to the pattern.');
       } else if (err < 300) {
-        message.textContent = 'Good progress. The model line is moving closer to the blue example points.';
+        message.textContent = translateText('Good progress. The model line is moving closer to the blue example points.');
       } else {
-        message.textContent = 'Keep training. The model still needs to reduce its error.';
+        message.textContent = translateText('Keep training. The model still needs to reduce its error.');
       }
     }
 
     function checkChoice(button, isCorrect, feedbackId) {
       const feedback = document.getElementById(feedbackId);
       if (isCorrect) {
-        feedback.textContent = 'Correct!';
+        feedback.textContent = translateText('Correct!');
         feedback.className = 'feedback correct';
       } else {
-        feedback.textContent = 'Not quite. Try again.';
+        feedback.textContent = translateText('Not quite. Try again.');
         feedback.className = 'feedback wrong';
       }
     }
@@ -884,10 +1079,10 @@
       const value = Number(document.getElementById('errorAnswer').value);
       const feedback = document.getElementById('q3');
       if (value === 8) {
-        feedback.textContent = 'Correct! 80 - 72 = 8.';
+        feedback.textContent = translateText('Correct! 80 - 72 = 8.');
         feedback.className = 'feedback correct';
       } else {
-        feedback.textContent = 'Try again. Use real answer - prediction.';
+        feedback.textContent = translateText('Try again. Use real answer - prediction.');
         feedback.className = 'feedback wrong';
       }
     }
@@ -896,10 +1091,10 @@
       const value = document.getElementById('blankAnswer').value.trim().toLowerCase();
       const feedback = document.getElementById('q4');
       if (value === 'smaller' || value === 'lower' || value === 'less') {
-        feedback.textContent = 'Correct! Good training makes error smaller.';
+        feedback.textContent = translateText('Correct! Good training makes error smaller.');
         feedback.className = 'feedback correct';
       } else {
-        feedback.textContent = 'Hint: the model improves when the error goes down.';
+        feedback.textContent = translateText('Hint: the model improves when the error goes down.');
         feedback.className = 'feedback wrong';
       }
     }
@@ -908,10 +1103,15 @@
     manualBias.addEventListener('input', renderManual);
     iceWeight.addEventListener('input', renderIce);
     iceBias.addEventListener('input', renderIce);
+    document.querySelectorAll('.lang-btn[data-lang-mode]').forEach(button => {
+      button.addEventListener('click', () => setLanguageMode(button.dataset.langMode));
+    });
 
-    renderManual();
-    renderIce();
-    renderTraining();
+    try {
+      setLanguageMode(localStorage.getItem(LANG_STORAGE_KEY) || 'en');
+    } catch {
+      setLanguageMode('en');
+    }
   </script>
 </body>
 </html>

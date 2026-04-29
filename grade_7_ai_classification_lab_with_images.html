@@ -67,6 +67,26 @@
       margin-bottom: 14px;
     }
 
+    .lang-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 14px 0 18px;
+    }
+
+    .lang-btn {
+      background: #ffffff;
+      color: var(--ink);
+      border: 1px solid var(--line);
+      box-shadow: none;
+    }
+
+    .lang-btn.is-active {
+      background: var(--blue);
+      color: #ffffff;
+      border-color: var(--blue);
+    }
+
     h1 {
       margin: 0;
       font-size: clamp(2.1rem, 5vw, 4rem);
@@ -423,6 +443,11 @@
   <header>
     <div class="badge">Grade 7 Friendly Lesson 3</div>
     <h1>Classification Lab</h1>
+    <div class="lang-controls" role="group" aria-label="Language mode">
+      <button type="button" class="lang-btn is-active" data-lang-mode="en" aria-pressed="true">English</button>
+      <button type="button" class="lang-btn" data-lang-mode="bi" aria-pressed="false">English + 中文</button>
+      <button type="button" class="lang-btn" data-lang-mode="zh" aria-pressed="false">中文</button>
+    </div>
     <p class="subtitle">
       In this lesson, AI does not predict a number. Instead, it chooses a label.
       Examples: <strong>cat or dog</strong>, <strong>spam or not spam</strong>.
@@ -874,6 +899,248 @@
   </main>
 
   <script>
+    const LANG_STORAGE_KEY = 'grade7AiClassificationLabLang';
+    const TRANSLATIONS = {
+      'English': '英文',
+      'English + 中文': '英文 + 中文',
+      '中文': '中文',
+      'Grade 7 Friendly Lesson 3': '七年级友好课程 3',
+      'Classification Lab': '分类实验室',
+      'In this lesson, AI does not predict a number. Instead, it chooses a label. Examples:': '在本课中，AI 不预测数字。它会选择一个标签。例子：',
+      'cat or dog': '猫或狗',
+      'spam or not spam': '垃圾邮件或非垃圾邮件',
+      'Image clue': '图像线索',
+      'Cat-like features can help the AI choose the label “cat”.': '像猫的特征可以帮助 AI 选择“猫”这个标签。',
+      'Dog-like features can help the AI choose the label “dog”.': '像狗的特征可以帮助 AI 选择“狗”这个标签。',
+      'AI can also classify messages as spam or not spam.': 'AI 也可以把消息分类为垃圾邮件或非垃圾邮件。',
+      'What is classification?': '什么是分类？',
+      'Classification means putting something into a group or category.': '分类就是把某个东西放进一个组或类别。',
+      'Main idea': '主要思想',
+      'The AI looks at features, gives each label a score, and chooses the highest score.': 'AI 查看特征，给每个标签打分，然后选择最高分。',
+      'Your mission': '你的任务',
+      'Test simple classifiers and see how AI decides between labels.': '测试简单分类器，看看 AI 如何在标签之间做决定。',
+      '1. Quick Review: Regression vs Classification': '1. 快速复习：回归 vs 分类',
+      'Regression': '回归',
+      'Predicts a number, like a score, price, or temperature.': '预测数字，例如分数、价格或温度。',
+      'Classification': '分类',
+      'Predicts a label, like cat, dog, spam, or not spam.': '预测标签，例如猫、狗、垃圾邮件或非垃圾邮件。',
+      'Features': '特征',
+      'Features are clues the AI uses, such as “has whiskers” or “contains FREE”.': '特征是 AI 使用的线索，例如“有胡须”或“包含 FREE”。',
+      'Look at features': '查看特征',
+      'Give each label a score': '给每个标签打分',
+      'Compare scores': '比较分数',
+      'Choose a label': '选择标签',
+      'A classifier does not “know” like a person. It uses patterns from examples and makes its best guess.': '分类器不像人一样“知道”。它使用例子中的规律做出最佳猜测。',
+      '2. Cat or Dog Classifier': '2. 猫或狗分类器',
+      'Turn features on or off. The simple AI will give a': '打开或关闭特征。这个简单 AI 会给出',
+      'cat score': '猫分数',
+      'dog score': '狗分数',
+      'Then it will choose a label.': '然后它会选择一个标签。',
+      'Cat features': '猫的特征',
+      'Dog features': '狗的特征',
+      'Has a meow sound': '有喵喵叫声',
+      'Has a bark sound': '有汪汪叫声',
+      'Has whiskers': '有胡须',
+      'Has pointy ears': '有尖耳朵',
+      'Wags tail a lot': '经常摇尾巴',
+      'Likes playing fetch': '喜欢玩接球',
+      'Classify': '分类',
+      'Try a Cat Example': '试一个猫的例子',
+      'Try a Dog Example': '试一个狗的例子',
+      'Reset': '重置',
+      'Cat score': '猫分数',
+      'Dog score': '狗分数',
+      'Prediction: —': '预测：—',
+      'Choose some features, then press Classify.': '选择一些特征，然后点击“分类”。',
+      'label = the class with the higher score': '标签 = 分数更高的类别',
+      'Feature': '特征',
+      'Helps Cat': '帮助猫',
+      'Helps Dog': '帮助狗',
+      'Meow': '喵叫',
+      'Bark': '汪叫',
+      'Whiskers': '胡须',
+      'Pointy ears': '尖耳朵',
+      'Wags tail': '摇尾巴',
+      'Likes fetch': '喜欢接球',
+      '3. Spam or Not Spam Classifier': '3. 垃圾邮件或非垃圾邮件分类器',
+      'Now try a message classifier. This kind of AI looks for patterns in text to decide whether a message is spam.': '现在试试消息分类器。这类 AI 会寻找文本中的规律，判断消息是否是垃圾邮件。',
+      'Incoming message': '收到的消息',
+      'AI checks clues': 'AI 检查线索',
+      'Spam': '垃圾邮件',
+      'Not Spam': '非垃圾邮件',
+      'Contains “FREE” or “WIN”': '包含“FREE”或“WIN”',
+      'Uses “urgent” or “act now”': '使用“urgent”或“act now”',
+      'Has a suspicious link': '有可疑链接',
+      'From an unknown sender': '来自未知发件人',
+      'From your teacher or school': '来自老师或学校',
+      'Talks about real homework/classwork': '谈到真实作业或课堂任务',
+      'Try a Spam Example': '试一个垃圾邮件例子',
+      'Try a Normal Example': '试一个正常例子',
+      'Spam score': '垃圾邮件分数',
+      'Not-spam score': '非垃圾邮件分数',
+      'Choose some message features, then press Classify.': '选择一些消息特征，然后点击“分类”。',
+      'more spam clues → higher spam score': '垃圾邮件线索越多 → 垃圾邮件分数越高',
+      'Helps Spam': '帮助垃圾邮件',
+      'Helps Not Spam': '帮助非垃圾邮件',
+      'FREE / WIN': 'FREE / WIN',
+      'Urgent / Act now': '紧急 / 立刻行动',
+      'Suspicious link': '可疑链接',
+      'Unknown sender': '未知发件人',
+      'Teacher / school sender': '老师 / 学校发件人',
+      'Real homework content': '真实作业内容',
+      '4. Try the Examples': '4. 试试这些例子',
+      'See whether you can predict the correct label before checking the answer.': '在检查答案前，看看你能不能预测正确标签。',
+      'Example A': '例子 A',
+      'Example B': '例子 B',
+      'Example C': '例子 C',
+      'Example D': '例子 D',
+      'Animal features:': '动物特征：',
+      'Message features:': '消息特征：',
+      'meow, whiskers, pointy ears': '喵叫、胡须、尖耳朵',
+      '“FREE prize”, unknown sender, suspicious link': '“FREE 奖品”、未知发件人、可疑链接',
+      'bark, wag tail, likes fetch': '汪叫、摇尾巴、喜欢接球',
+      'from teacher, real homework, no suspicious link': '来自老师、真实作业、没有可疑链接',
+      'What should the label be?': '标签应该是什么？',
+      'Cat': '猫',
+      'Dog': '狗',
+      '5. Why Classification Can Make Mistakes': '5. 为什么分类会出错',
+      'Too few features': '特征太少',
+      'If the AI does not get enough clues, it may guess the wrong label.': '如果 AI 得不到足够线索，可能会猜错标签。',
+      'Confusing examples': '容易混淆的例子',
+      'Some cases look similar. A classifier may not be 100% sure.': '有些情况看起来相似。分类器可能无法 100% 确定。',
+      'Biased training data': '有偏差的训练数据',
+      'If the training examples are poor, the model can learn bad patterns.': '如果训练例子不好，模型可能学到错误规律。',
+      'Real AI systems should be checked by humans, especially when the decision is important.': '真实 AI 系统应该由人类检查，尤其是决定很重要时。',
+      '6. Check Your Understanding': '6. 检查你的理解',
+      '1. What is classification?': '1. 什么是分类？',
+      'Predicting a number like 72': '预测像 72 这样的数字',
+      'Choosing a label like cat or dog': '选择像猫或狗这样的标签',
+      'Deleting features': '删除特征',
+      '2. Which one is an example of classification?': '2. 哪一个是分类的例子？',
+      "Predicting tomorrow's temperature": '预测明天的温度',
+      'Deciding whether an email is spam': '判断电子邮件是否是垃圾邮件',
+      'Estimating a test score': '估计考试分数',
+      '3. If a message says “FREE prize” and has a suspicious link, which score should rise more?': '3. 如果一条消息写着“FREE prize”并且有可疑链接，哪个分数应该升得更多？',
+      'Type: spam or not spam': '输入：spam 或 not spam',
+      'Check': '检查',
+      '4. Fill in the blank: AI makes a classification by comparing ________ for different labels.': '4. 填空：AI 通过比较不同标签的 ________ 来进行分类。',
+      'Type one word': '输入一个词',
+      'Final Summary': '最后总结',
+      'Classification means choosing a category or label. In this lesson, you saw how simple AI can decide between': '分类意味着选择一个类别或标签。在本课中，你看到简单 AI 如何在以下标签之间做决定：',
+      'and': '和',
+      'or between': '或在',
+      'not spam': '非垃圾邮件',
+      'features → scores → chosen label': '特征 → 分数 → 选定标签',
+      'Next lesson idea: How Chatbots Work — from words and tokens to responses.': '下一课建议：聊天机器人如何工作——从词语和标记到回复。',
+      'Classification Lab • Grade 7 beginner-friendly interactive lesson': '分类实验室 • 七年级初学者友好互动课程',
+      'Prediction: Cat': '预测：猫',
+      'Prediction: Dog': '预测：狗',
+      'Prediction: Spam': '预测：垃圾邮件',
+      'Prediction: Not Spam': '预测：非垃圾邮件',
+      'Prediction: Unsure': '预测：不确定',
+      'The scores are tied, so this simple classifier is not sure.': '分数相同，所以这个简单分类器不确定。',
+      'No features selected yet. The classifier needs clues.': '还没有选择特征。分类器需要线索。',
+      'Cat score is higher because': '猫分数更高，因为',
+      'Dog score is higher because': '狗分数更高，因为',
+      'Spam score is higher because': '垃圾邮件分数更高，因为',
+      'Not-spam score is higher because': '非垃圾邮件分数更高，因为',
+      'The scores are tied, so this simple classifier is unsure.': '分数相同，所以这个简单分类器不确定。',
+      'meow helps cat': '喵叫帮助猫',
+      'bark helps dog': '汪叫帮助狗',
+      'whiskers help cat': '胡须帮助猫',
+      'pointy ears can fit both': '尖耳朵两边都可能符合',
+      'wagging tail helps dog': '摇尾巴帮助狗',
+      'fetch helps dog': '接球帮助狗',
+      'FREE/WIN helps spam': 'FREE/WIN 帮助垃圾邮件',
+      'urgent language helps spam': '紧急语言帮助垃圾邮件',
+      'suspicious link helps spam': '可疑链接帮助垃圾邮件',
+      'unknown sender helps spam': '未知发件人帮助垃圾邮件',
+      'teacher/school helps not spam': '老师/学校帮助非垃圾邮件',
+      'real homework helps not spam': '真实作业帮助非垃圾邮件',
+      'Correct!': '正确！',
+      'Not quite. Try again.': '还不对。再试一次。',
+      'Try again.': '再试一次。',
+      'Correct! This should be labeled CAT.': '正确！这应该标为“猫”。',
+      'Not quite. Meow + whiskers strongly suggest CAT.': '还不对。喵叫 + 胡须强烈指向“猫”。',
+      'Correct! These are strong SPAM clues.': '正确！这些是强烈的垃圾邮件线索。',
+      'Not quite. FREE + unknown sender + suspicious link are classic SPAM clues.': '还不对。FREE + 未知发件人 + 可疑链接是典型垃圾邮件线索。',
+      'Not quite. Bark + wagging tail + fetch strongly suggest DOG.': '还不对。汪叫 + 摇尾巴 + 接球强烈指向“狗”。',
+      'Correct! This should be labeled DOG.': '正确！这应该标为“狗”。',
+      'Not quite. Teacher + real homework are strong NOT-SPAM clues.': '还不对。老师 + 真实作业是强烈的非垃圾邮件线索。',
+      'Correct! This should be NOT SPAM.': '正确！这应该是非垃圾邮件。',
+      'Correct! Those are spam clues.': '正确！那些是垃圾邮件线索。',
+      'Correct! It compares scores for each label.': '正确！它比较每个标签的分数。'
+    };
+
+    let currentLanguageMode = 'en';
+    const originalTextNodes = new WeakMap();
+    const originalPlaceholders = new WeakMap();
+
+    function normalizeText(text) {
+      return String(text).replace(/\s+/g, ' ').trim();
+    }
+
+    function translateText(text) {
+      const key = normalizeText(text);
+      const translated = TRANSLATIONS[key];
+      if (!translated || currentLanguageMode === 'en') {
+        return key || text;
+      }
+      return currentLanguageMode === 'zh' ? translated : `${key} / ${translated}`;
+    }
+
+    function translateTextNode(node) {
+      if (!originalTextNodes.has(node)) {
+        originalTextNodes.set(node, node.textContent);
+      }
+      const original = originalTextNodes.get(node);
+      const key = normalizeText(original);
+      if (!key || !TRANSLATIONS[key]) {
+        return;
+      }
+      const leading = original.match(/^\s*/)[0];
+      const trailing = original.match(/\s*$/)[0];
+      node.textContent = `${leading}${translateText(key)}${trailing}`;
+    }
+
+    function applyLanguageMode() {
+      const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+        acceptNode(node) {
+          const parent = node.parentElement;
+          if (!parent || ['SCRIPT', 'STYLE'].includes(parent.tagName)) {
+            return NodeFilter.FILTER_REJECT;
+          }
+          return normalizeText(node.textContent) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+        }
+      });
+      const nodes = [];
+      while (walker.nextNode()) {
+        nodes.push(walker.currentNode);
+      }
+      nodes.forEach(translateTextNode);
+
+      document.querySelectorAll('input[placeholder]').forEach(input => {
+        if (!originalPlaceholders.has(input)) {
+          originalPlaceholders.set(input, input.getAttribute('placeholder'));
+        }
+        input.setAttribute('placeholder', translateText(originalPlaceholders.get(input)));
+      });
+    }
+
+    function setLanguageMode(mode) {
+      currentLanguageMode = ['en', 'bi', 'zh'].includes(mode) ? mode : 'en';
+      document.documentElement.lang = currentLanguageMode === 'zh' ? 'zh-Hans' : 'en';
+      document.querySelectorAll('.lang-btn[data-lang-mode]').forEach(button => {
+        const active = button.dataset.langMode === currentLanguageMode;
+        button.classList.toggle('is-active', active);
+        button.setAttribute('aria-pressed', active ? 'true' : 'false');
+      });
+      applyLanguageMode();
+      try {
+        localStorage.setItem(LANG_STORAGE_KEY, currentLanguageMode);
+      } catch {}
+    }
+
     function getAnimalFeatures() {
       return {
         meow: document.getElementById('fMeow').checked,
@@ -891,27 +1158,29 @@
       let dog = 0;
       const reasons = [];
 
-      if (f.meow) { cat += 4; reasons.push('meow helps cat'); }
-      if (f.bark) { dog += 4; reasons.push('bark helps dog'); }
-      if (f.whiskers) { cat += 2; reasons.push('whiskers help cat'); }
-      if (f.pointyEars) { cat += 1; dog += 1; reasons.push('pointy ears can fit both'); }
-      if (f.wagTail) { dog += 2; reasons.push('wagging tail helps dog'); }
-      if (f.fetch) { dog += 3; reasons.push('fetch helps dog'); }
+      if (f.meow) { cat += 4; reasons.push(translateText('meow helps cat')); }
+      if (f.bark) { dog += 4; reasons.push(translateText('bark helps dog')); }
+      if (f.whiskers) { cat += 2; reasons.push(translateText('whiskers help cat')); }
+      if (f.pointyEars) { cat += 1; dog += 1; reasons.push(translateText('pointy ears can fit both')); }
+      if (f.wagTail) { dog += 2; reasons.push(translateText('wagging tail helps dog')); }
+      if (f.fetch) { dog += 3; reasons.push(translateText('fetch helps dog')); }
 
       document.getElementById('catScore').textContent = cat;
       document.getElementById('dogScore').textContent = dog;
 
-      let label = 'Unsure';
-      let reasonText = 'The scores are tied, so this simple classifier is not sure.';
+      let label = translateText('Prediction: —');
+      let reasonText = translateText('The scores are tied, so this simple classifier is not sure.');
 
       if (cat > dog) {
-        label = 'Prediction: Cat';
-        reasonText = 'Cat score is higher because ' + reasons.join(', ') + '.';
+        label = translateText('Prediction: Cat');
+        reasonText = translateText('Cat score is higher because') + ' ' + reasons.join(', ') + '.';
       } else if (dog > cat) {
-        label = 'Prediction: Dog';
-        reasonText = 'Dog score is higher because ' + reasons.join(', ') + '.';
+        label = translateText('Prediction: Dog');
+        reasonText = translateText('Dog score is higher because') + ' ' + reasons.join(', ') + '.';
       } else if (cat === 0 && dog === 0) {
-        reasonText = 'No features selected yet. The classifier needs clues.';
+        reasonText = translateText('No features selected yet. The classifier needs clues.');
+      } else {
+        label = translateText('Prediction: Unsure');
       }
 
       document.getElementById('animalLabel').textContent = label;
@@ -924,8 +1193,8 @@
       });
       document.getElementById('catScore').textContent = '0';
       document.getElementById('dogScore').textContent = '0';
-      document.getElementById('animalLabel').textContent = 'Prediction: —';
-      document.getElementById('animalReason').textContent = 'Choose some features, then press Classify.';
+      document.getElementById('animalLabel').textContent = translateText('Prediction: —');
+      document.getElementById('animalReason').textContent = translateText('Choose some features, then press Classify.');
     }
 
     function loadAnimalExample(type) {
@@ -959,28 +1228,28 @@
       let notspam = 0;
       const reasons = [];
 
-      if (f.free) { spam += 3; reasons.push('FREE/WIN helps spam'); }
-      if (f.urgent) { spam += 2; reasons.push('urgent language helps spam'); }
-      if (f.link) { spam += 3; reasons.push('suspicious link helps spam'); }
-      if (f.unknown) { spam += 2; reasons.push('unknown sender helps spam'); }
-      if (f.teacher) { notspam += 3; reasons.push('teacher/school helps not spam'); }
-      if (f.homework) { notspam += 3; reasons.push('real homework helps not spam'); }
+      if (f.free) { spam += 3; reasons.push(translateText('FREE/WIN helps spam')); }
+      if (f.urgent) { spam += 2; reasons.push(translateText('urgent language helps spam')); }
+      if (f.link) { spam += 3; reasons.push(translateText('suspicious link helps spam')); }
+      if (f.unknown) { spam += 2; reasons.push(translateText('unknown sender helps spam')); }
+      if (f.teacher) { notspam += 3; reasons.push(translateText('teacher/school helps not spam')); }
+      if (f.homework) { notspam += 3; reasons.push(translateText('real homework helps not spam')); }
 
       document.getElementById('spamScore').textContent = spam;
       document.getElementById('notSpamScore').textContent = notspam;
 
-      let label = 'Prediction: —';
-      let reasonText = 'Choose message features, then press Classify.';
+      let label = translateText('Prediction: —');
+      let reasonText = translateText('Choose some message features, then press Classify.');
 
       if (spam > notspam) {
-        label = 'Prediction: Spam';
-        reasonText = 'Spam score is higher because ' + reasons.join(', ') + '.';
+        label = translateText('Prediction: Spam');
+        reasonText = translateText('Spam score is higher because') + ' ' + reasons.join(', ') + '.';
       } else if (notspam > spam) {
-        label = 'Prediction: Not Spam';
-        reasonText = 'Not-spam score is higher because ' + reasons.join(', ') + '.';
+        label = translateText('Prediction: Not Spam');
+        reasonText = translateText('Not-spam score is higher because') + ' ' + reasons.join(', ') + '.';
       } else if (spam === notspam && (spam > 0 || notspam > 0)) {
-        label = 'Prediction: Unsure';
-        reasonText = 'The scores are tied, so this simple classifier is unsure.';
+        label = translateText('Prediction: Unsure');
+        reasonText = translateText('The scores are tied, so this simple classifier is unsure.');
       }
 
       document.getElementById('spamLabel').textContent = label;
@@ -993,8 +1262,8 @@
       });
       document.getElementById('spamScore').textContent = '0';
       document.getElementById('notSpamScore').textContent = '0';
-      document.getElementById('spamLabel').textContent = 'Prediction: —';
-      document.getElementById('spamReason').textContent = 'Choose some message features, then press Classify.';
+      document.getElementById('spamLabel').textContent = translateText('Prediction: —');
+      document.getElementById('spamReason').textContent = translateText('Choose some message features, then press Classify.');
     }
 
     function loadSpamExample(type) {
@@ -1012,17 +1281,17 @@
 
     function showExampleAnswer(id, isCorrect, message) {
       const box = document.getElementById(id);
-      box.textContent = message;
+      box.textContent = translateText(message);
       box.className = 'feedback ' + (isCorrect ? 'correct' : 'wrong');
     }
 
     function checkChoice(button, isCorrect, feedbackId) {
       const feedback = document.getElementById(feedbackId);
       if (isCorrect) {
-        feedback.textContent = 'Correct!';
+        feedback.textContent = translateText('Correct!');
         feedback.className = 'feedback correct';
       } else {
-        feedback.textContent = 'Not quite. Try again.';
+        feedback.textContent = translateText('Not quite. Try again.');
         feedback.className = 'feedback wrong';
       }
     }
@@ -1031,12 +1300,26 @@
       const value = document.getElementById(inputId).value.trim().toLowerCase();
       const feedback = document.getElementById(feedbackId);
       if (validAnswers.includes(value)) {
-        feedback.textContent = successText;
+        feedback.textContent = translateText(successText);
         feedback.className = 'feedback correct';
       } else {
-        feedback.textContent = 'Try again.';
+        feedback.textContent = translateText('Try again.');
         feedback.className = 'feedback wrong';
       }
+    }
+
+    document.querySelectorAll('.lang-btn[data-lang-mode]').forEach(button => {
+      button.addEventListener('click', () => {
+        setLanguageMode(button.dataset.langMode);
+        runAnimalClassifier();
+        runSpamClassifier();
+      });
+    });
+
+    try {
+      setLanguageMode(localStorage.getItem(LANG_STORAGE_KEY) || 'en');
+    } catch {
+      setLanguageMode('en');
     }
   </script>
 </body>
