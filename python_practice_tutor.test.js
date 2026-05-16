@@ -230,3 +230,32 @@ test("ask tutor includes an auto-open toggle that updates its label", () => {
   context.setSelectionAutoOpenEnabled(false);
   assert.equal(context.__elements.get("askAutoOpenToggle").textContent, "Auto-open: Off");
 });
+
+test("reference solution renders an inline copy button beside its heading", () => {
+  const context = loadTutorScript();
+
+  context.showAnswer({
+    answer: "print('hello')",
+  });
+
+  const html = context.__elements.get("answerBox").innerHTML;
+  assert.match(html, /class="answer-heading"/);
+  assert.match(html, /<strong>Reference solution<\/strong>/);
+  assert.match(html, /class="copy-answer-btn"/);
+  assert.match(html, /aria-label="Copy reference solution"/);
+});
+
+test("copyReferenceSolution copies only the current answer text", async () => {
+  const context = loadTutorScript();
+  let copiedText = "";
+  context.navigator.clipboard.writeText = async (text) => {
+    copiedText = text;
+  };
+  context.showAnswer({
+    answer: "for n in nums:\n    print(n)",
+  });
+
+  await context.copyReferenceSolution();
+
+  assert.equal(copiedText, "for n in nums:\n    print(n)");
+});

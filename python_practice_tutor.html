@@ -235,6 +235,43 @@
       background: var(--panel-alt);
     }
 
+    .answer-heading {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .answer-heading strong {
+      line-height: 1;
+    }
+
+    .copy-answer-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      padding: 0;
+      background: #fff;
+      color: var(--muted);
+    }
+
+    .copy-answer-btn:hover {
+      color: var(--text);
+      border-color: var(--border-strong);
+    }
+
+    .copy-answer-btn svg {
+      width: 15px;
+      height: 15px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
     .muted { color: var(--muted); }
 
     .list {
@@ -1876,11 +1913,46 @@ json.dumps(_result)
     }
 
     function showAnswer(question) {
+      el.answerBox.dataset.answer = safeText(question.answer);
       el.answerBox.innerHTML = `
-        <p><strong>Reference solution</strong></p>
+        <div class="answer-heading">
+          <strong>Reference solution</strong>
+          <button
+            class="copy-answer-btn"
+            type="button"
+            aria-label="Copy reference solution"
+            title="Copy reference solution"
+            onclick="copyReferenceSolution(this)"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="9" y="9" width="10" height="10" rx="2"></rect>
+              <path d="M5 15V7a2 2 0 0 1 2-2h8"></path>
+            </svg>
+          </button>
+        </div>
         <pre class="output">${escapeHtml(question.answer)}</pre>
         <p class="small muted">A student may solve it in a different way and still be correct.</p>
       `;
+    }
+
+    async function copyReferenceSolution(button) {
+      const answerText = safeText(el.answerBox.dataset.answer);
+      if (!answerText) return;
+
+      try {
+        await navigator.clipboard.writeText(answerText);
+        if (!button) return;
+
+        const originalLabel = 'Copy reference solution';
+        button.setAttribute('aria-label', 'Copied reference solution');
+        button.setAttribute('title', 'Copied');
+        window.setTimeout(() => {
+          button.setAttribute('aria-label', originalLabel);
+          button.setAttribute('title', originalLabel);
+        }, 1200);
+      } catch {
+        setStatus('Unable to copy the reference solution.', 'bad');
+      }
     }
 
     async function handleRun() {
