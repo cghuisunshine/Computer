@@ -94,6 +94,55 @@ function loadBackgroundRunner() {
   return { run: context.executeQuestionPython, workers, timers };
 }
 
+test('all 500 questions contain self-contained specifications and sample data', () => {
+  for (const { id, statement } of bank) {
+    assert.ok(statement, id);
+    for (const field of ['interface', 'input', 'output']) assert.ok(statement[field]?.trim(), `${id}: ${field}`);
+    assert.ok(statement.paragraphs.length && statement.paragraphs.every(text => text.trim()), id);
+    assert.ok(statement.constraints.length && statement.constraints.every(text => text.trim()), id);
+    assert.ok(statement.examples.length, id);
+    for (const example of statement.examples) {
+      assert.ok(example.input.trim() && example.output.trim(), id);
+      assert.doesNotMatch(example.input, /(?:Explanation:|Example\s*\d+:|Constraints:|custom judge|following scenario)/i, id);
+    }
+    assert.doesNotMatch(statement.interface, /(?:numsSize|matrixRowSize|matrixColSize)/, id);
+  }
+  assert.deepEqual(bank.filter(problem => problem.statement.variant).map(problem => problem.number).sort((a, b) => a - b), [252, 253, 256, 261, 269, 271, 280, 286, 323]);
+  const find = number => bank.find(problem => problem.id === `lc-${number}`).statement;
+  assert.equal(find(1).examples[0].input, 'nums = [2,7,11,15], target = 9');
+  assert.equal(find(1547).examples[1].input, 'n = 9, cuts = [5,6,1,4,2]');
+  assert.equal(find(191).examples[1].input, 'n = 128');
+  assert.equal(find(303).interface, 'NumArray(nums: list[int])\nsumRange(left: int, right: int) -> int');
+  assert.ok(find(146).constraints.includes('Maximum operation count: 2 * 10^5'));
+});
+
+test('question text renders visibly with escaped examples and constraints', () => {
+  const application = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)][0][1];
+  const context = vm.createContext({});
+  const escape = application.slice(application.indexOf('      function escapeHtml'), application.indexOf('      function link'));
+  const renderer = application.slice(application.indexOf('      function renderStatement'), application.indexOf('      function updateProgress'));
+  vm.runInContext(escape + renderer, context);
+  const problem = JSON.parse(JSON.stringify(bank[0]));
+  problem.statement.examples[0].input = '<script>alert("test")</script>';
+  const output = context.renderStatement(problem);
+  assert.match(output, /&lt;script&gt;/);
+  assert.doesNotMatch(output, /<script>|<details|hidden/);
+  for (const label of ['Python interface', 'Input', 'Output', 'Example 1', 'Constraints']) assert.ok(output.includes(label));
+  assert.ok(html.includes('<div class="prompt dsa-statement">${renderStatement(problem)}</div>'));
+});
+
+test('background execution forwards standard input separately for each run', async () => {
+  const { run, workers } = loadBackgroundRunner();
+  const first = run('print(input())', undefined, 'sample\n');
+  assert.equal(workers[0].messages[0].stdin, 'sample\n');
+  workers[0].send({ type: 'result', stdout: 'sample\n', stderr: '', error: '' });
+  assert.equal((await first).stdout, 'sample\n');
+  const second = run('print(1)');
+  assert.equal(workers[0].messages[1].stdin, '');
+  workers[0].send({ type: 'result', stdout: '1\n', stderr: '', error: '' });
+  assert.equal((await second).stdout, '1\n');
+});
+
 test('background execution routes results and prevents simultaneous runs', async () => {
   const { run, workers } = loadBackgroundRunner();
   let ready = 0;
