@@ -157,7 +157,7 @@
     .dsa-filters input, .dsa-filters select { width: 100%; min-width: 0; padding: 10px; border: 1px solid var(--line); border-radius: 10px; background: #0b1020; color: var(--ink); font: inherit; }
     .dsa-results-row { margin-bottom: 10px; }
     .dsa-questions { display: grid; gap: 12px; margin-top: 16px; }
-    .dsa-question { border: 1px solid var(--line); border-radius: 14px; padding: 14px; background: #0f1630; }
+    .dsa-question { margin-bottom: 0; }
     .dsa-question .qhead { gap: 14px; }
     .dsa-question h3 { font-size: 16px; margin: 0 0 6px; overflow-wrap: anywhere; }
     .dsa-badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
@@ -169,16 +169,14 @@
     .dsa-question .prompt { margin-bottom: 8px; }
     .dsa-solved-label { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; cursor: pointer; }
     .dsa-question[data-solved="true"] { border-color: #39d98a80; }
-    .dsa-workspace label { display: block; font-size: 13px; color: var(--muted); margin: 12px 0 6px; }
-    .dsa-workspace textarea { min-height: 180px; }
-    .dsa-workspace .dsa-notes { min-height: 70px; font-family: inherit; }
-    .dsa-hint { margin-top: 8px; white-space: pre-wrap; }
+    .dsa-review label { display: block; font-size: 13px; color: var(--muted); margin: 12px 0 6px; }
+    .dsa-review .dsa-notes { min-height: 70px; font-family: inherit; }
     .dsa-pagination { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 16px; margin: 20px 0; }
     .dsa-question .feedback { white-space: pre-wrap; }
     :focus-visible { outline: 2px solid #a9c9ff; outline-offset: 3px; }
     @media (max-width: 650px) { .dsa-filters { grid-template-columns: 1fr 1fr; } .dsa-question .qhead { flex-wrap: wrap; } }
     @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
-    @media print { .dsa-filters, .dsa-pagination, .dsa-workspace, .dsa-results-row button { display: none; } }
+    @media print { .dsa-filters, .dsa-pagination, .dsa-review, .dsa-results-row button { display: none; } }
   </style>
   <script src="https://cdn.jsdelivr.net/pyodide/v0.25.1/full/pyodide.js"></script>
 </head>
@@ -198,7 +196,7 @@
   <div class="wrap">
     <div class="bar">
       <div class="left">
-        <span class="pill">Python basics: AI grader + overlap fallback</span>
+        <span class="pill">Check: AI grader · Basics also support overlap fallback</span>
         <span class="pill">Shortcut: <span class="kbd">Ctrl</span> + <span class="kbd">F</span> to find</span>
       </div>
       <div class="right">
@@ -223,7 +221,7 @@
 
     <section class="card playground" id="python-playground">
       <h2>0) Live Python Playground</h2>
-      <p class="tiny">Integrated from <span class="kbd">preview.html</span>. Use "Run in playground" on any question, or type directly below.</p>
+      <p class="tiny">Type code here, or use “Load selected answer”. Question buttons run Python in the background and show output below each answer.</p>
       <div class="play-grid">
         <div class="pg-pane">
           <div class="pg-toolbar">
@@ -269,7 +267,7 @@
         </div>
         <span class="pill" id="dsa-progress" aria-live="polite">Solved: 0 / 500</span>
       </div>
-      <p class="tiny dsa-intro">Each card has a short task summary. Open the full statement for exact input formats, examples, constraints, and judging rules. Write Python and add your own tests in the workspace; “Mark solved” records your own assessment.</p>
+      <p class="tiny dsa-intro">Type your Python answer, then use Check, Hint, or Run in background. Open the full statement for examples and constraints. Check uses the AI grader; background runs execute your code and any print/assert tests you include.</p>
       <div class="dsa-filters" role="search" aria-label="Filter algorithm practices">
         <label class="dsa-search">Search questions
           <input id="dsa-search" type="search" placeholder="Title, topic, keyword, or problem number…" autocomplete="off">
@@ -2216,6 +2214,52 @@ pet.speak()</code></pre>
     ]
   </script>
 
+  <script type="text/plain" id="question-runner-worker">
+    const runtime = (async () => {
+      importScripts("https://cdn.jsdelivr.net/pyodide/v0.25.1/full/pyodide.js");
+      return await loadPyodide({ indexURL: "https://cdn.jsdelivr.net/pyodide/v0.25.1/full/" });
+    })();
+
+    self.onmessage = async event => {
+      const { id, code } = event.data;
+      try {
+        const python = await runtime;
+        self.postMessage({ id, type: "ready" });
+        python.globals.set("_practice_code", code);
+        const result = await python.runPythonAsync(`
+import io as _io, sys as _sys, json as _json, traceback as _traceback
+from contextlib import redirect_stdout as _redirect_stdout, redirect_stderr as _redirect_stderr
+
+class _LimitedOutput(_io.StringIO):
+    def write(self, text):
+        available = max(0, 20000 - self.tell())
+        super().write(text[:available])
+        return len(text)
+
+_out, _err = _LimitedOutput(), _LimitedOutput()
+_failure = ""
+_old_stdin = _sys.stdin
+try:
+    _sys.stdin = _io.StringIO("")
+    with _redirect_stdout(_out), _redirect_stderr(_err):
+        exec(compile(_practice_code, "<answer>", "exec"), {"__name__": "__main__"})
+except SystemExit as _exit:
+    if _exit.code not in (None, 0):
+        _failure = str(_exit)
+except BaseException:
+    _failure = _traceback.format_exc()
+finally:
+    _sys.stdin = _old_stdin
+_json.dumps({"stdout": _out.getvalue(), "stderr": _err.getvalue(), "error": _failure})
+`);
+        python.globals.delete("_practice_code");
+        self.postMessage({ id, type: "result", ...JSON.parse(result) });
+      } catch (error) {
+        self.postMessage({ id, type: "error", error: String(error) });
+      }
+    };
+  </script>
+
   <script>
     const DEFAULT_GRADE_API_URL = "https://lakesideart.gochatus.org/grade-service/grade";
 
@@ -2773,7 +2817,7 @@ print("Try changing this code and click Run.")
       const { wrap, head, pre } = getInlineRunOutputNodes(qEl);
       if (!wrap || !head || !pre) return;
       wrap.hidden = false;
-      head.textContent = statusText ? `Playground output (${statusText})` : "Playground output";
+      head.textContent = statusText ? `Python output (${statusText})` : "Python output";
       pre.textContent = text || "(no output)";
       pre.classList.toggle("err", !!isErr);
     }
@@ -2909,7 +2953,7 @@ print("Try changing this code and click Run.")
           throw new Error(reason + detail);
         }
 
-        const verdict = first.verdict === "correct" ? "correct" : "wrong";
+        const verdict = ["correct", "wrong"].includes(first.verdict) ? first.verdict : "unknown";
         const explanation = (first.explanation || "").trim();
         return { verdict, explanation, mode: "ai" };
       }
@@ -2939,7 +2983,8 @@ print("Try changing this code and click Run.")
     function getQuestionText(qEl) {
       const title = qEl.querySelector(".qtitle")?.textContent?.trim() || "";
       const prompt = qEl.querySelector(".prompt")?.textContent?.trim() || "";
-      return [title, prompt].filter(Boolean).join("\n");
+      const source = qEl.dataset.sourceUrl ? `Full problem statement: ${qEl.dataset.sourceUrl}` : "";
+      return [title, prompt, source].filter(Boolean).join("\n");
     }
 
     function getModelAnswer(qEl) {
@@ -2985,15 +3030,24 @@ print("Try changing this code and click Run.")
 
       try {
         const result = await gradeOne({ questionText, userText, correctText });
+        if (textarea.value.trim() !== userText) {
+          setFeedback(qEl, "Your answer changed during checking. Check the updated answer again.", "warn");
+          return { verdict: "unknown" };
+        }
         const isCorrect = result.verdict === "correct";
         const prefix = result.verdict === "unknown" ? "" : (isCorrect ? "Correct. " : "Wrong. ");
         const kind = result.verdict === "unknown" ? "warn" : (isCorrect ? "ok" : "bad");
         setFeedback(qEl, prefix + (result.explanation || ""), kind, isCorrect);
+        return result;
       } catch (err) {
         console.warn("Grading failed:", err);
+        if (textarea.value.trim() !== userText) {
+          setFeedback(qEl, "Your answer changed during checking. Check the updated answer again.", "warn");
+          return { verdict: "unknown" };
+        }
         const local = localOverlapCheck(userText, correctText);
         if (local.verdict === "unknown") {
-          setFeedback(qEl, "AI grading unavailable; also no sample solution to compare against.", "bad", false);
+          setFeedback(qEl, "AI grading unavailable; no local sample solution to compare against. Enable AI grading or try again.", "warn", false);
         } else {
           setFeedback(
             qEl,
@@ -3002,6 +3056,7 @@ print("Try changing this code and click Run.")
             local.verdict === "correct"
           );
         }
+        return local;
       } finally {
         if (btn) btn.disabled = false;
       }
@@ -3085,6 +3140,86 @@ print("Hi", user_name)`
       });
     }
 
+    let questionWorker = null;
+    let pendingQuestionRun = null;
+    let questionRunId = 0;
+
+    function finishQuestionRun(result, resetWorker = false) {
+      if (!pendingQuestionRun) return;
+      const pending = pendingQuestionRun;
+      pendingQuestionRun = null;
+      clearTimeout(pending.timer);
+      if (resetWorker && questionWorker) {
+        questionWorker.terminate();
+        questionWorker = null;
+      }
+      pending.resolve(result);
+    }
+
+    function executeQuestionPython(code, onReady = () => {}) {
+      if (pendingQuestionRun) return Promise.resolve({ error: "Another question is running. Try again when it finishes." });
+      return new Promise(resolve => {
+        const id = ++questionRunId;
+        pendingQuestionRun = { id, resolve, onReady, timer: null };
+        const expire = (milliseconds, message) => {
+          clearTimeout(pendingQuestionRun.timer);
+          pendingQuestionRun.timer = setTimeout(() => finishQuestionRun({ error: message }, true), milliseconds);
+        };
+        try {
+          if (!questionWorker) {
+            const source = document.getElementById("question-runner-worker").textContent;
+            const url = URL.createObjectURL(new Blob([source], { type: "text/javascript" }));
+            try { questionWorker = new Worker(url); }
+            finally { URL.revokeObjectURL(url); }
+            questionWorker.onmessage = event => {
+              if (!pendingQuestionRun || event.data.id !== pendingQuestionRun.id) return;
+              if (event.data.type === "ready") {
+                expire(20000, "Execution stopped after 20 seconds. Check for an infinite loop or reduce the input size.");
+                pendingQuestionRun.onReady();
+              } else {
+                finishQuestionRun(event.data, event.data.type === "error");
+              }
+            };
+            questionWorker.onerror = event => {
+              event.preventDefault();
+              finishQuestionRun({ error: event.message || "Background Python could not load. Check your connection and try again." }, true);
+            };
+          }
+          expire(60000, "Background Python took too long to load. Check your connection and try again.");
+          questionWorker.postMessage({ id, code });
+        } catch (error) {
+          finishQuestionRun({ error: String(error) }, true);
+        }
+      });
+    }
+
+    async function runQuestionInBackground(qEl, button) {
+      const code = qEl.querySelector("textarea")?.value.trim() || getModelAnswer(qEl);
+      if (!code) {
+        setFeedback(qEl, "Type your Python code first.", "warn");
+        return;
+      }
+      if (pendingQuestionRun) {
+        setFeedback(qEl, "Another question is running. Try again when it finishes.", "warn");
+        return;
+      }
+      if (button) button.disabled = true;
+      setFeedback(qEl, "Starting background Python...", "");
+      setInlineRunOutput(qEl, "Loading Python...", "Background run", false);
+      try {
+        const result = await executeQuestionPython(code, () => {
+          setFeedback(qEl, "Running in background...", "");
+          setInlineRunOutput(qEl, "Running...", "Background run", false);
+        });
+        const output = [result.stdout, result.stderr, result.error].filter(Boolean).join("\n");
+        const failed = !!(result.error || result.stderr);
+        setInlineRunOutput(qEl, output || "(no output) — use print(...) or add assert tests.", failed ? "Background run — error" : "Background run — done", failed);
+        setFeedback(qEl, result.error ? "Execution failed. See the error below." : "Finished. Review the output and your tests.", failed ? "bad" : "ok");
+      } finally {
+        if (button) button.disabled = false;
+      }
+    }
+
     qs.forEach(qEl => {
       const row = qEl.querySelector(".row");
       if (row && !row.querySelector('[data-action="run"]')) {
@@ -3092,7 +3227,7 @@ print("Hi", user_name)`
         runBtn.type = "button";
         runBtn.className = "btn secondary";
         runBtn.dataset.action = "run";
-        runBtn.textContent = "Run in playground";
+        runBtn.textContent = "Run in background";
         const feedback = row.querySelector(".feedback");
         if (feedback) row.insertBefore(runBtn, feedback);
         else row.appendChild(runBtn);
@@ -3119,24 +3254,14 @@ print("Hi", user_name)`
         if (!btn) return;
         if (btn.dataset.action === "check") await checkAnswer(qEl, btn);
         if (btn.dataset.action === "hint") showHint(qEl);
-        if (btn.dataset.action === "run") {
-          const loaded = await loadQuestionIntoPlayground(qEl, true);
-          if (!loaded) {
-            setFeedback(qEl, "Nothing to run yet. Add code or use the sample solution.", "warn", false);
-            return;
-          }
-          const runStatus = pgRunStatusEl?.textContent?.trim() || "";
-          const runText = pgOutputEl?.textContent || "";
-          const isErr = !!pgOutputEl?.classList.contains("err");
-          setInlineRunOutput(qEl, runText, runStatus, isErr);
-        }
+        if (btn.dataset.action === "run") await runQuestionInBackground(qEl, btn);
       });
     });
 
     let allOpen = false;
     toggleAllBtn.addEventListener("click", () => {
       allOpen = !allOpen;
-      document.querySelectorAll(".q details").forEach(d => d.open = allOpen);
+      document.querySelectorAll("#python-basics .q details").forEach(d => d.open = allOpen);
       toggleAllBtn.textContent = allOpen ? "Hide Python solutions" : "Show Python solutions";
     });
 
@@ -3151,7 +3276,7 @@ print("Hi", user_name)`
           pre.classList.remove("err");
         }
       });
-      document.querySelectorAll(".q details").forEach(d => d.open = false);
+      document.querySelectorAll("#python-basics .q details").forEach(d => d.open = false);
       allOpen = false;
       toggleAllBtn.textContent = "Show Python solutions";
       setApiStatus("", "");
@@ -3165,6 +3290,7 @@ print("Hi", user_name)`
     (() => {
       const problems = JSON.parse(document.getElementById("dsa-question-bank").textContent);
       const byId = new Map(problems.map(problem => [problem.id, problem]));
+      problems.forEach(problem => { rubric[problem.id] = { hint: problem.hint }; });
       const storageKey = "practiceDsaProgress.v1";
       const pageSize = 20;
       const el = id => document.getElementById(id);
@@ -3232,7 +3358,7 @@ print("Hi", user_name)`
 
       function updateProgress() {
         const solved = problems.filter(problem => state[problem.id]?.solved).length;
-        el("dsa-progress").textContent = `Solved: ${solved} / ${problems.length} (self-assessed)`;
+        el("dsa-progress").textContent = `Solved: ${solved} / ${problems.length} (AI checked or marked)`;
       }
 
       function updateResultLabel(matches) {
@@ -3259,8 +3385,9 @@ print("Hi", user_name)`
         }
         for (const problem of matches.slice((page - 1) * pageSize, page * pageSize)) {
           const article = document.createElement("article");
-          article.className = "dsa-question";
+          article.className = "q dsa-question";
           article.dataset.qid = problem.id;
+          article.dataset.sourceUrl = problem.url;
           article.dataset.solved = String(state[problem.id]?.solved === true);
           const badges = [problem.source, ...problem.lists.map(name => name === "blind75" ? "Blind 75" : "NeetCode 150")];
           if (problem.premium) badges.push("Premium statement");
@@ -3274,46 +3401,36 @@ print("Hi", user_name)`
               <span class="dsa-level ${problem.difficulty.toLowerCase()}">${problem.difficulty}${problem.source === "CSES" ? " (estimated)" : ""}</span>
             </div>
             <p class="prompt">${escapeHtml(problem.summary)}</p>
+            <textarea id="${problem.id}-answer" data-field="draft" spellcheck="false" aria-labelledby="${problem.id}-title" placeholder="Type your Python code here..."></textarea>
             <div class="row">
-              ${link(problem.url, "Full statement & examples ↗")}
-              ${problem.video ? link(problem.video, "Video walkthrough ↗") : ""}
-              ${problem.solution ? link(problem.solution, "Python reference ↗") : ""}
-              <label class="dsa-solved-label"><input type="checkbox" data-action="solved" aria-label="Mark ${escapeHtml(problem.title)} solved"> Mark solved</label>
+              <button type="button" class="btn" data-action="check">Check</button>
+              <button type="button" class="btn secondary" data-action="hint">Hint</button>
+              <button type="button" class="btn secondary" data-action="run">Run in background</button>
+              <span class="feedback" role="status"></span>
             </div>
-            <details class="dsa-workspace" aria-labelledby="${problem.id}-title">
-              <summary>Practice workspace</summary>
-              <div class="dsa-editor-slot"></div>
+            <div class="inline-run-output" hidden><div class="head">Background output</div><pre></pre></div>
+            <details>
+              <summary>Statement &amp; reference solutions</summary>
+              <div class="row">
+                ${link(problem.url, "Full statement & examples ↗")}
+                ${problem.video ? link(problem.video, "Video walkthrough ↗") : ""}
+                ${problem.solution ? link(problem.solution, "Python reference ↗") : ""}
+              </div>
+            </details>
+            <details class="dsa-review">
+              <summary>Progress &amp; review notes</summary>
+              <label class="dsa-solved-label"><input type="checkbox" data-action="solved" aria-label="Mark ${escapeHtml(problem.title)} solved"> Mark solved yourself</label>
+              <label for="${problem.id}-notes">Approach, complexity &amp; review notes</label>
+              <textarea class="dsa-notes" id="${problem.id}-notes" data-field="notes" placeholder="Explain your approach, time/space complexity, and edge cases…"></textarea>
             </details>`;
           article.querySelector('[data-action="solved"]').checked = state[problem.id]?.solved === true;
-          article.querySelector(".dsa-workspace").addEventListener("toggle", event => {
-            if (event.target.open) createWorkspace(article, problem);
-          });
+          article.querySelector('[data-field="draft"]').value = state[problem.id]?.draft || "";
+          article.querySelector('[data-field="notes"]').value = state[problem.id]?.notes || "";
+          const answer = article.querySelector('[data-field="draft"]');
+          bindSuggestionTextarea(answer);
+          answer.addEventListener("focus", () => { activeQuestionEl = article; });
           container.appendChild(article);
         }
-      }
-
-      function createWorkspace(article, problem) {
-        const slot = article.querySelector(".dsa-editor-slot");
-        if (slot.children.length) return;
-        slot.innerHTML = `
-          <p class="tiny dsa-intro">Read the full statement before coding. Include imports, any node classes you need, and print/assert tests to run in the playground. Running executes your code; it does not run the source site's judge.</p>
-          <label for="${problem.id}-answer">Python answer &amp; tests</label>
-          <textarea id="${problem.id}-answer" data-field="draft" spellcheck="false" placeholder="# Write your solution and add your own tests here..."></textarea>
-          <div class="row">
-            <button type="button" class="btn" data-action="load">Load into playground</button>
-            <button type="button" class="btn secondary" data-action="run">Run in playground</button>
-            <span class="feedback" role="status"></span>
-          </div>
-          <div class="inline-run-output" hidden><div class="head">Playground output</div><pre></pre></div>
-          <details><summary>Topic hint</summary><p class="tiny dsa-hint"></p></details>
-          <label for="${problem.id}-notes">Approach, complexity &amp; review notes</label>
-          <textarea class="dsa-notes" id="${problem.id}-notes" data-field="notes" placeholder="Explain your approach, time/space complexity, and edge cases…"></textarea>`;
-        slot.querySelector('[data-field="draft"]').value = state[problem.id]?.draft || "";
-        slot.querySelector('[data-field="notes"]').value = state[problem.id]?.notes || "";
-        slot.querySelector(".dsa-hint").textContent = problem.hint;
-        const answer = slot.querySelector('[data-field="draft"]');
-        bindSuggestionTextarea(answer);
-        answer.addEventListener("focus", () => { activeQuestionEl = article; });
       }
 
       container.addEventListener("input", event => {
@@ -3339,29 +3456,20 @@ print("Hi", user_name)`
         const button = event.target.closest("button[data-action]");
         if (!button) return;
         const article = button.closest(".dsa-question");
-        const feedback = article.querySelector(".feedback");
-        const code = article.querySelector('[data-field="draft"]').value.trim();
-        if (!code) {
-          feedback.textContent = "Write your Python answer and tests first.";
-          return;
-        }
-        if (button.dataset.action === "run" && (!pgPyodide || pgRunning)) {
-          feedback.textContent = pgRunning ? "The playground is already running. Try again when it finishes." : "Python is still loading or unavailable. You can load your code and run it when Python is ready.";
-          return;
-        }
         activeQuestionEl = article;
-        button.disabled = true;
-        try {
-          await loadQuestionIntoPlayground(article, button.dataset.action === "run");
-          feedback.textContent = button.dataset.action === "run" ? "Executed your code. Review the output and your tests." : "Your answer is loaded into the Python playground above.";
-          if (button.dataset.action === "run") {
-            setInlineRunOutput(article, pgOutputEl.textContent, pgRunStatusEl.textContent, pgOutputEl.classList.contains("err"));
-          } else {
-            document.querySelector(".playground").scrollIntoView({ block: "start" });
-            pgCodeEl.focus({ preventScroll: true });
+        if (button.dataset.action === "hint") showHint(article);
+        if (button.dataset.action === "run") await runQuestionInBackground(article, button);
+        if (button.dataset.action === "check") {
+          const answer = article.querySelector('[data-field="draft"]').value.trim();
+          const result = await checkAnswer(article, button);
+          if (result && result.verdict !== "unknown" && answer === entryFor(article.dataset.qid).draft.trim()) {
+            const solved = result.verdict === "correct";
+            entryFor(article.dataset.qid).solved = solved;
+            article.dataset.solved = String(solved);
+            article.querySelector('[data-action="solved"]').checked = solved;
+            saveState();
+            updateProgress();
           }
-        } finally {
-          button.disabled = false;
         }
       });
 
@@ -3383,7 +3491,7 @@ print("Hi", user_name)`
         page += delta;
         render();
         el("dsa-results").scrollIntoView({ block: "start" });
-        container.querySelector("summary")?.focus();
+        container.querySelector('[data-field="draft"]')?.focus({ preventScroll: true });
       }
       el("dsa-prev").addEventListener("click", () => movePage(-1));
       el("dsa-next").addEventListener("click", () => movePage(1));
