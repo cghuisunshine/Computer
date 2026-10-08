@@ -1,0 +1,1295 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="An offline Python data structures and algorithms tutorial with five visual labs, worked examples, and practice exercises."><title>Data Structures &amp; Algorithms with Python — Interactive Tutorial</title><style>
+:root{--bg:#f7f8fa;--panel:#fff;--text:#182b3a;--muted:#586977;--accent:#167452;--border:#dde4e8;--soft:#e9f5ef;--code:#142731;--amber:#af6810;--red:#b83f36;--radius:15px;color-scheme:light}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:95px}body{margin:0;font:15px/1.7 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text)}button,input{font:inherit}button{cursor:pointer;padding:8px 13px;border:1px solid var(--border);border-radius:8px;background:var(--panel);color:var(--text);font-size:13px;font-weight:600}button:hover{background:var(--soft);border-color:#98beab}button:disabled{opacity:.45;cursor:default}.primary{background:var(--accent);border-color:var(--accent);color:white}.primary:hover{background:#10583f;color:white}a{color:var(--accent)}:focus-visible{outline:3px solid #d89135;outline-offset:4px}[hidden]{display:none!important}.skip{position:fixed;top:-60px;left:12px;z-index:100;background:white;padding:8px 14px}.skip:focus{top:8px}
+.topbar{height:72px;position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 30px;border-bottom:1px solid var(--border);background:#ffffffed;backdrop-filter:blur(8px)}.brand{display:flex;align-items:center;gap:12px;white-space:nowrap}.brand-symbol{display:grid;place-items:center;width:35px;height:35px;border-radius:8px;background:var(--code);color:#b9f5d7;font:bold 17px monospace}.brand-title{font-weight:750;font-size:14px;letter-spacing:-.2px}.brand-subtitle{font-size:11px;color:var(--muted)}.actions{display:flex;gap:7px;flex-wrap:wrap}.actions button{font-size:12px}
+.layout{display:grid;grid-template-columns:265px minmax(0,1fr);max-width:1600px;margin:auto}.sidebar{position:sticky;top:72px;height:calc(100dvh - 72px);overflow:auto;border-right:1px solid var(--border);padding:27px 20px;background:#fbfcfd}.sidebar h2{font-size:10px;text-transform:uppercase;letter-spacing:.16em;color:var(--muted);margin:24px 9px 12px}.search-label{display:block;font-size:12px;margin-bottom:5px;font-weight:600}.search-row{display:flex;gap:5px}.search-row input{width:100%;min-width:0;font-size:12px}.search-row button{padding:6px 9px}input:not([type=radio]):not([type=checkbox]):not([type=range]){border:1px solid #bbc9ce;background:white;color:var(--text);padding:9px 10px;border-radius:7px}.search-count{font-size:11px;color:var(--muted);min-height:20px;margin:5px 0}.toc{list-style:none;margin:0;padding:0}.toc li{margin:4px 0}.toc a{display:flex;align-items:center;gap:10px;padding:9px 8px;text-decoration:none;color:#405361;border-radius:7px;font-size:12px;line-height:1.5}.toc a>span:first-child{font:11px ui-monospace,monospace;color:#6b7f8e}.toc a>span:nth-child(2){flex:1}.toc a:hover,.toc a.active{background:var(--soft);color:#126146}.toc a.active{font-weight:700}.toc-check{color:var(--accent)}.progress-card{border-top:1px solid var(--border);margin-top:24px;padding:19px 8px}.progress-card p{margin:0 0 8px;font-size:12px}.progress-card progress{display:block;width:100%;height:7px;accent-color:var(--accent)}.progress-note{color:var(--muted);font-size:10px!important;margin-top:9px!important}.sidebar-tip{font-size:11px;color:var(--muted);margin:22px 8px}.layout.sidebar-hidden{grid-template-columns:1fr}.sidebar-hidden .sidebar{display:none}
+main{min-width:0;padding:38px 44px 70px}.wrap{max-width:1000px;margin:auto}.eyebrow{text-transform:uppercase;letter-spacing:.16em;font-size:10px;font-weight:750;color:var(--accent);margin:0 0 17px}.hero{display:grid;grid-template-columns:1.35fr 1fr;gap:35px;align-items:center;padding-bottom:32px;border-bottom:1px solid var(--border);margin-bottom:23px}h1{font-size:clamp(32px,3.4vw,48px);letter-spacing:-1.7px;line-height:1.13;margin:0 0 20px;font-weight:780}h1 .accent{color:var(--accent)}.intro{font-size:14px;line-height:1.8;color:var(--muted);max-width:440px}.meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px}.meta span{background:white;border:1px solid var(--border);padding:3px 9px;border-radius:20px;font-size:10px;color:var(--muted)}.hero-terminal{background:var(--code);color:#c4dbe5;border-radius:13px;padding:20px;box-shadow:0 14px 28px #15273114;font:12px/1.8 ui-monospace,SFMono-Regular,Consolas,monospace;transform:rotate(1deg)}.terminal-dots{display:flex;gap:5px;margin-bottom:20px}.terminal-dots i{height:7px;width:7px;background:#42606f;border-radius:100%}.terminal-dots i:first-child{background:#d09b63}.terminal-dots i:last-child{background:#77b995}.hero-terminal pre{margin:0;white-space:pre-wrap}.terminal-label{font:9px system-ui,sans-serif;letter-spacing:.15em;margin-top:19px;padding-top:14px;border-top:1px solid #35515e;color:#8fa7b3}.mint{color:#a0e4be}.hero-terminal .comment{color:#a0b6c1}.start-note{display:flex;gap:13px;border:1px solid #cfe4d8;background:#eff8f2;padding:14px 18px;border-radius:10px;font-size:12px;margin:0 0 23px}.start-note b{white-space:nowrap;color:#155b40}
+.section{border:1px solid var(--border);border-radius:var(--radius);background:white;margin:15px 0;scroll-margin-top:90px;overflow:hidden}.section>summary{display:flex;align-items:center;gap:16px;padding:21px 23px;list-style:none;cursor:pointer}.section>summary::-webkit-details-marker{display:none}.chapter-number{display:grid;place-items:center;flex-shrink:0;height:39px;width:39px;border:1px solid var(--border);border-radius:9px;color:var(--accent);font:bold 15px ui-monospace,monospace}.section-title{display:block;font-size:17px;font-weight:730;letter-spacing:-.3px}.section-desc{display:block;color:var(--muted);font-size:11px;margin-top:1px}.chevron{margin-left:auto;color:var(--muted);font:22px monospace}.section[open] .chevron{font-size:0}.section[open] .chevron:after{content:'−';font:22px monospace}.section[open]>summary{border-bottom:1px solid var(--border)}.section-body{padding:10px 26px 25px}.section-body>p{font-size:14px}h3{font-size:18px;line-height:1.4;margin:28px 0 12px;letter-spacing:-.25px}h4{font-size:14px;margin:14px 0 8px}p{margin:12px 0}li{margin:6px 0}ol,ul{padding-left:23px}.section-body li{font-size:14px}.box{border:1px solid var(--border);border-left:3px solid #a6b6c3;border-radius:8px;padding:14px 17px;margin:19px 0;background:#f9fbfc}.box>strong{display:block;font-size:12px;margin-bottom:5px}.box p,.box li{font-size:13px;margin-top:7px;margin-bottom:7px}.definition{border-left-color:var(--accent);background:#f2faf5}.example{border-left-color:#c79443;background:#fffbf3}.trap{border-left-color:var(--red);background:#fff7f5}.trap>strong{color:#a2342e}.derivation{border-left-color:#517eb7;background:#f4f8ff}.complete{display:flex;align-items:center;gap:9px;font-size:12px;color:var(--accent);border-top:1px solid var(--border);padding-top:18px;margin-top:28px;cursor:pointer}.complete input{width:16px;height:16px;accent-color:var(--accent)}
+code,pre{font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace}p code,li code,td code{font-size:.86em;background:#edf2f5;padding:2px 4px;border-radius:3px}.code-card{background:var(--code);border-radius:10px;overflow:hidden;margin:17px 0;color:#e4edf2}.code-top{display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:1px solid #344b58;padding:9px 15px;color:#b3cbd6;font-size:11px}.code-top button{padding:4px 8px;background:#243e4c;border-color:#45606d;color:#d8e9f1;font-size:10px}.code-top button:hover{background:#345361}pre[data-copy]{font-size:12px;line-height:1.9;margin:0;padding:18px 19px;overflow:auto;tab-size:4;white-space:pre}.table-wrap{overflow:auto;border:1px solid var(--border);border-radius:9px;margin:16px 0}table{border-collapse:collapse;width:100%;font-size:12px;line-height:1.6;min-width:480px}th{text-align:left;font-size:11px;background:#f1f5f7;padding:11px 13px;color:#516675;font-weight:650}td{border-top:1px solid var(--border);padding:11px 13px;vertical-align:top}tbody tr:nth-child(even){background:#fbfcfd}.source,.small{font-size:11px!important;color:var(--muted)}.source a{text-underline-offset:3px}.hl{background:#fff4d3!important;box-shadow:inset 3px 0 #dcac39}.chain{display:flex;gap:12px;align-items:center;justify-content:center;padding:21px 10px;background:#f7faf9;border-radius:10px;flex-wrap:wrap}.chain span{border:1px solid #b9d1c4;background:white;padding:7px 17px;border-radius:6px;font-family:monospace}.tree-picture svg{display:block;width:min(100%,520px);margin:16px auto}
+.lab{padding:20px;margin:24px 0;border:1px solid #bcd5c8;border-radius:12px;background:#f8fcfa}.lab-heading{display:flex;gap:13px;align-items:center;flex-wrap:wrap;margin-bottom:13px}.lab-tag{font-size:9px;letter-spacing:.1em;padding:4px 7px;border:1px solid #b9d1c4;border-radius:4px;color:var(--accent);font-weight:700}.lab-heading h3{margin:0;font-size:16px}.lab p{font-size:12px}.lab label{font-size:12px}.lab input:not([type=range]){max-width:100%}.controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:13px 0}.controls input{width:90px}.two-col{display:grid;grid-template-columns:1fr 1fr;gap:24px}.tokens{display:flex;gap:6px;flex-wrap:wrap;min-height:42px;align-items:center;margin:12px 0}.token{display:grid;place-items:center;min-width:34px;min-height:34px;background:white;border:1px solid #abc7b7;padding:4px 9px;border-radius:6px;font:12px monospace;max-width:120px;overflow-wrap:anywhere}.result{padding:10px 12px;background:#edf5f0;border-radius:6px;font-size:12px;min-height:40px}.error{background:#fff1ec!important;color:#a2342e!important}.growth-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:13px}.growth-stat{padding:10px 5px;border:1px solid var(--border);border-radius:7px;background:white;text-align:center}.growth-stat b{display:block;font:16px ui-monospace,monospace;margin-bottom:3px}.growth-stat span{font-size:10px;color:var(--muted)}input[type=range]{width:100%;accent-color:var(--accent);margin-top:15px}.input-grid{display:grid;grid-template-columns:1fr 95px;gap:12px}.input-grid label{display:block;margin-bottom:5px}.input-grid input{width:100%}.array-cells{display:flex;gap:6px;margin-top:20px;flex-wrap:wrap}.cell{text-align:center;min-width:40px}.cell b{display:block;font:13px monospace;padding:11px 9px;border:1px solid #bac9c3;border-radius:6px;background:white}.cell span{font-size:9px;color:var(--muted)}.cell.eliminated b{opacity:.3}.cell.inspect b{background:#fff0cf;border:2px solid #ca8b31}.cell.found b{background:#d8f0e0;border:2px solid var(--accent)}.sort-bars{height:165px;display:flex;gap:7px;align-items:flex-end;padding:14px 0 0;margin:18px 0 0}.sort-bar{flex:1;min-width:0;text-align:center;background:#d9e3e9;border-radius:5px 5px 0 0;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;color:#263f4c;font:12px monospace;padding:7px 1px}.sort-bar.sorted{background:#bfe3cc}.sort-bar.key{background:#f4d39b}.graph-node circle{fill:white;stroke:#9cb7a9;stroke-width:2}.graph-node text{font:16px monospace;text-anchor:middle;dominant-baseline:central;fill:var(--text)}.graph-node.discovered circle{stroke:var(--accent);stroke-width:4}.graph-node.processed circle{fill:#2c7b57;stroke:#2c7b57}.graph-node.processed text{fill:white}#graph-svg{width:min(100%,500px);display:block;margin:auto}
+.quiz-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.quiz{border:1px solid var(--border);border-radius:9px;padding:15px;margin:0;min-width:0}.quiz legend{font-size:12px;font-weight:700;line-height:1.6;padding:0 4px}.quiz label{display:block;font-size:12px;margin:8px 0}.quiz input{accent-color:var(--accent)}.quiz button{margin-top:7px;font-size:11px}.quiz-feedback{font-size:11px!important}.quiz.correct{border-color:#69a783;background:#f3faf5}.score{color:var(--accent);font-size:12px;font-weight:650}.exercise{border-bottom:1px solid var(--border);padding:9px 0 18px}.exercise p{font-size:13px}.solution summary{color:var(--accent);font-size:12px;cursor:pointer}.solution>p{background:var(--soft);padding:12px;border-radius:7px}.footer{margin-top:30px;color:var(--muted);font-size:11px;display:flex;justify-content:space-between;gap:20px;border-top:1px solid var(--border);padding-top:20px}.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--code);color:white;padding:10px 18px;border-radius:8px;z-index:100;font-size:12px;box-shadow:0 5px 15px #182b3a30}.noscript{padding:14px;background:#fff4d3;border-radius:8px}
+@media(min-width:1600px){main{padding-left:60px;padding-right:60px}}
+@media(max-width:1100px){.layout{grid-template-columns:230px minmax(0,1fr)}.sidebar{padding:22px 14px}main{padding:30px 25px}.hero{grid-template-columns:1fr;gap:24px}.hero-terminal{transform:none;max-width:450px}h1{font-size:40px}}
+@media(max-width:760px){.topbar{height:auto;min-height:72px;padding:12px 16px;align-items:flex-start;flex-wrap:wrap}.actions{width:100%}.actions button{padding:6px 9px}.layout{display:block}.sidebar{position:static;width:100%;height:auto;border-right:0;border-bottom:1px solid var(--border);padding:16px 20px}.sidebar h2{margin:12px 0 7px}.toc{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}.progress-card{padding:12px 0;margin-top:12px}.sidebar-tip{display:none}main{padding:27px 16px}.hero{gap:22px}h1{font-size:36px;letter-spacing:-1px}.hero-terminal{max-width:100%}.section>summary{padding:16px;gap:12px}.section-title{font-size:15px}.section-desc{font-size:10px}.section-body{padding:8px 17px 20px}.chapter-number{height:33px;width:33px}.quiz-grid{grid-template-columns:1fr}.start-note{display:block}.start-note b{display:block;margin-bottom:4px}.two-col{gap:14px}.lab{padding:15px}.footer{display:block}.growth-grid{grid-template-columns:repeat(3,1fr)}html{scroll-padding-top:125px}.section{scroll-margin-top:125px}}
+@media(max-width:420px){.toc{grid-template-columns:1fr}.two-col{grid-template-columns:1fr}.input-grid{grid-template-columns:1fr}.input-grid #target{width:100px}.hero-terminal{font-size:11px}.code-top{align-items:flex-start}pre[data-copy]{padding:13px;font-size:11px}.controls{gap:6px}.controls button{font-size:11px;padding:7px 9px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media print{body{background:white;color:#111;font-size:11px}.topbar,.sidebar,.toast,.complete,.copy,.lab .controls,.lab form,.lab input,.skip,.footer button{display:none!important}.layout{display:block}main{padding:0}.hero{grid-template-columns:1fr 1fr;gap:20px}h1{font-size:30px}.hero-terminal{box-shadow:none;transform:none}.section{border:0;border-radius:0;overflow:visible}.section>summary{padding:14px 0;border-bottom:1px solid #bbb!important;break-after:avoid}.section-body{padding:0}.box,.code-card,.lab,.quiz,.exercise{break-inside:avoid}.section-title{font-size:17px}.chevron{display:none}.code-card{background:#f4f4f4;color:#111;border:1px solid #bbb}.code-top{color:#111;border-color:#ccc}pre[data-copy]{font-size:10px;white-space:pre-wrap;overflow-wrap:anywhere}.table-wrap{overflow:visible}table{min-width:0;font-size:10px}a{color:inherit}.quiz-feedback{display:block}.footer{margin-top:15px}.hero-terminal{color:#111;background:#f4f4f4;border:1px solid #bbb}.mint,.comment{color:#333!important}}
+</style>
+<!-- PART A — CANONICAL TUTORIAL (MARKDOWN)
+# Data Structures & Algorithms with Python
+
+Prerequisites: variables, if statements, loops, functions, and basic classes. Python 3.10+.
+
+## A — Think in structures & costs
+
+AThink in structures & costsAlgorithms, invariants, and Big O+
+
+    Imagine building a music app. A playlist needs an ordered collection, an undo button needs the most recent action, and a search box needs a way to find a song quickly. Each problem suggests a different way to organize and process information.
+Definition · structure + algorithmA data structure organizes values and supports operations on them. An algorithm is a finite sequence of well-defined steps for solving a problem. The representation and the steps together determine efficiency.
+
+Start with the operations
+Specify inputs and outputs. For a search: a collection and a target go in; an index or “not found” comes out.
+Write a simple correct solution. Try a small example by hand.
+Count the work. What happens as the input size grows?
+Choose a representation. Can you reduce repeated scans or expensive moves?
+Check edge cases. Include empty inputs, one value, duplicates, and missing values.
+
+Big O: how work grows
+Let n be input size. Big O gives an asymptotic upper bound on growth, ignoring constant factors and lower-order terms. Always say which case you mean: worst case, average case, or amortized across many operations.
+GrowthTypical exampleIf n doubles
+O(1)Index a Python listBound stays constant
+O(log n)Binary search on a sorted listAbout one extra comparison
+O(n)Scan every itemAbout twice the work
+O(n log n)Merge sortA little more than twice the work
+O(n²)Compare every pairAbout four times the work
+O(2ⁿ)Enumerate all subsetsMuch faster growth
+
+EXPLORE 01Make the input bigger
+
+Input size n: 32
+Illustrative operation counts: 1, ceil(log₂ n), n, ceil(n log₂ n), and n². These are growth models, not measured Python runtimes.
+
+One loop versus nested loopsCopy Python
+def total(values):
+    result = 0
+    for value in values:       # n additions
+        result += value
+    return result
+
+def all_pairs(values):
+    pairs = []
+    for left in values:
+        for right in values:  # n * n pairs
+            pairs.append((left, right))
+    return pairs
+
+print(total([2, 4, 6]))              # 12
+print(len(all_pairs([2, 4, 6])))     # 9
+
+Why are these costs different?The outer loop runs n times.
+The inner loop runs n times for each outer iteration.
+There are n × n append operations, so time is O(n²).
+The returned list also stores n² pairs: O(n²) output space. The total function needs O(1) auxiliary space.
+
+Common trap · a loop does not automatically mean O(n)A loop that halves its remaining work can be O(log n). Two separate linear loops cost O(n + n) = O(n), while two fully nested linear loops cost O(n²). Treat arithmetic and comparisons as constant cost in these beginner analyses; huge integers and long string keys can change that model.
+
+ I can explain the main ideas in this chapter
+
+## B — Python’s core collections
+
+BPython’s core collectionsLists, tuples, dictionaries, and sets+
+
+    Lists, tuples, dictionaries, and sets
+Python’s built-in collections cover many everyday problems. A list is a dynamic array of references, not a linked list. A dictionary associates keys with values; a set stores distinct values.
+StructureUse it when…Key propertyExample
+listOrder and position matterMutable; duplicates allowed[4, 7, 4]
+tupleYou need a fixed recordImmutable sequence(3, 8)
+dictYou look up a value by a keyUnique hashable keys; insertion order{"Ada": 95}
+setYou need fast membership or uniquenessDistinct hashable elements; no positional order{4, 7}
+
+Everyday collection operationsCopy Python
+scores = [82, 95, 88]
+scores.append(91)
+print(scores[1])                    # 95
+print(scores[-1])                   # 91
+print(scores[1:3])                  # [95, 88]
+
+point = (3, 8)
+x, y = point
+print(x + y)                       # 11
+
+grades = {"Ada": 95, "Lin": 88}
+grades["Sam"] = 91
+print(grades.get("Zoe", 0))        # 0
+
+visited = set()                     # {} makes an empty dict!
+visited.add("A")
+visited.add("A")
+print(len(visited))                 # 1
+print("A" in visited)              # True
+
+A practical complexity reference
+These are typical CPython costs with constant-cost hashing/comparisons. Let n be the collection’s size and k the number of copied items. Hash-table claims are averages, not worst-case guarantees.
+OperationTimeReason
+items[i], len(items)O(1)Direct indexing / stored length
+items.append(x)O(1) amortizedOccasional resizing costs O(n)
+items.pop()O(1) amortizedRemoves the final item
+items.insert(0, x), items.pop(0)O(n)Other references shift
+x in items for a listO(n)May scan every item
+items[a:b]O(k) time and spaceCopies k references
+Dict lookup / update; set membershipO(1) average; O(n) worstHash tables; collisions matter
+List sortingO(n log n) worstComparison-based sorting
+
+Worked example · count wordsCopy Python
+def count_words(words):
+    counts = {}
+    for word in words:
+        counts[word] = counts.get(word, 0) + 1
+    return counts
+
+print(count_words(["red", "blue", "red"]))
+# {'red': 2, 'blue': 1}
+
+Trace the changing dictionaryStart with {}. Read “red” → {"red": 1}. Read “blue” → add a second key. Read “red” again → increase its count to 2. For n words and u unique words, this uses O(n) average time and O(u) space under the constant-cost key model.
+
+References and shallow copies
+Aliasing is different from copyingCopy Python
+a = [1, 2]
+b = a
+b.append(3)
+print(a)                   # [1, 2, 3]: same list
+
+c = a.copy()
+c.append(4)
+print(a)                   # [1, 2, 3]: different outer list
+
+rows = [[1], [2]]
+copied = rows.copy()
+copied[0].append(9)
+print(rows)                # [[1, 9], [2]]: inner lists shared
+
+Common traps · mutation and hashabilityitems.sort() changes the list and returns None; sorted(items) returns a new list. Tuple immutability does not freeze mutable objects inside it. A tuple is hashable only if all its members are hashable. Lists cannot be dictionary keys or set members.
+
+Reference: Python collection tutorial · Python operation costs.
+ I can explain the main ideas in this chapter
+
+## C — Stacks, queues & linked lists
+
+CStacks, queues & linked listsChoose how values enter and leave+
+
+    Definition · stack and queueA stack is last in, first out (LIFO): think undo history. A queue is first in, first out (FIFO): think customers waiting to be served. These are abstract behaviors; different data structures can implement them.
+
+A stack with list; a queue with dequeCopy Python
+from collections import deque
+
+stack = []
+stack.append("open file")
+stack.append("type hello")
+print(stack.pop())                 # type hello
+
+queue = deque(["Ada", "Lin"])
+queue.append("Sam")
+print(queue.popleft())             # Ada
+print(list(queue))                 # ['Lin', 'Sam']
+
+EXPLORE 02Same arrivals, different departures
+
+Add an item to both containers. Predict what each remove button will return.
+New itemAdd to bothReset
+Stack · LIFO
+
+Pop lastTop is C.
+
+Queue · FIFO
+
+Remove firstFront is A.
+
+List append/pop: O(1) amortized. Deque append/popleft: O(1). The visual model holds up to 10 items per container.
+
+Linked lists: follow the next reference
+Each node stores a value and a reference to the next node. The final reference is None. There is no direct access to the kth node: you must follow links from the head.
+10→20→30→None
+Build and traverse a singly linked listCopy Python
+class Node:
+    def __init__(self, value, next_node=None):
+        self.value = value
+        self.next = next_node
+
+head = Node(20, Node(30))
+head = Node(10, head)            # prepend in O(1)
+
+def linked_values(head):
+    result = []
+    current = head
+    while current is not None:
+        result.append(current.value)
+        current = current.next
+    return result
+
+print(linked_values(head))      # [10, 20, 30]
+
+Operation on a singly linked listCostCondition
+Prepend / remove headO(1)Head reference is available
+Find a value / access kth nodeO(n)Must traverse links
+Insert after a known nodeO(1)Finding that node can still cost O(n)
+Append at tailO(1) with tail; O(n) withoutMaintain a tail reference for fast append
+
+Common trap · choosing a linked list everywhereFast insertion assumes you already have the relevant node. Python lists usually offer simpler code and better locality. For queues, use deque. For a stack, guard against popping an empty container: both list and deque raise IndexError.
+
+Reference: collections.deque.
+ I can explain the main ideas in this chapter
+
+## D — Trees, heaps & graphs
+
+DTrees, heaps & graphsModel hierarchies, priorities, and connections+
+
+    Trees and binary search trees
+A rooted tree has a root and parent–child relationships without cycles. A binary tree gives each node at most two children. In our binary search tree (BST), every left-subtree value is smaller and every right-subtree value is larger; duplicates are ignored.
+
+[Diagram in rendered tutorial]
+BST search and inorder traversalCopy Python
+class TreeNode:
+    def __init__(self, value, left=None, right=None):
+        self.value = value
+        self.left = left
+        self.right = right
+
+def bst_contains(root, target):
+    current = root
+    while current is not None:
+        if target == current.value:
+            return True
+        if target < current.value:
+            current = current.left
+        else:
+            current = current.right
+    return False
+
+def inorder(root):
+    if root is None:
+        return []
+    return inorder(root.left) + [root.value] + inorder(root.right)
+
+tree = TreeNode(8,
+    TreeNode(3, TreeNode(1), TreeNode(6)),
+    TreeNode(10, right=TreeNode(14)))
+print(bst_contains(tree, 6))     # True
+print(inorder(tree))            # [1, 3, 6, 8, 10, 14]
+
+Search follows one pathSearching for 6: compare with 8 → go left; compare with 3 → go right; compare with 6 → found. Search costs O(h), where h is tree height. Balanced trees have O(log n) height; a chain-shaped BST has O(n) height. The readable inorder example copies lists through concatenation: up to O(n²) time on a skewed tree. A single shared output list avoids this repeated copying.
+
+Heaps: efficiently retrieve the smallest item
+A min-heap has a parent no greater than either child. Only the smallest element at index 0 is guaranteed; the entire list is not sorted. In the array representation, children of index i are at 2i + 1 and 2i + 2.
+Priority queue with heapqCopy Python
+import heapq
+
+jobs = [(3, "write report"), (1, "fix outage"), (2, "reply")]
+heapq.heapify(jobs)                  # O(n)
+heapq.heappush(jobs, (0, "urgent"))  # O(log n)
+
+print(jobs[0])                      # (0, 'urgent')
+print(heapq.heappop(jobs))           # (0, 'urgent')
+print(heapq.heappop(jobs))           # (1, 'fix outage')
+
+Common trap · equal prioritiesTuples compare later fields when priorities tie. For jobs whose objects cannot be ordered, use (priority, sequence_number, job) to avoid comparing the job objects. Peek costs O(1); push/pop cost O(log n).
+
+Graphs: relationships beyond a hierarchy
+A graph contains vertices (nodes) and edges (connections). Graphs can be directed or undirected, weighted or unweighted. An adjacency list maps each node to its neighbors. For this tutorial, every vertex has an entry; the demo graph is undirected and unweighted.
+Breadth-first search and iterative depth-first searchCopy Python
+from collections import deque
+
+graph = {
+    "A": ["B", "C"],
+    "B": ["A", "D"],
+    "C": ["A", "D", "E"],
+    "D": ["B", "C"],
+    "E": ["C"],
+}
+
+def bfs(graph, start):
+    seen = {start}
+    queue = deque([start])
+    order = []
+    while queue:
+        node = queue.popleft()
+        order.append(node)
+        for neighbor in graph[node]:
+            if neighbor not in seen:
+                seen.add(neighbor)  # mark when enqueued
+                queue.append(neighbor)
+    return order
+
+def dfs(graph, start):
+    seen = {start}
+    stack = [start]
+    order = []
+    while stack:
+        node = stack.pop()
+        order.append(node)
+        for neighbor in reversed(graph[node]):
+            if neighbor not in seen:
+                seen.add(neighbor)
+                stack.append(neighbor)
+    return order
+
+print(bfs(graph, "A"))         # ['A', 'B', 'C', 'D', 'E']
+print(dfs(graph, "A"))         # ['A', 'B', 'D', 'C', 'E']
+
+EXPLORE 03Walk a graph with BFS
+
+The solid fill marks processed nodes. An outlined node is discovered and waiting in the queue. Neighbor order matches the Python example.
+[Diagram in rendered tutorial]Process next nodeReset
+
+Queue · front → back
+
+Processed order
+
+Why BFS is O(V + E)Each discovered vertex is queued once because we mark it immediately.
+Each adjacency list is scanned once when its vertex is processed.
+In an undirected graph each edge appears twice, which changes only a constant factor.
+Thus traversal is O(V + E) time and O(V) auxiliary space under average constant-cost set operations. Only the reachable component is visited.
+
+BFS discovers shortest paths by number of edges in an unweighted graph. DFS explores with a stack and is useful for reachability and deeper searches; it does not generally find shortest paths. For nonnegative weighted edges, learn Dijkstra’s algorithm next.
+Reference: heapq documentation.
+ I can explain the main ideas in this chapter
+
+## E — Searching & sorting
+
+ESearching & sortingFind a value; put values in order+
+
+    Linear search: no ordering required
+Scan until the target is foundCopy Python
+def linear_search(values, target):
+    for index, value in enumerate(values):
+        if value == target:
+            return index
+    return -1
+
+print(linear_search([9, 2, 7], 7))  # 2
+print(linear_search([], 7))         # -1
+
+Worst-case time is O(n); best-case time is O(1); auxiliary space is O(1). No sorting is required.
+Binary search: halve a sorted interval
+Iterative binary search · inclusive boundsCopy Python
+def binary_search(values, target):
+    low, high = 0, len(values) - 1
+    while low <= high:
+        mid = (low + high) // 2
+        if values[mid] == target:
+            return mid
+        if values[mid] < target:
+            low = mid + 1
+        else:
+            high = mid - 1
+    return -1
+
+print(binary_search([2, 4, 7, 9, 12, 15, 18], 12))  # 4
+print(binary_search([2, 4, 7], 5))                   # -1
+
+Correctness · the search interval invariantInitially every possible position lies in [low, high].
+If the middle value is too small, sorted order means every value at or before mid is also too small; discard that half.
+If it is too large, discard mid and all positions after it.
+Each unsuccessful comparison strictly shrinks the interval. Equality returns a valid index; an empty interval proves absence.
+After k halvings at most n / 2ᵏ candidates remain, giving O(log n) worst-case time and O(1) auxiliary space.
+
+EXPLORE 04Step through binary search
+
+Enter up to 16 integers in ascending order. Green means found; amber marks the middle inspected in the current step. Dim cells have been eliminated.
+Sorted values, comma-separated
+Target
+
+Load / restartNext comparison
+
+Common trap · hidden preparation costsBinary search requires ascending sorted input and fast indexing. Sorting once costs O(n log n) in the worst case; sorting before a single lookup can be slower than a scan. With duplicates, this version returns a matching index, not necessarily the first one. Never use values[-1] as a “not found” result: -1 is a valid Python index.
+
+Insertion sort: grow a sorted prefix
+For each new item, shift larger values to the right, then insert it into the gap. Before each outer iteration, the prefix to the left is already sorted.
+Stable insertion sortCopy Python
+def insertion_sort(values):
+    result = values.copy()
+    for i in range(1, len(result)):
+        key = result[i]
+        j = i - 1
+        while j >= 0 and result[j] > key:
+            result[j + 1] = result[j]
+            j -= 1
+        result[j + 1] = key
+    return result
+
+print(insertion_sort([7, 3, 5, 2]))  # [2, 3, 5, 7]
+
+EXPLORE 05Build the sorted prefix
+
+Each step completes one outer-loop iteration. The green prefix is sorted; amber is the item inserted in that pass.
+Values, comma-separated (2–12 integers)Load / restartInsert next item
+
+Merge sort: divide, sort, combine
+Merge sort with a fresh output listCopy Python
+def merge_sort(values):
+    if len(values) <= 1:
+        return values.copy()
+    mid = len(values) // 2
+    left = merge_sort(values[:mid])
+    right = merge_sort(values[mid:])
+    result = []
+    i = j = 0
+    while i < len(left) and j < len(right):
+        if left[i] <= right[j]:
+            result.append(left[i])
+            i += 1
+        else:
+            result.append(right[j])
+            j += 1
+    result.extend(left[i:])
+    result.extend(right[j:])
+    return result
+
+print(merge_sort([7, 3, 5, 2]))      # [2, 3, 5, 7]
+
+Why merge sort is O(n log n)Splitting in half creates O(log n) levels. Merging processes O(n) total items at each level, so total work is O(n log n). This implementation has O(n) peak auxiliary space including temporary slices, plus O(log n) recursion depth; allocations over the whole run are greater than peak memory.
+
+AlgorithmBest timeAverage timeWorst timeAuxiliary space
+Insertion sort aboveO(n)O(n²)O(n²)O(n) for the copy; O(1) if in-place
+Merge sort aboveO(n log n)O(n log n)O(n log n)O(n) peak
+Classic quicksortO(n log n)O(n log n)*O(n²)Depends on partition method / recursion
+Python sorted / list.sortO(n) for sorted runsO(n log n)O(n log n)O(n) worst case
+
+*Average quicksort time assumes suitable input/pivot behavior. Prefer Python’s stable built-in sort in application code; implement these algorithms to understand their tradeoffs.
+Sort real records with a keyCopy Python
+students = [("Ada", 95), ("Lin", 88), ("Sam", 91)]
+ranked = sorted(students, key=lambda student: student[1], reverse=True)
+print(ranked)  # [('Ada', 95), ('Sam', 91), ('Lin', 88)]
+
+ I can explain the main ideas in this chapter
+
+## F — Recursion & algorithm patterns
+
+FRecursion & algorithm patternsGreedy choices, backtracking, and dynamic programming+
+
+    Recursion: solve a smaller instance
+A recursive function calls itself on a smaller problem. A base case stops recursion; a progress measure proves that the calls reach it.
+Factorial with a base caseCopy Python
+def factorial(n):
+    if n < 0:
+        raise ValueError("n must be nonnegative")
+    if n <= 1:
+        return 1
+    return n * factorial(n - 1)
+
+print(factorial(4))   # 24
+
+Trace: 4 × factorial(3) → 4 × 3 × factorial(2) → 4 × 3 × 2 × 1 = 24. This makes O(n) calls and uses O(n) stack space; large integer multiplication has additional cost. Python limits recursion depth, so loops are often better for deep linear work.
+Choose an algorithmic pattern
+PatternCore ideaTypical problem
+Two pointersMove two positions using an invariantPair sum in a sorted array
+Sliding windowReuse work as a contiguous range movesMaximum sum of k consecutive items
+Divide and conquerSolve smaller independent parts; combineMerge sort
+GreedyCommit to a locally best choice with a proofMaximum number of non-overlapping intervals
+BacktrackingTry a choice; recurse; undoSubsets / constraint search
+Dynamic programmingReuse answers to overlapping subproblemsClimbing stairs / minimum coin count
+
+Greedy choices need a reason
+To select the most non-overlapping half-open intervals [start, end), choose the earliest finishing compatible interval. Assume every interval has start < end.
+Greedy interval schedulingCopy Python
+def select_intervals(intervals):
+    chosen = []
+    end = float("-inf")
+    for start, finish in sorted(intervals, key=lambda interval: interval[1]):
+        if start >= end:
+            chosen.append((start, finish))
+            end = finish
+    return chosen
+
+print(select_intervals([(0, 3), (1, 2), (2, 4), (3, 5)]))
+# [(1, 2), (2, 4)]
+
+Exchange argument · why earliest finish worksTake an optimal schedule. Replace its first interval with the earliest-finishing interval. The replacement finishes no later, so all later intervals remain feasible and the count is unchanged. Repeat this argument on the remaining intervals. Sorting dominates: O(n log n) time.
+
+Dynamic programming: name the state first
+A child climbs n stairs, taking 1 or 2 steps at a time. Let ways(i) count ways to reach stair i. The last move comes from i − 1 or i − 2, so ways(i) = ways(i − 1) + ways(i − 2). There is one way to take zero steps: do nothing.
+Bottom-up DP with only two stored statesCopy Python
+def climb_stairs(n):
+    if n < 0:
+        raise ValueError("n must be nonnegative")
+    previous, current = 1, 1    # ways(0), ways(1)
+    for _ in range(2, n + 1):
+        previous, current = current, previous + current
+    return current             # also 1 when n == 0
+
+print([climb_stairs(n) for n in range(6)])
+# [1, 1, 2, 3, 5, 8]
+
+State → recurrence → base cases → evaluation orderFor 4 stairs, the count is ways(3) + ways(2) = 3 + 2 = 5. Evaluating each state once takes O(n) additions and O(1) stored integer variables. Integer sizes grow with n, so that is a unit-cost model, not a constant bit-space guarantee.
+
+Backtracking: choose, explore, undo
+Generate all subsetsCopy Python
+def subsets(values):
+    answers = []
+    path = []
+
+    def visit(index):
+        if index == len(values):
+            answers.append(path.copy())
+            return
+        visit(index + 1)          # exclude this value
+        path.append(values[index])
+        visit(index + 1)          # include this value
+        path.pop()               # undo the choice
+
+    visit(0)
+    return answers
+
+print(subsets([1, 2]))            # [[], [2], [1], [1, 2]]
+
+Common traps · repeated work and unjustified greedNaive recursive stair counting repeats the same states exponentially; DP reuses them. Greedily taking the largest coin fails for coins {1, 3, 4} and amount 6: 4 + 1 + 1 uses three coins, but 3 + 3 uses two. Subset generation outputs 2ⁿ results and uses O(n2ⁿ) time and output space when copying subsets; auxiliary recursion/path space is O(n).
+
+ I can explain the main ideas in this chapter
+
+## G — Four worked problems
+
+GFour worked problemsTurn a technique into a complete solution+
+
+    For each problem, state the contract, trace an example, identify the invariant, and analyze time and extra memory.
+Example 1 · balanced brackets with a stack
+Return True if (), [], and {} are correctly nested. Ignore other characters.
+Balanced bracketsCopy Python
+def balanced(text):
+    matching = {")": "(", "]": "[", "}": "{"}
+    stack = []
+    for char in text:
+        if char in "([{":
+            stack.append(char)
+        elif char in matching:
+            if not stack or stack.pop() != matching[char]:
+                return False
+    return not stack
+
+print(balanced("a * (b + [c])"))   # True
+print(balanced("([)]"))            # False
+print(balanced("(("))              # False
+
+Trace + invariantFor “([)]”, push (, push [, then encounter ). The top is [, which does not match (, so reject. At each step, the stack contains unmatched opening brackets in nesting order. A final nonempty stack means an opening bracket was never closed. Time O(n), auxiliary space O(n) worst case.
+
+Example 2 · two sum with a dictionary
+Return two distinct indices whose values sum to target; return None if no pair exists. The input need not be sorted.
+Remember values already seenCopy Python
+def two_sum(values, target):
+    seen = {}
+    for index, value in enumerate(values):
+        needed = target - value
+        if needed in seen:
+            return seen[needed], index
+        seen[value] = index
+    return None
+
+print(two_sum([2, 7, 11, 15], 9))   # (0, 1)
+print(two_sum([3, 3], 6))           # (0, 1)
+print(two_sum([4], 8))              # None
+
+Why lookup happens before insertionBefore each iteration, the dictionary contains only earlier indices.
+For value 7 and target 9, the needed value is 2; its index is already stored.
+Looking up first prevents pairing an item with itself.
+The one-pass solution costs O(n) average time and O(n) extra space, instead of comparing O(n²) pairs.
+
+Example 3 · a fixed sliding window
+Find the maximum sum of k consecutive values. Require 1 ≤ k ≤ len(values).
+Reuse the previous window sumCopy Python
+def max_window_sum(values, k):
+    if not 1 <= k <= len(values):
+        raise ValueError("k must be between 1 and len(values)")
+    current = sum(values[:k])
+    best = current
+    for right in range(k, len(values)):
+        current += values[right] - values[right - k]
+        best = max(best, current)
+    return best
+
+print(max_window_sum([2, 1, 5, 1, 3, 2], 3))   # 9
+print(max_window_sum([-5, -2, -7], 2))         # -7
+
+Trace the windowsThe sums are 8, 7, 9, and 6. When the window moves, subtract the departing value and add the arriving one. This gives O(n) time. The initial slice uses O(k) temporary space in this version; replace it with sum(values[i] for i in range(k)) for O(1) auxiliary space. Initializing best to 0 would break all-negative inputs.
+
+Example 4 · shortest path in an unweighted graph
+Use BFS and record each node’s first parent. Reconstruct a path by walking backward from the goal. Require start and goal to be graph vertices.
+BFS with parent trackingCopy Python
+from collections import deque
+
+def shortest_path(graph, start, goal):
+    queue = deque([start])
+    parent = {start: None}
+    while queue:
+        node = queue.popleft()
+        if node == goal:
+            path = []
+            while node is not None:
+                path.append(node)
+                node = parent[node]
+            return path[::-1]
+        for neighbor in graph[node]:
+            if neighbor not in parent:
+                parent[neighbor] = node
+                queue.append(neighbor)
+    return None
+
+graph = {"A": ["B", "C"], "B": ["A", "D"],
+         "C": ["A", "D", "E"], "D": ["B", "C"], "E": ["C"]}
+print(shortest_path(graph, "A", "E"))  # ['A', 'C', 'E']
+print(shortest_path(graph, "A", "A"))  # ['A']
+
+Why the first parent is enoughBFS discovers nodes in increasing edge distance from the start. The first discovery therefore supplies a shortest route. Recording a parent only once also avoids cycles. Time O(V + E) and auxiliary space O(V) over the reachable component.
+
+ I can explain the main ideas in this chapter
+
+## H — Practice & check your understanding
+
+HPractice & check your understandingSix questions, six exercises, and a solving checklist+
+
+    Check your understanding
+Choose an answer and check it for an explanation. These questions assess concepts; the page does not execute Python.
+Which container fits frequent removals from the front? A Python list collections.deque A tupleCheck answer
+What must be true before binary search on a list? All values are unique The list is sorted in the expected order The list has an even lengthCheck answer
+How many pairs does a full nested loop over n items produce? n 2n n²Check answer
+A plain BST containing n nodes always guarantees… O(log n) search O(1) search O(h) search, where h is its heightCheck answer
+Which traversal finds a shortest route by edge count? BFS on an unweighted graph DFS on any graph BFS on any weighted graphCheck answer
+What does dynamic programming usually avoid? All loops Repeatedly solving the same subproblems Storing any stateCheck answer
+
+0 / 6 questions correct
+Practice in Python
+Copy examples into a Python 3 file or interpreter. Use assert to check outputs, then solve these exercises before opening the suggested approach.
+1 · Remove duplicates while keeping order
+Write unique_in_order(values). Example: [3, 1, 3, 2, 1] → [3, 1, 2]. Assume hashable values.
+Reveal approach + complexity
+Track a seen set and append to a result only on the first encounter. O(n) average time; O(n) extra space.
+
+2 · Find the first matching index
+Modify binary search to return the first occurrence. Example: [1, 2, 2, 2, 4], target 2 → index 1.
+Reveal approach + complexity
+On equality, remember mid and continue left with high = mid - 1. Keep the remembered answer initialized to -1. O(log n) time.
+
+3 · Reverse a linked list
+Reverse links in place, including the empty-list case.
+Reveal approach + complexity
+Keep previous and current references. Save current.next, redirect it to previous, then advance both. Return previous. O(n) time; O(1) auxiliary space.
+
+4 · Count connected components
+Given an undirected adjacency list, count its connected components, including isolated vertices.
+Reveal approach + complexity
+Start BFS from every not-yet-seen vertex; increment a component count each time a new traversal starts. Maintain one global seen set. O(V + E) time.
+
+5 · Minimum coins
+For positive integer denominations [1, 3, 4], compute the minimum coins to make amount 6. Return -1 if impossible.
+Reveal approach + complexity
+Use dp[0] = 0 and infinity for other amounts. For each amount a and usable coin c, minimize dp[a] with 1 + dp[a-c]. Answer 2. O(amount × number_of_coins) time; O(amount) space.
+
+6 · Merge two sorted lists
+Return one sorted list without calling sorted(). Example: [1, 4, 7] and [2, 3, 8] → [1, 2, 3, 4, 7, 8].
+Reveal approach + complexity
+Use two indices; take the smaller next value, then append the remaining tail. O(n + m) time and O(n + m) output space.
+
+Small tests catch big mistakesCopy Python
+assert binary_search([], 4) == -1
+assert binary_search([4], 4) == 0
+assert insertion_sort([3, 1, 3]) == [1, 3, 3]
+assert merge_sort([]) == []
+assert balanced("") is True
+assert balanced("]") is False
+assert two_sum([3, 3], 6) == (0, 1)
+assert two_sum([3], 6) is None
+assert max_window_sum([-5, -2, -7], 2) == -7
+assert climb_stairs(0) == 1
+print("All checks passed")
+
+A repeatable problem-solving checklist
+Clarify: sorted input? duplicates? allowed mutation? what happens on failure?
+Trace: solve a tiny example by hand.
+Baseline: write a correct simple solution first.
+Improve: look for repeated scans, repeated subproblems, and a matching data structure.
+Explain: state an invariant or recurrence and why the algorithm terminates.
+Test: empty, one element, duplicates, extremes, and absent targets.
+Analyze: give time and auxiliary space, with case and assumptions.
+
+Suggested next topics
+After you can solve these exercises: balanced BSTs, tries, disjoint sets, topological sorting, Dijkstra’s algorithm, and more DP problems. Work on one new pattern at a time and explain your solution aloud.
+ I can explain the main ideas in this chapter
+
+
+-->
+<script type="application/json" id="studyPageStructure">{"title": "Data Structures & Algorithms with Python", "subject": "computer-science", "language": "en", "python": "3.10+", "sections": [{"id": "foundations", "letter": "A", "title": "Think in structures & costs", "description": "Algorithms, invariants, and Big O", "keywords": "complexity time space big o analysis loops"}, {"id": "collections", "letter": "B", "title": "Python’s core collections", "description": "Lists, tuples, dictionaries, and sets", "keywords": "array hash hashing dictionary dict set tuple list copy"}, {"id": "linear-structures", "letter": "C", "title": "Stacks, queues & linked lists", "description": "Choose how values enter and leave", "keywords": "lifo fifo deque stack queue node linked"}, {"id": "trees-graphs", "letter": "D", "title": "Trees, heaps & graphs", "description": "Model hierarchies, priorities, and connections", "keywords": "bst binary tree heap priority bfs dfs traversal graph"}, {"id": "search-sort", "letter": "E", "title": "Searching & sorting", "description": "Find a value; put values in order", "keywords": "binary linear search insertion merge quick sort timsort"}, {"id": "patterns", "letter": "F", "title": "Recursion & algorithm patterns", "description": "Greedy choices, backtracking, and dynamic programming", "keywords": "recursion greedy backtracking dp dynamic programming window pointers"}, {"id": "worked-examples", "letter": "G", "title": "Four worked problems", "description": "Turn a technique into a complete solution", "keywords": "brackets two sum sliding window shortest path examples"}, {"id": "practice", "letter": "H", "title": "Practice & check your understanding", "description": "Six questions, six exercises, and a solving checklist", "keywords": "quiz exercises test checklist review"}], "features": ["search", "collapsible chapters", "copy code", "five visual labs", "quiz", "local progress", "print"], "snippets": [{"title": "One loop versus nested loops", "code": "def total(values):\n    result = 0\n    for value in values:       # n additions\n        result += value\n    return result\n\ndef all_pairs(values):\n    pairs = []\n    for left in values:\n        for right in values:  # n * n pairs\n            pairs.append((left, right))\n    return pairs\n\nprint(total([2, 4, 6]))              # 12\nprint(len(all_pairs([2, 4, 6])))     # 9"}, {"title": "Everyday collection operations", "code": "scores = [82, 95, 88]\nscores.append(91)\nprint(scores[1])                    # 95\nprint(scores[-1])                   # 91\nprint(scores[1:3])                  # [95, 88]\n\npoint = (3, 8)\nx, y = point\nprint(x + y)                       # 11\n\ngrades = {\"Ada\": 95, \"Lin\": 88}\ngrades[\"Sam\"] = 91\nprint(grades.get(\"Zoe\", 0))        # 0\n\nvisited = set()                     # {} makes an empty dict!\nvisited.add(\"A\")\nvisited.add(\"A\")\nprint(len(visited))                 # 1\nprint(\"A\" in visited)              # True"}, {"title": "Worked example · count words", "code": "def count_words(words):\n    counts = {}\n    for word in words:\n        counts[word] = counts.get(word, 0) + 1\n    return counts\n\nprint(count_words([\"red\", \"blue\", \"red\"]))\n# {'red': 2, 'blue': 1}"}, {"title": "Aliasing is different from copying", "code": "a = [1, 2]\nb = a\nb.append(3)\nprint(a)                   # [1, 2, 3]: same list\n\nc = a.copy()\nc.append(4)\nprint(a)                   # [1, 2, 3]: different outer list\n\nrows = [[1], [2]]\ncopied = rows.copy()\ncopied[0].append(9)\nprint(rows)                # [[1, 9], [2]]: inner lists shared"}, {"title": "A stack with list; a queue with deque", "code": "from collections import deque\n\nstack = []\nstack.append(\"open file\")\nstack.append(\"type hello\")\nprint(stack.pop())                 # type hello\n\nqueue = deque([\"Ada\", \"Lin\"])\nqueue.append(\"Sam\")\nprint(queue.popleft())             # Ada\nprint(list(queue))                 # ['Lin', 'Sam']"}, {"title": "Build and traverse a singly linked list", "code": "class Node:\n    def __init__(self, value, next_node=None):\n        self.value = value\n        self.next = next_node\n\nhead = Node(20, Node(30))\nhead = Node(10, head)            # prepend in O(1)\n\ndef linked_values(head):\n    result = []\n    current = head\n    while current is not None:\n        result.append(current.value)\n        current = current.next\n    return result\n\nprint(linked_values(head))      # [10, 20, 30]"}, {"title": "BST search and inorder traversal", "code": "class TreeNode:\n    def __init__(self, value, left=None, right=None):\n        self.value = value\n        self.left = left\n        self.right = right\n\ndef bst_contains(root, target):\n    current = root\n    while current is not None:\n        if target == current.value:\n            return True\n        if target \u003c current.value:\n            current = current.left\n        else:\n            current = current.right\n    return False\n\ndef inorder(root):\n    if root is None:\n        return []\n    return inorder(root.left) + [root.value] + inorder(root.right)\n\ntree = TreeNode(8,\n    TreeNode(3, TreeNode(1), TreeNode(6)),\n    TreeNode(10, right=TreeNode(14)))\nprint(bst_contains(tree, 6))     # True\nprint(inorder(tree))            # [1, 3, 6, 8, 10, 14]"}, {"title": "Priority queue with heapq", "code": "import heapq\n\njobs = [(3, \"write report\"), (1, \"fix outage\"), (2, \"reply\")]\nheapq.heapify(jobs)                  # O(n)\nheapq.heappush(jobs, (0, \"urgent\"))  # O(log n)\n\nprint(jobs[0])                      # (0, 'urgent')\nprint(heapq.heappop(jobs))           # (0, 'urgent')\nprint(heapq.heappop(jobs))           # (1, 'fix outage')"}, {"title": "Breadth-first search and iterative depth-first search", "code": "from collections import deque\n\ngraph = {\n    \"A\": [\"B\", \"C\"],\n    \"B\": [\"A\", \"D\"],\n    \"C\": [\"A\", \"D\", \"E\"],\n    \"D\": [\"B\", \"C\"],\n    \"E\": [\"C\"],\n}\n\ndef bfs(graph, start):\n    seen = {start}\n    queue = deque([start])\n    order = []\n    while queue:\n        node = queue.popleft()\n        order.append(node)\n        for neighbor in graph[node]:\n            if neighbor not in seen:\n                seen.add(neighbor)  # mark when enqueued\n                queue.append(neighbor)\n    return order\n\ndef dfs(graph, start):\n    seen = {start}\n    stack = [start]\n    order = []\n    while stack:\n        node = stack.pop()\n        order.append(node)\n        for neighbor in reversed(graph[node]):\n            if neighbor not in seen:\n                seen.add(neighbor)\n                stack.append(neighbor)\n    return order\n\nprint(bfs(graph, \"A\"))         # ['A', 'B', 'C', 'D', 'E']\nprint(dfs(graph, \"A\"))         # ['A', 'B', 'D', 'C', 'E']"}, {"title": "Scan until the target is found", "code": "def linear_search(values, target):\n    for index, value in enumerate(values):\n        if value == target:\n            return index\n    return -1\n\nprint(linear_search([9, 2, 7], 7))  # 2\nprint(linear_search([], 7))         # -1"}, {"title": "Iterative binary search · inclusive bounds", "code": "def binary_search(values, target):\n    low, high = 0, len(values) - 1\n    while low \u003c= high:\n        mid = (low + high) // 2\n        if values[mid] == target:\n            return mid\n        if values[mid] \u003c target:\n            low = mid + 1\n        else:\n            high = mid - 1\n    return -1\n\nprint(binary_search([2, 4, 7, 9, 12, 15, 18], 12))  # 4\nprint(binary_search([2, 4, 7], 5))                   # -1"}, {"title": "Stable insertion sort", "code": "def insertion_sort(values):\n    result = values.copy()\n    for i in range(1, len(result)):\n        key = result[i]\n        j = i - 1\n        while j >= 0 and result[j] > key:\n            result[j + 1] = result[j]\n            j -= 1\n        result[j + 1] = key\n    return result\n\nprint(insertion_sort([7, 3, 5, 2]))  # [2, 3, 5, 7]"}, {"title": "Merge sort with a fresh output list", "code": "def merge_sort(values):\n    if len(values) \u003c= 1:\n        return values.copy()\n    mid = len(values) // 2\n    left = merge_sort(values[:mid])\n    right = merge_sort(values[mid:])\n    result = []\n    i = j = 0\n    while i \u003c len(left) and j \u003c len(right):\n        if left[i] \u003c= right[j]:\n            result.append(left[i])\n            i += 1\n        else:\n            result.append(right[j])\n            j += 1\n    result.extend(left[i:])\n    result.extend(right[j:])\n    return result\n\nprint(merge_sort([7, 3, 5, 2]))      # [2, 3, 5, 7]"}, {"title": "Sort real records with a key", "code": "students = [(\"Ada\", 95), (\"Lin\", 88), (\"Sam\", 91)]\nranked = sorted(students, key=lambda student: student[1], reverse=True)\nprint(ranked)  # [('Ada', 95), ('Sam', 91), ('Lin', 88)]"}, {"title": "Factorial with a base case", "code": "def factorial(n):\n    if n \u003c 0:\n        raise ValueError(\"n must be nonnegative\")\n    if n \u003c= 1:\n        return 1\n    return n * factorial(n - 1)\n\nprint(factorial(4))   # 24"}, {"title": "Greedy interval scheduling", "code": "def select_intervals(intervals):\n    chosen = []\n    end = float(\"-inf\")\n    for start, finish in sorted(intervals, key=lambda interval: interval[1]):\n        if start >= end:\n            chosen.append((start, finish))\n            end = finish\n    return chosen\n\nprint(select_intervals([(0, 3), (1, 2), (2, 4), (3, 5)]))\n# [(1, 2), (2, 4)]"}, {"title": "Bottom-up DP with only two stored states", "code": "def climb_stairs(n):\n    if n \u003c 0:\n        raise ValueError(\"n must be nonnegative\")\n    previous, current = 1, 1    # ways(0), ways(1)\n    for _ in range(2, n + 1):\n        previous, current = current, previous + current\n    return current             # also 1 when n == 0\n\nprint([climb_stairs(n) for n in range(6)])\n# [1, 1, 2, 3, 5, 8]"}, {"title": "Generate all subsets", "code": "def subsets(values):\n    answers = []\n    path = []\n\n    def visit(index):\n        if index == len(values):\n            answers.append(path.copy())\n            return\n        visit(index + 1)          # exclude this value\n        path.append(values[index])\n        visit(index + 1)          # include this value\n        path.pop()               # undo the choice\n\n    visit(0)\n    return answers\n\nprint(subsets([1, 2]))            # [[], [2], [1], [1, 2]]"}, {"title": "Balanced brackets", "code": "def balanced(text):\n    matching = {\")\": \"(\", \"]\": \"[\", \"}\": \"{\"}\n    stack = []\n    for char in text:\n        if char in \"([{\":\n            stack.append(char)\n        elif char in matching:\n            if not stack or stack.pop() != matching[char]:\n                return False\n    return not stack\n\nprint(balanced(\"a * (b + [c])\"))   # True\nprint(balanced(\"([)]\"))            # False\nprint(balanced(\"((\"))              # False"}, {"title": "Remember values already seen", "code": "def two_sum(values, target):\n    seen = {}\n    for index, value in enumerate(values):\n        needed = target - value\n        if needed in seen:\n            return seen[needed], index\n        seen[value] = index\n    return None\n\nprint(two_sum([2, 7, 11, 15], 9))   # (0, 1)\nprint(two_sum([3, 3], 6))           # (0, 1)\nprint(two_sum([4], 8))              # None"}, {"title": "Reuse the previous window sum", "code": "def max_window_sum(values, k):\n    if not 1 \u003c= k \u003c= len(values):\n        raise ValueError(\"k must be between 1 and len(values)\")\n    current = sum(values[:k])\n    best = current\n    for right in range(k, len(values)):\n        current += values[right] - values[right - k]\n        best = max(best, current)\n    return best\n\nprint(max_window_sum([2, 1, 5, 1, 3, 2], 3))   # 9\nprint(max_window_sum([-5, -2, -7], 2))         # -7"}, {"title": "BFS with parent tracking", "code": "from collections import deque\n\ndef shortest_path(graph, start, goal):\n    queue = deque([start])\n    parent = {start: None}\n    while queue:\n        node = queue.popleft()\n        if node == goal:\n            path = []\n            while node is not None:\n                path.append(node)\n                node = parent[node]\n            return path[::-1]\n        for neighbor in graph[node]:\n            if neighbor not in parent:\n                parent[neighbor] = node\n                queue.append(neighbor)\n    return None\n\ngraph = {\"A\": [\"B\", \"C\"], \"B\": [\"A\", \"D\"],\n         \"C\": [\"A\", \"D\", \"E\"], \"D\": [\"B\", \"C\"], \"E\": [\"C\"]}\nprint(shortest_path(graph, \"A\", \"E\"))  # ['A', 'C', 'E']\nprint(shortest_path(graph, \"A\", \"A\"))  # ['A']"}, {"title": "Small tests catch big mistakes", "code": "assert binary_search([], 4) == -1\nassert binary_search([4], 4) == 0\nassert insertion_sort([3, 1, 3]) == [1, 3, 3]\nassert merge_sort([]) == []\nassert balanced(\"\") is True\nassert balanced(\"]\") is False\nassert two_sum([3, 3], 6) == (0, 1)\nassert two_sum([3], 6) is None\nassert max_window_sum([-5, -2, -7], 2) == -7\nassert climb_stairs(0) == 1\nprint(\"All checks passed\")"}]}</script>
+</head><body>
+<!-- PART C — FINAL HTML STUDY PAGE -->
+<a href="#main" class="skip">Skip to tutorial</a>
+<header class="topbar"><div class="brand"><span class="brand-symbol" aria-hidden="true">py</span><div><div class="brand-title">The Python Study Lab</div><div class="brand-subtitle">Learn the idea. Trace the steps. Write the code.</div></div></div><div class="actions"><button id="toggle-sidebar" type="button" aria-controls="sidebar" aria-expanded="true">Toggle sidebar</button><button id="expand-all" type="button">Expand all</button><button id="collapse-all" type="button">Collapse all</button><button id="print" type="button">Print / PDF</button></div></header>
+<div class="layout" id="layout"><aside class="sidebar" id="sidebar" aria-label="Tutorial navigation"><label class="search-label" for="q">Search the tutorial</label><div class="search-row"><input id="q" type="search" placeholder="Try binary search or stacks" autocomplete="off"><button id="clear-search" aria-label="Clear search" type="button">×</button></div><p id="search-count" class="search-count" role="status">Find a concept, example, or technique</p><h2>Your learning path</h2><nav aria-label="Chapters"><ul class="toc"><li data-toc-item><a data-toc-link href="#foundations"><span>A</span><span>Think in structures & costs</span><span class="toc-check" aria-label="Completed" hidden>✓</span></a></li><li data-toc-item><a data-toc-link href="#collections"><span>B</span><span>Python’s core collections</span><span class="toc-check" aria-label="Completed" hidden>✓</span></a></li><li data-toc-item><a data-toc-link href="#linear-structures"><span>C</span><span>Stacks, queues & linked lists</span><span class="toc-check" aria-label="Completed" hidden>✓</span></a></li><li data-toc-item><a data-toc-link href="#trees-graphs"><span>D</span><span>Trees, heaps & graphs</span><span class="toc-check" aria-label="Completed" hidden>✓</span></a></li><li data-toc-item><a data-toc-link href="#search-sort"><span>E</span><span>Searching & sorting</span><span class="toc-check" aria-label="Completed" hidden>✓</span></a></li><li data-toc-item><a data-toc-link href="#patterns"><span>F</span><span>Recursion & algorithm patterns</span><span class="toc-check" aria-label="Completed" hidden>✓</span></a></li><li data-toc-item><a data-toc-link href="#worked-examples"><span>G</span><span>Four worked problems</span><span class="toc-check" aria-label="Completed" hidden>✓</span></a></li><li data-toc-item><a data-toc-link href="#practice"><span>H</span><span>Practice & check your understanding</span><span class="toc-check" aria-label="Completed" hidden>✓</span></a></li></ul><p id="no-results" class="small" hidden>No matching chapters. Try another term.</p></nav><div class="progress-card"><p id="progress-text">0 / 8 chapters complete</p><progress id="progress" max="8" value="0" aria-label="Chapters completed"></progress><p class="progress-note" id="storage-note">Saved in this browser on this device.</p></div><p class="sidebar-tip">Tip: use the Copy Python button, or double-click a code block. Paste it into your Python interpreter to run it.</p></aside>
+<main id="main"><div class="wrap"><div class="hero"><div><p class="eyebrow">A practical guide · beginner to intermediate</p><h1>Data structures.<br>Algorithms.<br><span class="accent">Think in Python.</span></h1><p class="intro">Learn how to organize data, choose a strategy, and explain why your solution works. Follow the examples, experiment with the visual labs, then try it yourself.</p><div class="meta"><span>8 chapters</span><span>5 visual labs</span><span>Python 3.10+</span><span>Works offline</span></div></div><div class="hero-terminal"><div class="terminal-dots" aria-hidden="true"><i></i><i></i><i></i></div><pre><span class="comment"># A structure for every problem</span>
+playlist = ["intro", "chapter 1"]
+scores = {"Ada": 95, "Lin": 88}
+visited = {"A", "B", "C"}
+
+<span class="comment"># A strategy for every next step</span>
+for topic in playlist:
+    print(topic)
+
+<span class="mint">&gt; understand → trace → solve</span></pre><div class="terminal-label">SMALL EXAMPLES. CLEAR REASONING.</div></div></div>
+<div class="start-note"><b>Before you begin</b><span>You should know variables, conditions, loops, and functions. Classes appear in linked-list and tree examples. Demos illustrate algorithm steps in your browser; run the Python examples in your own interpreter.</span></div><noscript><p class="noscript">Enable JavaScript for the visual labs, search, and saved progress. All lessons and Python code remain readable without it; open each chapter to read.</p></noscript>
+<details class="section" id="foundations" open>
+    <summary><span class="chapter-number">A</span><span><span class="section-title">Think in structures & costs</span><span class="section-desc">Algorithms, invariants, and Big O</span></span><span class="chevron" aria-hidden="true">+</span></summary>
+    <div class="section-body"><p>Imagine building a music app. A playlist needs an ordered collection, an undo button needs the most recent action, and a search box needs a way to find a song quickly. Each problem suggests a different way to organize and process information.</p><div class="box definition"><strong>Definition · structure + algorithm</strong><div><p>A <b>data structure</b> organizes values and supports operations on them. An <b>algorithm</b> is a finite sequence of well-defined steps for solving a problem. The representation and the steps together determine efficiency.</p></div></div><h3>Start with the operations</h3><ol><li><b>Specify inputs and outputs.</b> For a search: a collection and a target go in; an index or “not found” comes out.</li><li><b>Write a simple correct solution.</b> Try a small example by hand.</li><li><b>Count the work.</b> What happens as the input size grows?</li><li><b>Choose a representation.</b> Can you reduce repeated scans or expensive moves?</li><li><b>Check edge cases.</b> Include empty inputs, one value, duplicates, and missing values.</li></ol>
+<h3>Big O: how work grows</h3><p>Let <code>n</code> be input size. Big O gives an asymptotic upper bound on growth, ignoring constant factors and lower-order terms. Always say which case you mean: worst case, average case, or amortized across many operations.</p><div class="table-wrap"><table><thead><tr><th scope="col">Growth</th><th scope="col">Typical example</th><th scope="col">If n doubles</th></tr></thead><tbody><tr><td>O(1)</td><td>Index a Python list</td><td>Bound stays constant</td></tr><tr><td>O(log n)</td><td>Binary search on a sorted list</td><td>About one extra comparison</td></tr><tr><td>O(n)</td><td>Scan every item</td><td>About twice the work</td></tr><tr><td>O(n log n)</td><td>Merge sort</td><td>A little more than twice the work</td></tr><tr><td>O(n²)</td><td>Compare every pair</td><td>About four times the work</td></tr><tr><td>O(2ⁿ)</td><td>Enumerate all subsets</td><td>Much faster growth</td></tr></tbody></table></div><div class="lab" id="complexity-lab"><div class="lab-heading"><span class="lab-tag">EXPLORE 01</span><h3>Make the input bigger</h3></div><label for="size">Input size n: <output id="size-label">32</output></label><input type="range" id="size" min="4" max="128" value="32" step="4"><div class="growth-grid" id="growth-values" aria-live="polite"></div><p class="small">Illustrative operation counts: 1, ceil(log₂ n), n, ceil(n log₂ n), and n². These are growth models, not measured Python runtimes.</p></div><div class="code-card"><div class="code-top"><span>One loop versus nested loops</span><button type="button" class="copy">Copy Python</button></div><pre data-copy><code>def total(values):
+    result = 0
+    for value in values:       # n additions
+        result += value
+    return result
+
+def all_pairs(values):
+    pairs = []
+    for left in values:
+        for right in values:  # n * n pairs
+            pairs.append((left, right))
+    return pairs
+
+print(total([2, 4, 6]))              # 12
+print(len(all_pairs([2, 4, 6])))     # 9</code></pre></div><div class="box derivation"><strong>Why are these costs different?</strong><div><ol><li>The outer loop runs n times.</li><li>The inner loop runs n times for each outer iteration.</li><li>There are n × n append operations, so time is O(n²).</li><li>The returned list also stores n² pairs: O(n²) output space. The total function needs O(1) auxiliary space.</li></ol></div></div><div class="box trap"><strong>Common trap · a loop does not automatically mean O(n)</strong><div><p>A loop that halves its remaining work can be O(log n). Two separate linear loops cost O(n + n) = O(n), while two fully nested linear loops cost O(n²). Treat arithmetic and comparisons as constant cost in these beginner analyses; huge integers and long string keys can change that model.</p></div></div><label class="complete"><input type="checkbox" data-complete="foundations"> I can explain the main ideas in this chapter</label></div></details><details class="section" id="collections" open>
+    <summary><span class="chapter-number">B</span><span><span class="section-title">Python’s core collections</span><span class="section-desc">Lists, tuples, dictionaries, and sets</span></span><span class="chevron" aria-hidden="true">+</span></summary>
+    <div class="section-body"><h3>Lists, tuples, dictionaries, and sets</h3><p>Python’s built-in collections cover many everyday problems. A list is a dynamic array of references, not a linked list. A dictionary associates keys with values; a set stores distinct values.</p><div class="table-wrap"><table><thead><tr><th scope="col">Structure</th><th scope="col">Use it when…</th><th scope="col">Key property</th><th scope="col">Example</th></tr></thead><tbody><tr><td><code>list</code></td><td>Order and position matter</td><td>Mutable; duplicates allowed</td><td><code>[4, 7, 4]</code></td></tr><tr><td><code>tuple</code></td><td>You need a fixed record</td><td>Immutable sequence</td><td><code>(3, 8)</code></td></tr><tr><td><code>dict</code></td><td>You look up a value by a key</td><td>Unique hashable keys; insertion order</td><td><code>{"Ada": 95}</code></td></tr><tr><td><code>set</code></td><td>You need fast membership or uniqueness</td><td>Distinct hashable elements; no positional order</td><td><code>{4, 7}</code></td></tr></tbody></table></div><div class="code-card"><div class="code-top"><span>Everyday collection operations</span><button type="button" class="copy">Copy Python</button></div><pre data-copy><code>scores = [82, 95, 88]
+scores.append(91)
+print(scores[1])                    # 95
+print(scores[-1])                   # 91
+print(scores[1:3])                  # [95, 88]
+
+point = (3, 8)
+x, y = point
+print(x + y)                       # 11
+
+grades = {&quot;Ada&quot;: 95, &quot;Lin&quot;: 88}
+grades[&quot;Sam&quot;] = 91
+print(grades.get(&quot;Zoe&quot;, 0))        # 0
+
+visited = set()                     # {} makes an empty dict!
+visited.add(&quot;A&quot;)
+visited.add(&quot;A&quot;)
+print(len(visited))                 # 1
+print(&quot;A&quot; in visited)              # True</code></pre></div><h3>A practical complexity reference</h3><p>These are typical CPython costs with constant-cost hashing/comparisons. Let n be the collection’s size and k the number of copied items. Hash-table claims are averages, not worst-case guarantees.</p><div class="table-wrap"><table><thead><tr><th scope="col">Operation</th><th scope="col">Time</th><th scope="col">Reason</th></tr></thead><tbody><tr><td><code>items[i]</code>, <code>len(items)</code></td><td>O(1)</td><td>Direct indexing / stored length</td></tr><tr><td><code>items.append(x)</code></td><td>O(1) amortized</td><td>Occasional resizing costs O(n)</td></tr><tr><td><code>items.pop()</code></td><td>O(1) amortized</td><td>Removes the final item</td></tr><tr><td><code>items.insert(0, x)</code>, <code>items.pop(0)</code></td><td>O(n)</td><td>Other references shift</td></tr><tr><td><code>x in items</code> for a list</td><td>O(n)</td><td>May scan every item</td></tr><tr><td><code>items[a:b]</code></td><td>O(k) time and space</td><td>Copies k references</td></tr><tr><td>Dict lookup / update; set membership</td><td>O(1) average; O(n) worst</td><td>Hash tables; collisions matter</td></tr><tr><td>List sorting</td><td>O(n log n) worst</td><td>Comparison-based sorting</td></tr></tbody></table></div><div class="code-card"><div class="code-top"><span>Worked example · count words</span><button type="button" class="copy">Copy Python</button></div><pre data-copy><code>def count_words(words):
+    counts = {}
+    for word in words:
+        counts[word] = counts.get(word, 0) + 1
+    return counts
+
+print(count_words([&quot;red&quot;, &quot;blue&quot;, &quot;red&quot;]))
+# {&#x27;red&#x27;: 2, &#x27;blue&#x27;: 1}</code></pre></div><div class="box example"><strong>Trace the changing dictionary</strong><div><p>Start with <code>{}</code>. Read “red” → <code>{"red": 1}</code>. Read “blue” → add a second key. Read “red” again → increase its count to 2. For n words and u unique words, this uses O(n) average time and O(u) space under the constant-cost key model.</p></div></div><h3>References and shallow copies</h3><div class="code-card"><div class="code-top"><span>Aliasing is different from copying</span><button type="button" class="copy">Copy Python</button></div><pre data-copy><code>a = [1, 2]
+b = a
+b.append(3)
+print(a)                   # [1, 2, 3]: same list
+
+c = a.copy()
+c.append(4)
+print(a)                   # [1, 2, 3]: different outer list
+
+rows = [[1], [2]]
+copied = rows.copy()
+copied[0].append(9)
+print(rows)                # [[1, 9], [2]]: inner lists shared</code></pre></div><div class="box trap"><strong>Common traps · mutation and hashability</strong><div><p><code>items.sort()</code> changes the list and returns <code>None</code>; <code>sorted(items)</code> returns a new list. Tuple immutability does not freeze mutable objects inside it. A tuple is hashable only if all its members are hashable. Lists cannot be dictionary keys or set members.</p></div></div><p class="source">Reference: <a href="https://docs.python.org/3/tutorial/datastructures.html">Python collection tutorial</a> · <a href="https://wiki.python.org/moin/TimeComplexity">Python operation costs</a>.</p><label class="complete"><input type="checkbox" data-complete="collections"> I can explain the main ideas in this chapter</label></div></details><details class="section" id="linear-structures" >
+    <summary><span class="chapter-number">C</span><span><span class="section-title">Stacks, queues & linked lists</span><span class="section-desc">Choose how values enter and leave</span></span><span class="chevron" aria-hidden="true">+</span></summary>
+    <div class="section-body"><div class="box definition"><strong>Definition · stack and queue</strong><div><p>A <b>stack</b> is last in, first out (LIFO): think undo history. A <b>queue</b> is first in, first out (FIFO): think customers waiting to be served. These are abstract behaviors; different data structures can implement them.</p></div></div><div class="code-card"><div class="code-top"><span>A stack with list; a queue with deque</span><button type="button" class="copy">Copy Python</button></div><pre data-copy><code>from collections import deque
+
+stack = []
+stack.append(&quot;open file&quot;)
+stack.append(&quot;type hello&quot;)
+print(stack.pop())                 # type hello
+
+queue = deque([&quot;Ada&quot;, &quot;Lin&quot;])
+queue.append(&quot;Sam&quot;)
+print(queue.popleft())             # Ada
+print(list(queue))                 # [&#x27;Lin&#x27;, &#x27;Sam&#x27;]</code></pre></div><div class="lab"><div class="lab-heading"><span class="lab-tag">EXPLORE 02</span><h3>Same arrivals, different departures</h3></div><p>Add an item to both containers. Predict what each remove button will return.</p><div class="controls"><label for="item">New item</label><input id="item" type="text" maxlength="12" value="D"><button id="add-item" class="primary" type="button">Add to both</button><button id="reset-containers" type="button">Reset</button></div><div class="two-col"><div><h4>Stack · LIFO</h4><div class="tokens" id="stack-values" aria-label="Stack, bottom to top"></div><button id="pop-stack" type="button">Pop last</button><p id="stack-message" class="result" role="status">Top is C.</p></div><div><h4>Queue · FIFO</h4><div class="tokens" id="queue-values" aria-label="Queue, front to back"></div><button id="pop-queue" type="button">Remove first</button><p id="queue-message" class="result" role="status">Front is A.</p></div></div><p class="small">List append/pop: O(1) amortized. Deque append/popleft: O(1). The visual model holds up to 10 items per container.</p></div><h3>Linked lists: follow the next reference</h3><p>Each node stores a value and a reference to the next node. The final reference is <code>None</code>. There is no direct access to the kth node: you must follow links from the head.</p><div class="chain" aria-label="Linked list: 10 points to 20 points to 30 points to None"><span>10</span><b>→</b><span>20</span><b>→</b><span>30</span><b>→</b><code>None</code></div><div class="code-card"><div class="code-top"><span>Build and traverse a singly linked list</span><button type="button" class="copy">Copy Python</button></div><pre data-copy><code>class Node:
+    def __init__(self, value, next_node=None):
+        self.value = value
+        self.next = next_node
+
+head = Node(20, Node(30))
+head = Node(10, head)            # prepend in O(1)
+
+def linked_values(head):
+    result = []
+    current = head
+    while current is not None:
+        result.append(current.value)
+        current = current.next
+    return result
+
+print(linked_values(head))      # [10, 20, 30]</code></pre></div><div class="table-wrap"><table><thead><tr><th scope="col">Operation on a singly linked list</th><th scope="col">Cost</th><th scope="col">Condition</th></tr></thead><tbody><tr><td>Prepend / remove head</td><td>O(1)</td><td>Head reference is available</td></tr><tr><td>Find a value / access kth node</td><td>O(n)</td><td>Must traverse links</td></tr><tr><td>Insert after a known node</td><td>O(1)</td><td>Finding that node can still cost O(n)</td></tr><tr><td>Append at tail</td><td>O(1) with tail; O(n) without</td><td>Maintain a tail reference for fast append</td></tr></tbody></table></div><div class="box trap"><strong>Common trap · choosing a linked list everywhere</strong><div><p>Fast insertion assumes you already have the relevant node. Python lists usually offer simpler code and better locality. For queues, use <code>deque</code>. For a stack, guard against popping an empty container: both list and deque raise <code>IndexError</code>.</p></div></div><p class="source">Reference: <a href="https://docs.python.org/3/library/collections.html#collections.deque">collections.deque</a>.</p><label class="complete"><input type="checkbox" data-complete="linear-structures"> I can explain the main ideas in this chapter</label></div></details><details class="section" id="trees-graphs" >
+    <summary><span class="chapter-number">D</span><span><span class="section-title">Trees, heaps & graphs</span><span class="section-desc">Model hierarchies, priorities, and connections</span></span><span class="chevron" aria-hidden="true">+</span></summary>
+    <div class="section-body"><h3>Trees and binary search trees</h3><p>A rooted tree has a root and parent–child relationships without cycles. A binary tree gives each node at most two children. In our binary search tree (BST), every left-subtree value is smaller and every right-subtree value is larger; duplicates are ignored.</p>
+<div class="tree-picture"><svg viewBox="0 0 520 210" role="img" aria-label="Binary search tree: root 8; children 3 and 10; node 3 has children 1 and 6; node 10 has right child 14"><g stroke="#a5b3c2" stroke-width="2"><path d="M260 40 L145 105 M260 40 L375 105 M145 105 L85 170 M145 105 L205 170 M375 105 L435 170"/></g><g fill="#ecf7f2" stroke="#237454" stroke-width="2"><circle cx="260" cy="40" r="25"/><circle cx="145" cy="105" r="25"/><circle cx="375" cy="105" r="25"/><circle cx="85" cy="170" r="25"/><circle cx="205" cy="170" r="25"/><circle cx="435" cy="170" r="25"/></g><g text-anchor="middle" dominant-baseline="central" fill="#133629" font-size="18" font-family="monospace"><text x="260" y="40">8</text><text x="145" y="105">3</text><text x="375" y="105">10</text><text x="85" y="170">1</text><text x="205" y="170">6</text><text x="435" y="170">14</text></g></svg></div><div class="code-card"><div class="code-top"><span>BST search and inorder traversal</span><button type="button" class="copy">Copy Python</button></div><pre data-copy><code>class TreeNode:
+    def __init__(self, value, left=None, right=None):
+        self.value = value
+        self.left = left
+        self.right = right
+
+def bst_contains(root, target):
+    current = root
+    while current is not None:
+        if target == current.value:
+            return True
+        if target &lt; current.value:
+            current = current.left
+        else:
+            current = current.right
+    return False
+
+def inorder(root):
+    if root is None:
+        return []
+    return inorder(root.left) + [root.value] + inorder(root.right)
+
+tree = TreeNode(8,
+    TreeNode(3, TreeNode(1), TreeNode(6)),
+    TreeNode(10, right=TreeNode(14)))
+print(bst_contains(tree, 6))     # True
+print(inorder(tree))            # [1, 3, 6, 8, 10, 14]</code></pre></div><div class="box example"><strong>Search follows one path</strong><div><p>Searching for 6: compare with 8 → go left; compare with 3 → go right; compare with 6 → found. Search costs O(h), where h is tree height. Balanced trees have O(log n) height; a chain-shaped BST has O(n) height. The readable inorder example copies lists through concatenation: up to O(n²) time on a skewed tree. A single shared output list avoids this repeated copying.</p></div></div><h3>Heaps: efficiently retrieve the smallest item</h3><p>A min-heap has a parent no greater than either child. Only the smallest element at index 0 is guaranteed; the entire list is not sorted. In the array representation, children of index i are at 2i + 1 and 2i + 2.</p><div class="code-card"><div class="code-top"><span>Priority queue with heapq</span><button type="button" class="copy">Copy Python</button></div><pre data-copy><code>import heapq
+
+jobs = [(3, &quot;write report&quot;), (1, &quot;fix outage&quot;), (2, &quot;reply&quot;)]
+heapq.heapify(jobs)                  # O(n)
+heapq.heappush(jobs, (0, &quot;urgent&quot;))  # O(log n)
+
+print(jobs[0])                      # (0, &#x27;urgent&#x27;)
+print(heapq.heappop(jobs))           # (0, &#x27;urgent&#x27;)
+print(heapq.heappop(jobs))           # (1, &#x27;fix outage&#x27;)</code></pre></div><div class="box trap"><strong>Common trap · equal priorities</strong><div><p>Tuples compare later fields when priorities tie. For jobs whose objects cannot be ordered, use <code>(priority, sequence_number, job)</code> to avoid comparing the job objects. Peek costs O(1); push/pop cost O(log n).</p></div></div><h3>Graphs: relationships beyond a hierarchy</h3><p>A graph contains vertices (nodes) and edges (connections). Graphs can be directed or undirected, weighted or unweighted. An adjacency list maps each node to its neighbors. For this tutorial, every vertex has an entry; the demo graph is undirected and unweighted.</p><div class="code-card"><div class="code-top"><span>Breadth-first search and iterative depth-first search</span><button type="button" class="copy">Copy Python</button></div><pre data-copy><code>from collections import deque
+
+graph = {
+    &quot;A&quot;: [&quot;B&quot;, &quot;C&quot;],
+    &quot;B&quot;: [&quot;A&quot;, &quot;D&quot;],
+    &quot;C&quot;: [&quot;A&quot;, &quot;D&quot;, &quot;E&quot;],
+    &quot;D&quot;: [&quot;B&quot;, &quot;C&quot;],
+    &quot;E&quot;: [&quot;C&quot;],
+}
+
+def bfs(graph, start):
+    seen = {start}
+    queue = deque([start])
+    order = []
+    while queue:
+        node = queue.popleft()
+        order.append(node)
+        for neighbor in graph[node]:
+            if neighbor not in seen:
+                seen.add(neighbor)  # mark when enqueued
+                queue.append(neighbor)
+    return order
+
+def dfs(graph, start):
+    seen = {start}
+    stack = [start]
+    order = []
+    while stack:
+        node = stack.pop()
+        order.append(node)
+        for neighbor in reversed(graph[node]):
+            if neighbor not in seen:
+                seen.add(neighbor)
+                stack.append(neighbor)
+    return order
+
+print(bfs(graph, &quot;A&quot;))         # [&#x27;A&#x27;, &#x27;B&#x27;, &#x27;C&#x27;, &#x27;D&#x27;, &#x27;E&#x27;]
+print(dfs(graph, &quot;A&quot;))         # [&#x27;A&#x27;, &#x27;B&#x27;, &#x27;D&#x27;, &#x27;C&#x27;, &#x27;E&#x27;]</code></pre></div><div class="lab"><div class="lab-heading"><span class="lab-tag">EXPLORE 03</span><h3>Walk a graph with BFS</h3></div><p>The solid fill marks processed nodes. An outlined node is discovered and waiting in the queue. Neighbor order matches the Python example.</p><svg id="graph-svg" viewBox="0 0 500 240" role="img" aria-label="Undirected graph with edges A–B, A–C, B–D, C–D, and C–E"><g stroke="#a5b3c2" stroke-width="3"><path d="M70 120 L200 50 M70 120 L200 185 M200 50 L350 80 M200 185 L350 80 M200 185 L420 195"/></g><g class="graph-node" data-node="A" transform="translate(70,120)"><circle r="25"/><text>A</text></g><g class="graph-node" data-node="B" transform="translate(200,50)"><circle r="25"/><text>B</text></g><g class="graph-node" data-node="C" transform="translate(200,185)"><circle r="25"/><text>C</text></g><g class="graph-node" data-node="D" transform="translate(350,80)"><circle r="25"/><text>D</text></g><g class="graph-node" data-node="E" transform="translate(420,195)"><circle r="25"/><text>E</text></g></svg><div class="controls"><button id="bfs-next" type="button" class="primary">Process next node</button><button id="bfs-reset" type="button">Reset</button></div><p id="bfs-message" class="result" role="status"></p><div class="two-col"><div><h4>Queue · front → back</h4><div id="bfs-queue" class="tokens"></div></div><div><h4>Processed order</h4><div id="bfs-order" class="tokens"></div></div></div></div><div class="box derivation"><strong>Why BFS is O(V + E)</strong><div><ol><li>Each discovered vertex is queued once because we mark it immediately.</li><li>Each adjacency list is scanned once when its vertex is processed.</li><li>In an undirected graph each edge appears twice, which changes only a constant factor.</li><li>Thus traversal is O(V + E) time and O(V) auxiliary space under average constant-cost set operations. Only the reachable component is visited.</li></ol></div></div><p>BFS discovers shortest paths by number of edges in an unweighted graph. DFS explores with a stack and is useful for reachability and deeper searches; it does not generally find shortest paths. For nonnegative weighted edges, learn Dijkstra’s algorithm next.</p><p class="source">Reference: <a href="https://docs.python.org/3/library/heapq.html">heapq documentation</a>.</p><label class="complete"><input type="checkbox" data-complete="trees-graphs"> I can explain the main ideas in this chapter</label></div></details><details class="section" id="search-sort" >
+    <summary><span class="chapter-number">E</span><span><span class="section-title">Searching & sorting</span><span class="section-desc">Find a value; put values in order</span></span><span class="chevron" aria-hidden="true">+</span></summary>
+    <div class="section-body"><h3>Linear search: no ordering required</h3><div class="code-card"><div class="code-top"><span>Scan until the target is found</span><button type="button" class="copy">Copy Python</button></div><pre data-copy><code>def linear_search(values, target):
+    for index, value in enumerate(values):
+        if value == target:
+            return index
+    return -1
+
+print(linear_search([9, 2, 7], 7))  # 2
+print(linear_search([], 7))         # -1</code></pre></div><p>Worst-case time is O(n); best-case time is O(1); auxiliary space is O(1). No sorting is required.</p><h3>Binary search: halve a sorted interval</h3><div class="code-card"><div class="code-top"><span>Iterative binary search · inclusive bounds</span><button type="button" class="copy">Copy Python</button></div><pre data-copy><code>def binary_search(values, target):
+    low, high = 0, len(values) - 1
+    while low &lt;= high:
+        mid = (low + high) // 2
+        if values[mid] == target:
+            return mid
+        if values[mid] &lt; target:
+            low = mid + 1
+        else:
+            high = mid - 1
+    return -1
+
+print(binary_search([2, 4, 7, 9, 12, 15, 18], 12))  # 4
+print(binary_search([2, 4, 7], 5))                   # -1</code></pre></div><div class="box derivation"><strong>Correctness · the search interval invariant</strong><div><ol><li>Initially every possible position lies in [low, high].</li><li>If the middle value is too small, sorted order means every value at or before mid is also too small; discard that half.</li><li>If it is too large, discard mid and all positions after it.</li><li>Each unsuccessful comparison strictly shrinks the interval. Equality returns a valid index; an empty interval proves absence.</li><li>After k halvings at most n / 2ᵏ candidates remain, giving O(log n) worst-case time and O(1) auxiliary space.</li></ol></div></div><div class="lab"><div class="lab-heading"><span class="lab-tag">EXPLORE 04</span><h3>Step through binary search</h3></div><p>Enter up to 16 integers in ascending order. Green means found; amber marks the middle inspected in the current step. Dim cells have been eliminated.</p><form id="search-form"><div class="input-grid"><div><label for="search-values">Sorted values, comma-separated</label><input id="search-values" value="2, 4, 7, 9, 12, 15, 18" required></div><div><label for="target">Target</label><input id="target" type="number" value="12" step="1" required></div></div><div class="controls"><button class="primary" type="submit">Load / restart</button><button type="button" id="search-next">Next comparison</button></div></form><div class="array-cells" id="search-array"></div><p id="search-message" class="result" role="status"></p><p class="small" id="search-bounds"></p></div><div class="box trap"><strong>Common trap · hidden preparation costs</strong><div><p>Binary search requires ascending sorted input and fast indexing. Sorting once costs O(n log n) in the worst case; sorting before a single lookup can be slower than a scan. With duplicates, this version returns a matching index, not necessarily the first one. Never use <code>values[-1]</code> as a “not found” result: -1 is a valid Python index.</p></div></div><h3>Insertion sort: grow a sorted prefix</h3><p>For each new item, shift larger values to the right, then insert it into the gap. Before each outer iteration, the prefix to the left is already sorted.</p><div class="code-card"><div class="code-top"><span>Stable insertion sort</span><button type="button" class="copy">Copy Python</button></div><pre data-copy><code>def insertion_sort(values):
+    result = values.copy()
+    for i in range(1, len(result)):
+        key = result[i]
+        j = i - 1
+        while j &gt;= 0 and result[j] &gt; key:
+            result[j + 1] = result[j]
+            j -= 1
+        result[j + 1] = key
+    return result
+
+print(insertion_sort([7, 3, 5, 2]))  # [2, 3, 5, 7]</code></pre></div><div class="lab"><div class="lab-heading"><span class="lab-tag">EXPLORE 05</span><h3>Build the sorted prefix</h3></div><p>Each step completes one outer-loop iteration. The green prefix is sorted; amber is the item inserted in that pass.</p><form id="sort-form"><label for="sort-values">Values, comma-separated (2–12 integers)</label><input id="sort-values" value="7, 3, 5, 2, 8, 1" required><div class="controls"><button type="submit">Load / restart</button><button class="primary" id="sort-next" type="button">Insert next item</button></div></form><div class="sort-bars" id="sort-bars"></div><p id="sort-message" class="result" role="status"></p></div><h3>Merge sort: divide, sort, combine</h3><div class="code-card"><div class="code-top"><span>Merge sort with a fresh output list</span><button type="button" class="copy">Copy Python</button></div><pre data-copy><code>def merge_sort(values):
+    if len(values) &lt;= 1:
+        return values.copy()
+    mid = len(values) // 2
+    left = merge_sort(values[:mid])
+    right = merge_sort(values[mid:])
+    result = []
+    i = j = 0
+    while i &lt; len(left) and j &lt; len(right):
+        if left[i] &lt;= right[j]:
+            result.append(left[i])
+            i += 1
+        else:
+            result.append(right[j])
+            j += 1
+    result.extend(left[i:])
+    result.extend(right[j:])
+    return result
+
+print(merge_sort([7, 3, 5, 2]))      # [2, 3, 5, 7]</code></pre></div><div class="box derivation"><strong>Why merge sort is O(n log n)</strong><div><p>Splitting in half creates O(log n) levels. Merging processes O(n) total items at each level, so total work is O(n log n). This implementation has O(n) peak auxiliary space including temporary slices, plus O(log n) recursion depth; allocations over the whole run are greater than peak memory.</p></div></div><div class="table-wrap"><table><thead><tr><th scope="col">Algorithm</th><th scope="col">Best time</th><th scope="col">Average time</th><th scope="col">Worst time</th><th scope="col">Auxiliary space</th></tr></thead><tbody><tr><td>Insertion sort above</td><td>O(n)</td><td>O(n²)</td><td>O(n²)</td><td>O(n) for the copy; O(1) if in-place</td></tr><tr><td>Merge sort above</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n) peak</td></tr><tr><td>Classic quicksort</td><td>O(n log n)</td><td>O(n log n)*</td><td>O(n²)</td><td>Depends on partition method / recursion</td></tr><tr><td>Python <code>sorted</code> / <code>list.sort</code></td><td>O(n) for sorted runs</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n) worst case</td></tr></tbody></table></div><p class="small">*Average quicksort time assumes suitable input/pivot behavior. Prefer Python’s stable built-in sort in application code; implement these algorithms to understand their tradeoffs.</p><div class="code-card"><div class="code-top"><span>Sort real records with a key</span><button type="button" class="copy">Copy Python</button></div><pre data-copy><code>students = [(&quot;Ada&quot;, 95), (&quot;Lin&quot;, 88), (&quot;Sam&quot;, 91)]
+ranked = sorted(students, key=lambda student: student[1], reverse=True)
+print(ranked)  # [(&#x27;Ada&#x27;, 95), (&#x27;Sam&#x27;, 91), (&#x27;Lin&#x27;, 88)]</code></pre></div><label class="complete"><input type="checkbox" data-complete="search-sort"> I can explain the main ideas in this chapter</label></div></details><details class="section" id="patterns" >
+    <summary><span class="chapter-number">F</span><span><span class="section-title">Recursion & algorithm patterns</span><span class="section-desc">Greedy choices, backtracking, and dynamic programming</span></span><span class="chevron" aria-hidden="true">+</span></summary>
+    <div class="section-body"><h3>Recursion: solve a smaller instance</h3><p>A recursive function calls itself on a smaller problem. A base case stops recursion; a progress measure proves that the calls reach it.</p><div class="code-card"><div class="code-top"><span>Factorial with a base case</span><button type="button" class="copy">Copy Python</button></div><pre data-copy><code>def factorial(n):
+    if n &lt; 0:
+        raise ValueError(&quot;n must be nonnegative&quot;)
+    if n &lt;= 1:
+        return 1
+    return n * factorial(n - 1)
+
+print(factorial(4))   # 24</code></pre></div><p>Trace: <code>4 × factorial(3) → 4 × 3 × factorial(2) → 4 × 3 × 2 × 1 = 24</code>. This makes O(n) calls and uses O(n) stack space; large integer multiplication has additional cost. Python limits recursion depth, so loops are often better for deep linear work.</p><h3>Choose an algorithmic pattern</h3><div class="table-wrap"><table><thead><tr><th scope="col">Pattern</th><th scope="col">Core idea</th><th scope="col">Typical problem</th></tr></thead><tbody><tr><td>Two pointers</td><td>Move two positions using an invariant</td><td>Pair sum in a sorted array</td></tr><tr><td>Sliding window</td><td>Reuse work as a contiguous range moves</td><td>Maximum sum of k consecutive items</td></tr><tr><td>Divide and conquer</td><td>Solve smaller independent parts; combine</td><td>Merge sort</td></tr><tr><td>Greedy</td><td>Commit to a locally best choice with a proof</td><td>Maximum number of non-overlapping intervals</td></tr><tr><td>Backtracking</td><td>Try a choice; recurse; undo</td><td>Subsets / constraint search</td></tr><tr><td>Dynamic programming</td><td>Reuse answers to overlapping subproblems</td><td>Climbing stairs / minimum coin count</td></tr></tbody></table></div><h3>Greedy choices need a reason</h3><p>To select the most non-overlapping half-open intervals <code>[start, end)</code>, choose the earliest finishing compatible interval. Assume every interval has <code>start &lt; end</code>.</p><div class="code-card"><div class="code-top"><span>Greedy interval scheduling</span><button type="button" class="copy">Copy Python</button></div><pre data-copy><code>def select_intervals(intervals):
+    chosen = []
+    end = float(&quot;-inf&quot;)
+    for start, finish in sorted(intervals, key=lambda interval: interval[1]):
+        if start &gt;= end:
+            chosen.append((start, finish))
+            end = finish
+    return chosen
+
+print(select_intervals([(0, 3), (1, 2), (2, 4), (3, 5)]))
+# [(1, 2), (2, 4)]</code></pre></div><div class="box derivation"><strong>Exchange argument · why earliest finish works</strong><div><p>Take an optimal schedule. Replace its first interval with the earliest-finishing interval. The replacement finishes no later, so all later intervals remain feasible and the count is unchanged. Repeat this argument on the remaining intervals. Sorting dominates: O(n log n) time.</p></div></div><h3>Dynamic programming: name the state first</h3><p>A child climbs n stairs, taking 1 or 2 steps at a time. Let <code>ways(i)</code> count ways to reach stair i. The last move comes from i − 1 or i − 2, so <code>ways(i) = ways(i − 1) + ways(i − 2)</code>. There is one way to take zero steps: do nothing.</p><div class="code-card"><div class="code-top"><span>Bottom-up DP with only two stored states</span><button type="button" class="copy">Copy Python</button></div><pre data-copy><code>def climb_stairs(n):
+    if n &lt; 0:
+        raise ValueError(&quot;n must be nonnegative&quot;)
+    previous, current = 1, 1    # ways(0), ways(1)
+    for _ in range(2, n + 1):
+        previous, current = current, previous + current
+    return current             # also 1 when n == 0
+
+print([climb_stairs(n) for n in range(6)])
+# [1, 1, 2, 3, 5, 8]</code></pre></div><div class="box example"><strong>State → recurrence → base cases → evaluation order</strong><div><p>For 4 stairs, the count is <code>ways(3) + ways(2) = 3 + 2 = 5</code>. Evaluating each state once takes O(n) additions and O(1) stored integer variables. Integer sizes grow with n, so that is a unit-cost model, not a constant bit-space guarantee.</p></div></div><h3>Backtracking: choose, explore, undo</h3><div class="code-card"><div class="code-top"><span>Generate all subsets</span><button type="button" class="copy">Copy Python</button></div><pre data-copy><code>def subsets(values):
+    answers = []
+    path = []
+
+    def visit(index):
+        if index == len(values):
+            answers.append(path.copy())
+            return
+        visit(index + 1)          # exclude this value
+        path.append(values[index])
+        visit(index + 1)          # include this value
+        path.pop()               # undo the choice
+
+    visit(0)
+    return answers
+
+print(subsets([1, 2]))            # [[], [2], [1], [1, 2]]</code></pre></div><div class="box trap"><strong>Common traps · repeated work and unjustified greed</strong><div><p>Naive recursive stair counting repeats the same states exponentially; DP reuses them. Greedily taking the largest coin fails for coins {1, 3, 4} and amount 6: 4 + 1 + 1 uses three coins, but 3 + 3 uses two. Subset generation outputs 2ⁿ results and uses O(n2ⁿ) time and output space when copying subsets; auxiliary recursion/path space is O(n).</p></div></div><label class="complete"><input type="checkbox" data-complete="patterns"> I can explain the main ideas in this chapter</label></div></details><details class="section" id="worked-examples" >
+    <summary><span class="chapter-number">G</span><span><span class="section-title">Four worked problems</span><span class="section-desc">Turn a technique into a complete solution</span></span><span class="chevron" aria-hidden="true">+</span></summary>
+    <div class="section-body"><p>For each problem, state the contract, trace an example, identify the invariant, and analyze time and extra memory.</p><h3>Example 1 · balanced brackets with a stack</h3><p>Return True if (), [], and {} are correctly nested. Ignore other characters.</p><div class="code-card"><div class="code-top"><span>Balanced brackets</span><button type="button" class="copy">Copy Python</button></div><pre data-copy><code>def balanced(text):
+    matching = {&quot;)&quot;: &quot;(&quot;, &quot;]&quot;: &quot;[&quot;, &quot;}&quot;: &quot;{&quot;}
+    stack = []
+    for char in text:
+        if char in &quot;([{&quot;:
+            stack.append(char)
+        elif char in matching:
+            if not stack or stack.pop() != matching[char]:
+                return False
+    return not stack
+
+print(balanced(&quot;a * (b + [c])&quot;))   # True
+print(balanced(&quot;([)]&quot;))            # False
+print(balanced(&quot;((&quot;))              # False</code></pre></div><div class="box example"><strong>Trace + invariant</strong><div><p>For “([)]”, push (, push [, then encounter ). The top is [, which does not match (, so reject. At each step, the stack contains unmatched opening brackets in nesting order. A final nonempty stack means an opening bracket was never closed. Time O(n), auxiliary space O(n) worst case.</p></div></div><h3>Example 2 · two sum with a dictionary</h3><p>Return two distinct indices whose values sum to target; return <code>None</code> if no pair exists. The input need not be sorted.</p><div class="code-card"><div class="code-top"><span>Remember values already seen</span><button type="button" class="copy">Copy Python</button></div><pre data-copy><code>def two_sum(values, target):
+    seen = {}
+    for index, value in enumerate(values):
+        needed = target - value
+        if needed in seen:
+            return seen[needed], index
+        seen[value] = index
+    return None
+
+print(two_sum([2, 7, 11, 15], 9))   # (0, 1)
+print(two_sum([3, 3], 6))           # (0, 1)
+print(two_sum([4], 8))              # None</code></pre></div><div class="box derivation"><strong>Why lookup happens before insertion</strong><div><ol><li>Before each iteration, the dictionary contains only earlier indices.</li><li>For value 7 and target 9, the needed value is 2; its index is already stored.</li><li>Looking up first prevents pairing an item with itself.</li><li>The one-pass solution costs O(n) average time and O(n) extra space, instead of comparing O(n²) pairs.</li></ol></div></div><h3>Example 3 · a fixed sliding window</h3><p>Find the maximum sum of k consecutive values. Require <code>1 ≤ k ≤ len(values)</code>.</p><div class="code-card"><div class="code-top"><span>Reuse the previous window sum</span><button type="button" class="copy">Copy Python</button></div><pre data-copy><code>def max_window_sum(values, k):
+    if not 1 &lt;= k &lt;= len(values):
+        raise ValueError(&quot;k must be between 1 and len(values)&quot;)
+    current = sum(values[:k])
+    best = current
+    for right in range(k, len(values)):
+        current += values[right] - values[right - k]
+        best = max(best, current)
+    return best
+
+print(max_window_sum([2, 1, 5, 1, 3, 2], 3))   # 9
+print(max_window_sum([-5, -2, -7], 2))         # -7</code></pre></div><div class="box example"><strong>Trace the windows</strong><div><p>The sums are 8, 7, 9, and 6. When the window moves, subtract the departing value and add the arriving one. This gives O(n) time. The initial slice uses O(k) temporary space in this version; replace it with <code>sum(values[i] for i in range(k))</code> for O(1) auxiliary space. Initializing best to 0 would break all-negative inputs.</p></div></div><h3>Example 4 · shortest path in an unweighted graph</h3><p>Use BFS and record each node’s first parent. Reconstruct a path by walking backward from the goal. Require start and goal to be graph vertices.</p><div class="code-card"><div class="code-top"><span>BFS with parent tracking</span><button type="button" class="copy">Copy Python</button></div><pre data-copy><code>from collections import deque
+
+def shortest_path(graph, start, goal):
+    queue = deque([start])
+    parent = {start: None}
+    while queue:
+        node = queue.popleft()
+        if node == goal:
+            path = []
+            while node is not None:
+                path.append(node)
+                node = parent[node]
+            return path[::-1]
+        for neighbor in graph[node]:
+            if neighbor not in parent:
+                parent[neighbor] = node
+                queue.append(neighbor)
+    return None
+
+graph = {&quot;A&quot;: [&quot;B&quot;, &quot;C&quot;], &quot;B&quot;: [&quot;A&quot;, &quot;D&quot;],
+         &quot;C&quot;: [&quot;A&quot;, &quot;D&quot;, &quot;E&quot;], &quot;D&quot;: [&quot;B&quot;, &quot;C&quot;], &quot;E&quot;: [&quot;C&quot;]}
+print(shortest_path(graph, &quot;A&quot;, &quot;E&quot;))  # [&#x27;A&#x27;, &#x27;C&#x27;, &#x27;E&#x27;]
+print(shortest_path(graph, &quot;A&quot;, &quot;A&quot;))  # [&#x27;A&#x27;]</code></pre></div><div class="box example"><strong>Why the first parent is enough</strong><div><p>BFS discovers nodes in increasing edge distance from the start. The first discovery therefore supplies a shortest route. Recording a parent only once also avoids cycles. Time O(V + E) and auxiliary space O(V) over the reachable component.</p></div></div><label class="complete"><input type="checkbox" data-complete="worked-examples"> I can explain the main ideas in this chapter</label></div></details><details class="section" id="practice" >
+    <summary><span class="chapter-number">H</span><span><span class="section-title">Practice & check your understanding</span><span class="section-desc">Six questions, six exercises, and a solving checklist</span></span><span class="chevron" aria-hidden="true">+</span></summary>
+    <div class="section-body"><h3>Check your understanding</h3><p>Choose an answer and check it for an explanation. These questions assess concepts; the page does not execute Python.</p><div class="quiz-grid"><fieldset class="quiz" id="q1" data-answer="1"><legend>Which container fits frequent removals from the front?</legend><label><input type="radio" name="q1" value="0"> A Python list</label><label><input type="radio" name="q1" value="1"> collections.deque</label><label><input type="radio" name="q1" value="2"> A tuple</label><button type="button" class="check-answer">Check answer</button><p class="quiz-feedback" role="status" data-explanation="deque.popleft() is O(1); list.pop(0) shifts the remaining references."></p></fieldset><fieldset class="quiz" id="q2" data-answer="1"><legend>What must be true before binary search on a list?</legend><label><input type="radio" name="q2" value="0"> All values are unique</label><label><input type="radio" name="q2" value="1"> The list is sorted in the expected order</label><label><input type="radio" name="q2" value="2"> The list has an even length</label><button type="button" class="check-answer">Check answer</button><p class="quiz-feedback" role="status" data-explanation="Sorted order justifies discarding an entire half after a comparison."></p></fieldset><fieldset class="quiz" id="q3" data-answer="2"><legend>How many pairs does a full nested loop over n items produce?</legend><label><input type="radio" name="q3" value="0"> n</label><label><input type="radio" name="q3" value="1"> 2n</label><label><input type="radio" name="q3" value="2"> n²</label><button type="button" class="check-answer">Check answer</button><p class="quiz-feedback" role="status" data-explanation="Each of n outer iterations performs n inner iterations: n × n."></p></fieldset><fieldset class="quiz" id="q4" data-answer="2"><legend>A plain BST containing n nodes always guarantees…</legend><label><input type="radio" name="q4" value="0"> O(log n) search</label><label><input type="radio" name="q4" value="1"> O(1) search</label><label><input type="radio" name="q4" value="2"> O(h) search, where h is its height</label><button type="button" class="check-answer">Check answer</button><p class="quiz-feedback" role="status" data-explanation="A balanced BST has logarithmic height, but an unbalanced tree can form a chain."></p></fieldset><fieldset class="quiz" id="q5" data-answer="0"><legend>Which traversal finds a shortest route by edge count?</legend><label><input type="radio" name="q5" value="0"> BFS on an unweighted graph</label><label><input type="radio" name="q5" value="1"> DFS on any graph</label><label><input type="radio" name="q5" value="2"> BFS on any weighted graph</label><button type="button" class="check-answer">Check answer</button><p class="quiz-feedback" role="status" data-explanation="BFS visits distance layers. Different edge weights need a different algorithm."></p></fieldset><fieldset class="quiz" id="q6" data-answer="1"><legend>What does dynamic programming usually avoid?</legend><label><input type="radio" name="q6" value="0"> All loops</label><label><input type="radio" name="q6" value="1"> Repeatedly solving the same subproblems</label><label><input type="radio" name="q6" value="2"> Storing any state</label><button type="button" class="check-answer">Check answer</button><p class="quiz-feedback" role="status" data-explanation="Memoization or a bottom-up table reuses previously computed states."></p></fieldset></div><p id="quiz-score" class="score" aria-live="polite">0 / 6 questions correct</p><h3>Practice in Python</h3><p>Copy examples into a Python 3 file or interpreter. Use <code>assert</code> to check outputs, then solve these exercises before opening the suggested approach.</p><div class="exercise"><h4>1 · Remove duplicates while keeping order</h4><p>Write unique_in_order(values). Example: [3, 1, 3, 2, 1] → [3, 1, 2]. Assume hashable values.</p><details class="solution"><summary>Reveal approach + complexity</summary><p>Track a seen set and append to a result only on the first encounter. O(n) average time; O(n) extra space.</p></details></div><div class="exercise"><h4>2 · Find the first matching index</h4><p>Modify binary search to return the first occurrence. Example: [1, 2, 2, 2, 4], target 2 → index 1.</p><details class="solution"><summary>Reveal approach + complexity</summary><p>On equality, remember mid and continue left with high = mid - 1. Keep the remembered answer initialized to -1. O(log n) time.</p></details></div><div class="exercise"><h4>3 · Reverse a linked list</h4><p>Reverse links in place, including the empty-list case.</p><details class="solution"><summary>Reveal approach + complexity</summary><p>Keep previous and current references. Save current.next, redirect it to previous, then advance both. Return previous. O(n) time; O(1) auxiliary space.</p></details></div><div class="exercise"><h4>4 · Count connected components</h4><p>Given an undirected adjacency list, count its connected components, including isolated vertices.</p><details class="solution"><summary>Reveal approach + complexity</summary><p>Start BFS from every not-yet-seen vertex; increment a component count each time a new traversal starts. Maintain one global seen set. O(V + E) time.</p></details></div><div class="exercise"><h4>5 · Minimum coins</h4><p>For positive integer denominations [1, 3, 4], compute the minimum coins to make amount 6. Return -1 if impossible.</p><details class="solution"><summary>Reveal approach + complexity</summary><p>Use dp[0] = 0 and infinity for other amounts. For each amount a and usable coin c, minimize dp[a] with 1 + dp[a-c]. Answer 2. O(amount × number_of_coins) time; O(amount) space.</p></details></div><div class="exercise"><h4>6 · Merge two sorted lists</h4><p>Return one sorted list without calling sorted(). Example: [1, 4, 7] and [2, 3, 8] → [1, 2, 3, 4, 7, 8].</p><details class="solution"><summary>Reveal approach + complexity</summary><p>Use two indices; take the smaller next value, then append the remaining tail. O(n + m) time and O(n + m) output space.</p></details></div><div class="code-card"><div class="code-top"><span>Small tests catch big mistakes</span><button type="button" class="copy">Copy Python</button></div><pre data-copy><code>assert binary_search([], 4) == -1
+assert binary_search([4], 4) == 0
+assert insertion_sort([3, 1, 3]) == [1, 3, 3]
+assert merge_sort([]) == []
+assert balanced(&quot;&quot;) is True
+assert balanced(&quot;]&quot;) is False
+assert two_sum([3, 3], 6) == (0, 1)
+assert two_sum([3], 6) is None
+assert max_window_sum([-5, -2, -7], 2) == -7
+assert climb_stairs(0) == 1
+print(&quot;All checks passed&quot;)</code></pre></div><h3>A repeatable problem-solving checklist</h3><div class="box checklist"><ol><li><b>Clarify:</b> sorted input? duplicates? allowed mutation? what happens on failure?</li><li><b>Trace:</b> solve a tiny example by hand.</li><li><b>Baseline:</b> write a correct simple solution first.</li><li><b>Improve:</b> look for repeated scans, repeated subproblems, and a matching data structure.</li><li><b>Explain:</b> state an invariant or recurrence and why the algorithm terminates.</li><li><b>Test:</b> empty, one element, duplicates, extremes, and absent targets.</li><li><b>Analyze:</b> give time and auxiliary space, with case and assumptions.</li></ol></div><h3>Suggested next topics</h3><p>After you can solve these exercises: balanced BSTs, tries, disjoint sets, topological sorting, Dijkstra’s algorithm, and more DP problems. Work on one new pattern at a time and explain your solution aloud.</p><label class="complete"><input type="checkbox" data-complete="practice"> I can explain the main ideas in this chapter</label></div></details>
+<footer class="footer"><p>A self-contained study page · no accounts or downloads needed.<br>Reference links require an internet connection.</p><p>Build the habit: explain the invariant,<br>then test the edge cases.</p></footer></div></main></div>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<script>
+(() => {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const all = selector => [...document.querySelectorAll(selector)];
+  const data = JSON.parse($('studyPageStructure').textContent);
+  const sections = all('details.section');
+  const storageKey = 'python-dsa-tutorial-v1';
+  let state = {complete: {}, quiz: {}};
+  let storageAvailable = true;
+  try {
+    const saved = JSON.parse(localStorage.getItem(storageKey) || 'null');
+    if (saved && typeof saved === 'object') {
+      state.complete = saved.complete && typeof saved.complete === 'object' ? saved.complete : {};
+      state.quiz = saved.quiz && typeof saved.quiz === 'object' ? saved.quiz : {};
+    }
+  } catch { storageAvailable = false; }
+  function save() {
+    try { localStorage.setItem(storageKey, JSON.stringify(state)); }
+    catch { storageAvailable = false; }
+    $('storage-note').textContent = storageAvailable ? 'Saved in this browser on this device.' : 'Progress is kept for this visit; browser storage is unavailable.';
+  }
+  function progress() {
+    const count = sections.filter(section => state.complete[section.id] === true).length;
+    $('progress-text').textContent = `${count} / 8 chapters complete`;
+    $('progress').value = count;
+    all('[data-toc-link]').forEach(link => {
+      link.querySelector('.toc-check').hidden = state.complete[link.hash.slice(1)] !== true;
+    });
+  }
+  all('[data-complete]').forEach(input => {
+    input.checked = state.complete[input.dataset.complete] === true;
+    input.addEventListener('change', () => { state.complete[input.dataset.complete] = input.checked; progress(); save(); });
+  });
+  progress(); save();
+  if (matchMedia('(max-width: 760px)').matches) {
+    $('layout').classList.add('sidebar-hidden');
+    $('toggle-sidebar').setAttribute('aria-expanded', 'false');
+  }
+  $('toggle-sidebar').addEventListener('click', () => {
+    const hidden = $('layout').classList.toggle('sidebar-hidden');
+    $('toggle-sidebar').setAttribute('aria-expanded', String(!hidden));
+  });
+  $('expand-all').addEventListener('click', () => all('main details').forEach(d => d.open = true));
+  $('collapse-all').addEventListener('click', () => all('main details').forEach(d => d.open = false));
+  const beforePrint = new Map();
+  window.addEventListener('beforeprint', () => { all('main details').forEach(d => { if (!beforePrint.has(d)) beforePrint.set(d,d.open); d.open = true; }); });
+  window.addEventListener('afterprint', () => { beforePrint.forEach((open,d) => d.open = open); beforePrint.clear(); });
+  $('print').addEventListener('click', () => window.print());
+  function activate(id, scroll = false) {
+    const target = $(id);
+    if (!target || !target.classList.contains('section')) return;
+    target.open = true;
+    all('[data-toc-link]').forEach(link => {
+      const active = link.hash === '#' + id;
+      link.classList.toggle('active', active);
+      if(active) link.setAttribute('aria-current','location'); else link.removeAttribute('aria-current');
+    });
+    if (scroll) target.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'});
+  }
+  all('[data-toc-link]').forEach(link => link.addEventListener('click', e => {
+    if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
+    e.preventDefault();
+    const id = link.hash.slice(1);
+    try { history.pushState(null, '', '#' + id); } catch { location.hash = id; }
+    activate(id, true);
+  }));
+  window.addEventListener('hashchange', () => activate(location.hash.slice(1), true));
+  window.addEventListener('popstate', () => activate(location.hash.slice(1), true));
+  if (location.hash) activate(location.hash.slice(1)); else activate('foundations');
+  function search() {
+    const term = $('q').value.trim().toLowerCase();
+    let count = 0;
+    data.sections.forEach(ch => {
+      const section = $(ch.id);
+      const matched = !term || [ch.title,ch.description,ch.keywords,section.textContent].join(' ').toLowerCase().includes(term);
+      const item = all('[data-toc-item]').find(li => li.querySelector('a').hash === '#' + ch.id);
+      item.hidden = !matched;
+      section.querySelector('summary').classList.toggle('hl', !!term && matched);
+      if(matched) count++;
+    });
+    $('search-count').textContent = term ? `${count} matching chapter${count === 1 ? '' : 's'}` : 'Find a concept, example, or technique';
+    $('no-results').hidden = count !== 0;
+  }
+  $('q').addEventListener('input',search);
+  $('clear-search').addEventListener('click',() => { $('q').value = ''; search(); $('q').focus(); });
+  let toastTimer;
+  function toast(message) {
+    $('toast').textContent = message; $('toast').hidden = false;
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => $('toast').hidden = true, 2400);
+  }
+  async function copy(block) {
+    const text = block.innerText.trim();
+    try { await navigator.clipboard.writeText(text); toast('Python code copied'); }
+    catch {
+      const field = document.createElement('textarea');
+      const focus = document.activeElement;
+      field.value = text; field.style.position = 'fixed'; field.style.left = '-9999px';
+      document.body.append(field); field.select();
+      let ok = false; try { ok = document.execCommand('copy'); } catch {}
+      field.remove(); if(focus && focus.focus) focus.focus();
+      toast(ok ? 'Python code copied' : 'Select the code and copy it with Ctrl/Cmd+C');
+    }
+  }
+  all('.copy').forEach(button => button.addEventListener('click',() => copy(button.closest('.code-card').querySelector('pre'))));
+  all('[data-copy]').forEach(block => block.addEventListener('dblclick',() => copy(block)));
+  function renderGrowth() {
+    const n = Number($('size').value);
+    $('size-label').textContent = n;
+    const stats = [['O(1)',1],['O(log n)',Math.ceil(Math.log2(n))],['O(n)',n],['O(n log n)',Math.ceil(n*Math.log2(n))],['O(n²)',n*n]];
+    $('growth-values').replaceChildren(...stats.map(([label,value]) => {
+      const div = document.createElement('div'); div.className = 'growth-stat';
+      const b = document.createElement('b'); b.textContent = value.toLocaleString();
+      const span = document.createElement('span'); span.textContent = label;
+      div.append(b,span); return div;
+    }));
+  }
+  $('size').addEventListener('input',renderGrowth); renderGrowth();
+  function tokens(id, values) {
+    const container = $(id); container.replaceChildren();
+    if (!values.length) { const note = document.createElement('span'); note.className = 'small'; note.textContent = '(empty)'; container.append(note); }
+    values.forEach(value => { const span = document.createElement('span'); span.className = 'token'; span.textContent = value; container.append(span); });
+  }
+  let stack, queue;
+  function renderContainers() { tokens('stack-values', stack); tokens('queue-values', queue); }
+  function resetContainers() { stack = ['A','B','C']; queue = ['A','B','C']; $('stack-message').textContent = 'Top is C.'; $('queue-message').textContent = 'Front is A.'; renderContainers(); }
+  $('add-item').addEventListener('click', () => {
+    const value = $('item').value.trim();
+    if (!value) { toast('Enter a value first'); return; }
+    if(stack.length >= 10 || queue.length >= 10) { toast('Remove an item or reset: the demo limit is 10'); return; }
+    stack.push(value); queue.push(value); renderContainers();
+    $('stack-message').textContent = `Pushed ${value}; top is ${value}.`;
+    $('queue-message').textContent = `Enqueued ${value}; front is ${queue[0]}.`;
+  });
+  $('pop-stack').addEventListener('click',() => { $('stack-message').textContent = stack.length ? `Popped ${stack.pop()}.` : 'Empty stack: nothing to pop.'; renderContainers(); });
+  $('pop-queue').addEventListener('click',() => { $('queue-message').textContent = queue.length ? `Removed ${queue.shift()}.` : 'Empty queue: nothing to remove.'; renderContainers(); });
+  $('reset-containers').addEventListener('click',resetContainers); resetContainers();
+  const graph = {A:['B','C'], B:['A','D'], C:['A','D','E'], D:['B','C'], E:['C']};
+  let bfsQueue, bfsOrder, bfsSeen;
+  function renderBfs() {
+    tokens('bfs-queue',bfsQueue); tokens('bfs-order',bfsOrder);
+    all('.graph-node').forEach(node => {
+      node.classList.toggle('discovered',bfsSeen.has(node.dataset.node));
+      node.classList.toggle('processed',bfsOrder.includes(node.dataset.node));
+    });
+    $('bfs-next').disabled = !bfsQueue.length;
+  }
+  function resetBfs() { bfsQueue = ['A']; bfsOrder = []; bfsSeen = new Set(['A']); $('bfs-message').textContent = 'A is discovered and queued. Process it first.'; renderBfs(); }
+  $('bfs-next').addEventListener('click',() => {
+    if(!bfsQueue.length) return;
+    const node = bfsQueue.shift(); const discovered = [];
+    bfsOrder.push(node);
+    graph[node].forEach(neighbor => { if(!bfsSeen.has(neighbor)) { bfsSeen.add(neighbor); bfsQueue.push(neighbor); discovered.push(neighbor); } });
+    $('bfs-message').textContent = `Processed ${node}. ${discovered.length ? 'Newly queued: ' + discovered.join(', ') + '.' : 'No new neighbors.'}${!bfsQueue.length ? ' Traversal complete.' : ''}`;
+    renderBfs();
+  });
+  $('bfs-reset').addEventListener('click',resetBfs); resetBfs();
+  function parseInts(value, minLength, maxLength) {
+    const pieces = value.split(',').map(s=>s.trim());
+    if(pieces.length < minLength || pieces.length > maxLength || pieces.some(s=>!/^[-+]?\d+$/.test(s))) throw new Error(`Enter ${minLength}–${maxLength} comma-separated integers; no blank entries.`);
+    const values = pieces.map(Number);
+    if(values.some(n=>!Number.isSafeInteger(n) || Math.abs(n) > 999)) throw new Error('Use integers between -999 and 999.');
+    return values;
+  }
+  let searchValues = [], target, low, high, inspected, found, done, comparisons;
+  function renderSearch() {
+    $('search-array').replaceChildren(...searchValues.map((value,index) => {
+      const cell = document.createElement('div'); cell.className = 'cell';
+      cell.classList.toggle('eliminated', (index < low || index > high) && index !== found);
+      cell.classList.toggle('inspect',index === inspected && index !== found);
+      cell.classList.toggle('found', index === found);
+      const b = document.createElement('b'); b.textContent = value;
+      const span = document.createElement('span'); span.textContent = `i=${index}`;
+      cell.append(b,span); return cell;
+    }));
+    $('search-bounds').textContent = `Remaining interval: low=${low}, high=${high}. Comparisons: ${comparisons}. Target loaded: ${target}.`;
+    $('search-next').disabled = done;
+  }
+  function loadSearch() {
+    try {
+      const values = parseInts($('search-values').value,1,16);
+      if(values.some((n,i)=>i>0 && n<values[i-1])) throw new Error('Values must be in ascending order.');
+      const targetText = $('target').value;
+      if(!/^[-+]?\d+$/.test(targetText) || !Number.isSafeInteger(Number(targetText))) throw new Error('Enter a whole-number target.');
+      searchValues = values; target = Number(targetText); low=0; high=values.length-1; inspected=-1; found=-1; done=false; comparisons=0;
+      $('search-message').classList.remove('error');
+      $('search-message').textContent = 'Ready. Predict the first middle index, then compare.';
+      renderSearch();
+    } catch(error) { done=true; $('search-message').classList.add('error'); $('search-message').textContent=error.message; $('search-next').disabled=true; }
+  }
+  $('search-form').addEventListener('submit',e=>{e.preventDefault();loadSearch();});
+  $('search-next').addEventListener('click',()=>{
+    if(done) return;
+    inspected=Math.floor((low+high)/2); comparisons++;
+    const value=searchValues[inspected];
+    if(value===target) { found=inspected; done=true; $('search-message').textContent=`Found ${target} at index ${found}, after ${comparisons} comparison${comparisons===1?'':'s'}.`; }
+    else {
+      const oldLow=low, oldHigh=high;
+      if(value<target) low=inspected+1; else high=inspected-1;
+      $('search-message').textContent=`mid=(${oldLow}+${oldHigh})//2=${inspected}; ${value} ${value<target?'<':'>'} ${target}. ${value<target?'Move low to '+low:'Move high to '+high}.`;
+      if(low>high) { done=true; $('search-message').textContent+=' Empty interval: return -1 (not found).'; }
+    }
+    renderSearch();
+  }); loadSearch();
+  let sortValues=[], sortIndex=1, sortKey=-1;
+  function renderSort() {
+    const maximum=Math.max(...sortValues.map(n=>Math.abs(n)),1);
+    $('sort-bars').replaceChildren(...sortValues.map((value,index)=>{
+      const bar=document.createElement('div'); bar.className='sort-bar';
+      bar.classList.toggle('sorted',index<sortIndex); bar.classList.toggle('key',index===sortKey);
+      bar.style.height=(30+Math.abs(value)/maximum*115)+'px'; bar.textContent=value;
+      bar.setAttribute('aria-label',`${value}${index<sortIndex?', sorted prefix':''}${index===sortKey?', inserted item':''}`);
+      return bar;
+    }));
+    $('sort-next').disabled=sortIndex>=sortValues.length;
+  }
+  function loadSort() {
+    try { sortValues=parseInts($('sort-values').value,2,12); sortIndex=1; sortKey=-1; $('sort-message').classList.remove('error'); $('sort-message').textContent='The first item is a sorted prefix of length 1. Bar height shows absolute value; labels preserve the sign.'; renderSort(); }
+    catch(error) { $('sort-message').classList.add('error'); $('sort-message').textContent=error.message; $('sort-next').disabled=true; }
+  }
+  $('sort-form').addEventListener('submit',e=>{e.preventDefault();loadSort();});
+  $('sort-next').addEventListener('click',()=>{
+    if(sortIndex>=sortValues.length) return;
+    const key=sortValues[sortIndex]; let j=sortIndex-1, shifts=0;
+    while(j>=0 && sortValues[j]>key) {sortValues[j+1]=sortValues[j];j--;shifts++;}
+    sortValues[j+1]=key;sortKey=j+1;sortIndex++;
+    $('sort-message').textContent=`Inserted ${key} at index ${sortKey}; shifted ${shifts} larger item${shifts===1?'':'s'}. Sorted prefix length: ${sortIndex}.${sortIndex===sortValues.length?' All items sorted.':''}`;
+    renderSort();
+  }); loadSort();
+  const quizzes=all('.quiz');
+  function quizScore() { $('quiz-score').textContent = `${quizzes.filter(q=>q.classList.contains('correct')).length} / ${quizzes.length} questions correct`; }
+  function checkQuiz(quiz, persist=true) {
+    const chosen=quiz.querySelector('input:checked'); const feedback=quiz.querySelector('.quiz-feedback');
+    if(!chosen) {feedback.textContent='Choose an answer first.';return;}
+    const correct=chosen.value===quiz.dataset.answer;
+    quiz.classList.toggle('correct',correct);
+    feedback.textContent=(correct?'Correct. ':'Try again. ')+feedback.dataset.explanation;
+    if(persist) {state.quiz[quiz.id]=Number(chosen.value);save();}
+    quizScore();
+  }
+  quizzes.forEach(quiz=>{
+    quiz.querySelector('.check-answer').addEventListener('click',()=>checkQuiz(quiz));
+    quiz.querySelectorAll('input').forEach(input=>input.addEventListener('change',()=>{
+      quiz.classList.remove('correct');quiz.querySelector('.quiz-feedback').textContent='';delete state.quiz[quiz.id];save();quizScore();
+    }));
+    const answer=state.quiz[quiz.id];
+    if(Number.isInteger(answer)) { const input=quiz.querySelector(`input[value="${answer}"]`); if(input) {input.checked=true;checkQuiz(quiz,false);} }
+  });
+  quizScore();
+})();
+</script></body></html>
