@@ -1,32 +1,46 @@
-import { loadPyodide } from "https://cdn.jsdelivr.net/pyodide/v0.27.7/full/pyodide.mjs";
-
+import {loadPyodide} from 'https://cdn.jsdelivr.net/pyodide/v0.27.7/full/pyodide.mjs';
 let runtimePromise;
-
-self.onmessage = async (event) => {
-  if (event.data?.type !== "run") return;
+self.onmessage = async event => {
+  if (event.data?.type !== 'run') return;
+  const {id, code, tests = []} = event.data;
+  let globals;
+  const lines = [];
+  let length = 0, truncated = false;
+  const capture = line => {
+    if (length < 20000) {
+      const part = line.slice(0, 20000 - length);
+      lines.push(part); length += part.length + 1;
+    } else if (!truncated) { lines.push('[Further output truncated]'); truncated = true; }
+  };
+  const errorText = error => error?.message || String(error);
   try {
-    if (!runtimePromise) {
-      self.postMessage({ type: "loading" });
-      runtimePromise = loadPyodide({ indexURL: "https://cdn.jsdelivr.net/pyodide/v0.27.7/full/" });
-    }
+    if (!runtimePromise) runtimePromise = loadPyodide({indexURL:'https://cdn.jsdelivr.net/pyodide/v0.27.7/full/'});
     const pyodide = await runtimePromise;
-    const lines = [];
-    pyodide.setStdout({ batched: (line) => lines.push(line) });
-    pyodide.setStderr({ batched: (line) => lines.push(line) });
-    const makeDict = pyodide.globals.get("dict");
-    const globals = makeDict();
-    try {
-      const result = await pyodide.runPythonAsync(event.data.code, { globals });
-      if (result !== undefined && result !== null) lines.push(String(result));
-      self.postMessage({ type: "result", output: lines.join("\n").slice(0, 20000), error: false });
-    } catch (error) {
-      lines.push(error?.message || String(error));
-      self.postMessage({ type: "result", output: lines.join("\n").slice(0, 20000), error: true });
-    } finally {
-      globals.destroy();
+    self.postMessage({type:'ready', id});
+    pyodide.setStdout({batched:capture});
+    pyodide.setStderr({batched:capture});
+    const makeDict = pyodide.globals.get('dict');
+    globals = makeDict(); makeDict.destroy();
+    globals.set('__name__', '__main__');
+    const result = await pyodide.runPythonAsync(code, {globals});
+    if (result !== undefined && result !== null) { capture(String(result)); if (typeof result.destroy === 'function') result.destroy(); }
+    const checks = [];
+    for (const test of tests) {
+      try {
+        const value = await pyodide.runPythonAsync(test.code, {globals});
+        if (value && typeof value.destroy === 'function') value.destroy();
+        checks.push({name:test.name, passed:true});
+      } catch (error) {
+        const detail = errorText(error).trim().split('\n').slice(-2).join('\n');
+        checks.push({name:test.name, passed:false, detail});
+      }
     }
+    self.postMessage({type:'result', id, output:lines.join('\n'), checks, error:false});
   } catch (error) {
-    runtimePromise = null;
-    self.postMessage({ type: "result", output: "Python could not load. Check your connection and try again.\n" + (error?.message || ""), error: true });
+    capture(errorText(error));
+    self.postMessage({type:'result', id, output:lines.join('\n'), checks:[], error:true});
+    if (!globals) runtimePromise = null;
+  } finally {
+    if (globals) globals.destroy();
   }
 };
