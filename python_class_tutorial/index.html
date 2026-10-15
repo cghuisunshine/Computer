@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f5ef">
+  <meta name="description" content="A friendly, hands-on Python course with bite-sized lessons, quick checks, and a browser-based code playground.">
+  <title>Python Studio — Learn & Practice</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="site-shell">
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="Python Studio home"><span class="brand-mark">py<span>.</span></span><span>python<span class="brand-light">studio</span></span></a>
+      <nav class="topnav" aria-label="Main navigation"><a href="#curriculum">Lessons</a><a href="#practice">Practice</a><a href="#playground">Playground</a></nav>
+      <a class="top-cta" href="#curriculum">Start learning <span aria-hidden="true">↗</span></a>
+    </header>
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <div class="eyebrow"><span class="eyebrow-dot"></span> YOUR PYTHON CLASS, YOUR PACE</div>
+          <h1 id="hero-title">Small lessons.<br><em>Big “I get it”</em><br>moments.</h1>
+          <p>Learn the building blocks of Python, write real code, and test what you know. Everything starts right here in your browser.</p>
+          <div class="hero-actions"><a class="button button-dark" href="#curriculum">Start the course <span aria-hidden="true">↗</span></a><a class="text-link" href="#practice">Explore practice <span aria-hidden="true">→</span></a></div>
+          <div class="hero-micro"><span class="avatar-stack" aria-hidden="true"><b>01</b><b>02</b><b>03</b></span><span>6 focused lessons · learn by doing</span></div>
+        </div>
+        <div class="hero-visual" aria-label="Python example showing a greeting">
+          <div class="hero-shape hero-shape-one"></div><div class="hero-shape hero-shape-two"></div>
+          <div class="terminal-card">
+            <div class="terminal-header"><div class="window-dots"><i></i><i></i><i></i></div><span>hello_python.py</span><span class="terminal-arrow">↗</span></div>
+            <div class="terminal-code"><span class="line-number">01</span><span><span class="code-purple">name</span> = <span class="code-green">"future coder"</span></span><span class="line-number">02</span><span><span class="code-blue">print</span>(<span class="code-green">f"Hello, {name}!"</span>)</span><span class="line-number">03</span><span></span><span class="line-number">04</span><span class="code-comment"># You just wrote Python ✨</span></div>
+            <div class="terminal-output"><span class="output-label">OUTPUT</span><strong>› Hello, future coder!</strong></div>
+          </div>
+          <div class="hero-sticker"><span>✦</span><strong>Ready when<br>you are.</strong></div>
+        </div>
+      </section>
+      <section class="intro-band" aria-label="Course highlights"><div><span class="band-icon">◉</span><strong>Learn one idea</strong><small>Clear examples, no jargon</small></div><div><span class="band-icon">⌘</span><strong>Try it yourself</strong><small>A real Python playground</small></div><div><span class="band-icon">✓</span><strong>Check your understanding</strong><small>Instant practice feedback</small></div></section>
+      <section id="curriculum" class="course-section" aria-labelledby="course-title">
+        <div class="section-heading"><div><span class="section-kicker">THE COURSE</span><h2 id="course-title">Your learning path<span class="accent-period">.</span></h2><p>Follow the lessons in order, or jump into the topic you need.</p></div><div class="course-progress"><div class="progress-text"><span>Your progress</span><strong id="progress-label">0 / 6 lessons</strong></div><div class="progress-track" role="progressbar" aria-label="Course progress" aria-valuemin="0" aria-valuemax="6" aria-valuenow="0" id="progress-bar"><span id="progress-fill"></span></div></div></div>
+        <div class="course-layout"><aside class="lesson-sidebar" aria-label="Lessons"><div class="sidebar-title">COURSE CONTENT <span>01—06</span></div><div id="lesson-list"></div><div class="sidebar-note"><span>✦</span><strong>A little every day adds up.</strong><p>Your place is saved on this device.</p></div></aside><article class="lesson-panel" id="lesson-panel" aria-live="polite"></article></div>
+      </section>
+      <section id="practice" class="practice-section" aria-labelledby="practice-title"><div class="practice-lead"><span class="section-kicker">MAKE IT STICK</span><h2 id="practice-title">A quick check for<br>every lesson<span class="accent-period">.</span></h2><p>Pick an answer, get immediate feedback, and learn why it works. No grades, just progress.</p><div class="practice-decoration" aria-hidden="true">{<span>?</span>}</div></div><div class="quiz-card" id="quiz-card" aria-live="polite"></div></section>
+      <section id="playground" class="playground-section" aria-labelledby="playground-title"><div class="playground-heading"><div><span class="section-kicker">YOUR SPACE TO EXPERIMENT</span><h2 id="playground-title">Write it. Run it. See it<span class="accent-period">.</span></h2><p>Change the code, press Run, and discover what Python does.</p></div><div class="playground-badge">Python in your browser <span>●</span></div></div><div class="editor-shell"><div class="editor-top"><span><i class="editor-tab-dot"></i> main.py</span><span>PYTHON 3</span></div><label class="sr-only" for="code-editor">Python code editor</label><textarea id="code-editor" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">name = "Python learner"
+for number in range(1, 4):
+    print(f"{number}. Keep going, {name}!")</textarea><div class="editor-bottom"><span id="run-status" role="status">Ready to run your code</span><button id="run-button" class="button button-lime" type="button">Run code <span aria-hidden="true">▶</span></button></div><div class="console"><div class="console-heading"><span>CONSOLE OUTPUT</span><button id="clear-output" type="button">Clear</button></div><pre id="code-output">Your result will appear here.</pre></div></div><p class="playground-footnote">The first run may take a moment while Python loads. Code runs only in this browser tab.</p></section>
+    </main>
+    <footer class="footer"><a class="brand" href="#top"><span class="brand-mark">py<span>.</span></span><span>python<span class="brand-light">studio</span></span></a><p>Curiosity looks good on you. Keep building.</p><a href="#top">Back to top ↑</a></footer>
+  </div>
+</body>
+</html>
