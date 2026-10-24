@@ -20,11 +20,13 @@ const expected = [
 test('standalone HTML includes the current animation sources and reduced-motion styles', () => {
   assert.ok(html.includes(fs.readFileSync(path.join(__dirname, 'tools/dsa_animations.js'), 'utf8')));
   assert.ok(html.includes(fs.readFileSync(path.join(__dirname, 'tools/dsa_animations.css'), 'utf8')));
+  assert.ok(html.includes(fs.readFileSync(path.join(__dirname, 'tools/dsa_concepts.js'), 'utf8')));
+  assert.ok(html.includes(fs.readFileSync(path.join(__dirname, 'tools/dsa_concepts.css'), 'utf8')));
   assert.match(html, /@media\(prefers-reduced-motion:reduce\).*trace-player/);
 });
 
-function load({reduced = false} = {}) {
-  const errors = [], timers = new Map(); let timerId = 0;
+function load({reduced = false, motion = false} = {}) {
+  const errors = [], animations = [], timers = new Map(); let timerId = 0;
   const console = new VirtualConsole(); console.on('jsdomError', e => errors.push(e));
   const dom = new JSDOM(html, {
     url: 'https://tutorial.test/', runScripts: 'dangerously', virtualConsole: console,
@@ -38,6 +40,7 @@ function load({reduced = false} = {}) {
       window.setTimeout = callback => { const id = ++timerId; timers.set(id, callback); return id; };
       window.clearTimeout = id => timers.delete(id);
       window.HTMLElement.prototype.scrollIntoView = function() {};
+      if (motion) window.Element.prototype.animate = function(frames, options) { animations.push({node: this, frames, options}); };
       window.navigator.clipboard = {writeText: async text => { window.copied = text; }};
     }
   });
@@ -47,7 +50,7 @@ function load({reduced = false} = {}) {
     const slider = card.querySelector('.trace-timeline');
     slider.value = String(index); slider.dispatchEvent(new dom.window.Event('input', {bubbles: true}));
   }
-  return {dom, document, cards, seek, errors, timers};
+  return {dom, document, cards, seek, errors, timers, animations};
 }
 
 test('every code example has a matching animation and correct recorded output', () => {
@@ -147,4 +150,137 @@ test('copy preserves runnable Python; original labs, search, and quiz still work
   document.querySelector('#q1 input[value="1"]').checked = true; document.querySelector('#q1 .check-answer').click();
   assert.match(document.querySelector('#quiz-score').textContent, /1 \/ 6/);
   assert.deepEqual(errors, []); dom.window.close();
+});
+
+function seekConcept(dom, id, index) {
+  const card = dom.window.document.getElementById('concept-' + id);
+  const slider = card.querySelector('.concept-slider');
+  slider.value = String(index); slider.dispatchEvent(new dom.window.Event('input', {bubbles: true}));
+  return card;
+}
+
+test('all eight chapters have definition stories, with unique anchors and complete controls', () => {
+  const {dom, document, errors} = load();
+  const stories = dom.window.dsaConceptLessons;
+  assert.equal(stories.length, 32);
+  assert.equal(new Set(stories.map(story => story.id)).size, stories.length);
+  for (const chapter of document.querySelectorAll('details.section')) {
+    assert.ok(chapter.querySelector('.concept-demo'), chapter.id);
+  }
+  for (const story of stories) {
+    const card = document.getElementById('concept-' + story.id);
+    assert.equal(card.closest('details.section').id, story.chapter);
+    assert.equal(card.querySelector('.concept-definition').textContent, story.definition);
+    assert.ok(story.steps.length >= 3);
+    assert.equal(card.querySelectorAll('button').length, 4);
+    assert.equal(card.querySelector('select').options.length, 3);
+    assert.ok(card.querySelector('.concept-slider').getAttribute('aria-label').includes(story.title));
+    assert.ok(card.querySelector('.concept-caption[role="status"]'));
+  }
+  assert.deepEqual(errors, []); dom.window.close();
+});
+
+test('every concept step renders its visual model and explanation, then rewinds', () => {
+  const {dom, errors} = load();
+  for (const story of dom.window.dsaConceptLessons) {
+    story.steps.forEach((frame, i) => {
+      const card = seekConcept(dom, story.id, i);
+      assert.equal(card.querySelector('.concept-counter').textContent, `${i + 1} / ${story.steps.length}`);
+      assert.equal(card.querySelector('.concept-caption strong').textContent, frame.title);
+      assert.equal(card.querySelector('.concept-caption p').textContent, frame.explain);
+      const keys = [...card.querySelectorAll('[data-motion-key]')].map(node => node.getAttribute('data-motion-key'));
+      assert.equal(new Set(keys).size, keys.length, story.id + ': unique identities within each scene');
+      assert.equal(card.querySelectorAll('.concept-lane').length, frame.lanes.length);
+      if (frame.diagram) {
+        assert.equal(card.querySelectorAll('.concept-node').length, frame.diagram.nodes.length);
+        const ids = new Set(frame.diagram.nodes.map(n => n.id));
+        frame.diagram.edges.forEach(e => { assert.ok(ids.has(e.from)); assert.ok(ids.has(e.to)); });
+        for (const line of card.querySelectorAll('.concept-edge')) {
+          for (const attr of ['x1', 'y1', 'x2', 'y2']) assert.ok(Number.isFinite(Number(line.getAttribute(attr))));
+        }
+      }
+      if (frame.grid) assert.equal(card.querySelectorAll('.concept-work-grid span').length, frame.grid.size ** 2);
+    });
+    const card = dom.window.document.getElementById('concept-' + story.id);
+    assert.equal(card.querySelector('[data-concept-action="next"]').disabled, true);
+    card.querySelector('[data-concept-action="reset"]').click();
+    assert.equal(card.querySelector('.concept-slider').value, '0');
+    assert.equal(card.querySelector('[data-concept-action="back"]').disabled, true);
+    card.querySelector('[data-concept-action="next"]').click();
+    assert.equal(card.querySelector('.concept-slider').value, '1');
+    card.querySelector('[data-concept-action="back"]').click();
+    assert.equal(card.querySelector('.concept-slider').value, '0');
+  }
+  assert.deepEqual(errors, []); dom.window.close();
+});
+
+test('concept models preserve structure and algorithm invariants', () => {
+  const {dom, errors} = load();
+  const byId = id => dom.window.dsaConceptLessons.find(story => story.id === id);
+  const values = (frame, label) => Array.from(frame.lanes.find(row => row.label.startsWith(label)).items, item => item.value);
+  assert.deepEqual(values(byId('set-definition').steps[1], 'visited'), values(byId('set-definition').steps[2], 'visited'));
+  assert.deepEqual(values(byId('stack-queue-definition').steps.at(-1), 'Stack · removed'), ['Sam']);
+  assert.deepEqual(values(byId('stack-queue-definition').steps.at(-1), 'Queue · removed'), ['Ada']);
+  const referenceEdges = byId('references-definition').steps[1].diagram.edges;
+  for (const outer of ['outer1', 'outer2']) for (const inner of ['inner1', 'inner2']) assert.ok(referenceEdges.some(e => e.from === outer && e.to === inner));
+  const heap = byId('heap-definition').steps.at(-1).diagram.nodes.map(n => Number(n.value));
+  for (let i = 1; i < heap.length; i++) assert.ok(heap[Math.floor((i - 1) / 2)] <= heap[i]);
+  assert.deepEqual(values(byId('traversal-definition').steps[5], 'Visit order'), ['A', 'B', 'C', 'D', 'E']);
+  assert.deepEqual(values(byId('traversal-definition').steps.at(-1), 'Visit order'), ['A', 'B', 'D', 'C', 'E']);
+  for (const id of ['insertion-definition', 'merge-definition', 'divide-definition']) {
+    const finalValues = byId(id).steps.at(-1).lanes[0].items.map(item => Number(item.value));
+    assert.deepEqual(Array.from(finalValues), id.startsWith('insertion') ? [3, 5, 7] : [2, 3, 5, 7]);
+  }
+  assert.deepEqual(values(byId('quicksort-definition').steps.at(-1), 'Sorted result'), ['2', '3', '5', '5', '7']);
+  for (const id of ['window-pattern-definition', 'window-definition']) {
+    const sums = byId(id).steps.map(frame => values(frame, 'Remembered state')[0]);
+    const best = byId(id).steps.map(frame => values(frame, 'Remembered state')[1]);
+    assert.deepEqual(Array.from(sums), ['sum = 8', 'sum = 7', 'sum = 9', 'sum = 6']);
+    assert.deepEqual(Array.from(best), ['best = 8', 'best = 8', 'best = 9', 'best = 9']);
+  }
+  assert.equal(values(byId('recursion-definition').steps.at(-1), 'Returned answer')[0], '24');
+  assert.equal(byId('dp-definition').steps.at(-1).lanes[0].items[1].value, '8');
+  assert.deepEqual(values(byId('backtracking-definition').steps.at(-1), 'Saved answer copies'), ['[]', '[2]', '[1]', '[1, 2]']);
+  assert.deepEqual(values(byId('shortest-path-definition').steps.at(-1), 'Shortest route'), ['A', 'C', 'E']);
+  assert.deepEqual(errors, []); dom.window.close();
+});
+
+test('definition playback pauses code playback and handles speed, completion, replay, and chapter collapse', () => {
+  const {dom, document, cards, timers, errors} = load();
+  const card = document.getElementById('concept-structure-algorithm');
+  const play = card.querySelector('[data-concept-action="play"]');
+  cards[1].querySelector('[data-action="play"]').click();
+  play.click();
+  assert.equal(cards[1].querySelector('[data-action="play"]').getAttribute('aria-pressed'), 'false');
+  assert.equal(play.getAttribute('aria-pressed'), 'true');
+  assert.equal(timers.size, 1);
+  const speed = card.querySelector('select'); speed.value = '2'; speed.dispatchEvent(new dom.window.Event('change'));
+  assert.equal(timers.size, 1);
+  let limit = 100;
+  while (timers.size && limit--) { const [id, tick] = timers.entries().next().value; timers.delete(id); tick(); }
+  assert.ok(limit > 0); assert.equal(card.querySelector('.concept-slider').value, '4');
+  assert.equal(play.textContent, '↻ Replay'); assert.equal(play.getAttribute('aria-pressed'), 'false');
+  play.click(); assert.equal(card.querySelector('.concept-slider').value, '0');
+  cards[1].querySelector('[data-action="play"]').click(); assert.equal(play.getAttribute('aria-pressed'), 'false');
+  play.click();
+  const second = document.getElementById('concept-growth').querySelector('[data-concept-action="play"]'); second.click();
+  assert.equal(play.getAttribute('aria-pressed'), 'false'); assert.equal(second.getAttribute('aria-pressed'), 'true');
+  const chapter = card.closest('details.section'); chapter.open = false; chapter.dispatchEvent(new dom.window.Event('toggle'));
+  assert.equal(second.getAttribute('aria-pressed'), 'false'); assert.equal(timers.size, 0);
+  assert.deepEqual(errors, []); dom.window.close();
+});
+
+test('concept motion uses valid transforms and respects reduced motion', () => {
+  for (const reduced of [false, true]) {
+    const {dom, errors, animations} = load({reduced, motion: true});
+    for (const story of dom.window.dsaConceptLessons) story.steps.forEach((_, i) => seekConcept(dom, story.id, i));
+    if (reduced) assert.equal(animations.length, 0);
+    else {
+      assert.ok(animations.length > 100);
+      for (const animation of animations) for (const frame of animation.frames) {
+        if (frame.transform) assert.doesNotMatch(frame.transform, /NaN|undefined|Infinity/);
+      }
+    }
+    assert.deepEqual(errors, []); dom.window.close();
+  }
 });

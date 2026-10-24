@@ -1,0 +1,42 @@
+/* Offline concept stories, shared by every chapter. */
+.concept-demo{border:1px solid #c8dcd1;border-radius:12px;background:#f5fbf7;padding:18px;margin:20px 0;scroll-margin-top:95px;color:var(--text);overflow:hidden}
+.concept-kicker{display:flex;align-items:center;justify-content:space-between;gap:10px;text-transform:uppercase;letter-spacing:.12em;font-size:9px;font-weight:750;color:#197252}
+.concept-counter{font:10px ui-monospace,monospace;text-transform:none;letter-spacing:0;color:#64776b}
+.concept-demo h4{font-size:16px;margin:7px 0 9px;line-height:1.5;letter-spacing:-.2px}
+.concept-definition{font-size:13px!important;line-height:1.8;margin:0 0 13px!important;max-width:78ch}
+.concept-controls{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:11px 0 4px}
+.concept-controls button{font-size:11px;padding:6px 11px;min-height:34px}
+.concept-controls label{margin-left:auto;display:flex;align-items:center;gap:5px;font-size:11px}
+.concept-controls select{font:11px system-ui,sans-serif;color:var(--text);border:1px solid #b9cec0;border-radius:6px;padding:5px;background:white}
+.concept-slider{width:100%;margin:5px 0 12px!important;cursor:pointer;min-height:20px}
+.concept-stage{padding:17px;background:white;border:1px solid #d7e5dc;border-radius:9px;position:relative;isolation:isolate;min-height:100px}
+.concept-lane{padding:7px 0 11px;border-bottom:1px dashed #e0e9e3}.concept-lane:last-of-type{border-bottom:0;padding-bottom:3px}
+.concept-lane h5{font:600 10px/1.6 system-ui,sans-serif;color:#516f5c;margin:0 0 9px}
+.concept-items{display:flex;flex-wrap:wrap;gap:9px;align-items:stretch;min-height:35px}
+.concept-tile{display:flex;flex-direction:column;justify-content:center;min-width:47px;max-width:100%;border:1px solid #acc7b7;border-radius:7px;background:#eff6f1;padding:9px 11px;position:relative;z-index:1;text-align:center;box-shadow:0 2px 0 #b8cdb626}
+.concept-value{font:600 13px/1.6 ui-monospace,monospace;overflow-wrap:anywhere}
+.concept-tile small{font:10px/1.6 system-ui,sans-serif;color:#536d5c;display:block;max-width:220px}
+.concept-tile.focus{background:#fff0c9;border-color:#b98222;box-shadow:inset 0 -3px #d09d41}
+.concept-tile.done{background:#daf0e2;border-color:#4b976b;box-shadow:inset 0 -3px #69ab81}
+.concept-tile.reject{background:#fce4df;border-color:#b86d5a;box-shadow:inset 0 -3px #ca806f}
+.concept-tile.dim{background:#f5f6f6;border-color:#d5dcd8;color:#7c8780;opacity:.48}
+.concept-empty{font:italic 11px/2 system-ui,sans-serif;color:#7b8d81;align-self:center}
+.concept-equation{padding:10px 12px;margin-top:13px;border-radius:7px;background:#edf4fa;color:#265475;font:600 12px/1.8 ui-monospace,monospace;overflow-wrap:anywhere}
+.concept-work{margin:0 0 12px}.concept-work h5{font:600 10px/1.6 system-ui,sans-serif;color:#516f5c;margin:0 0 9px}.concept-work-grid{display:grid;gap:4px;width:max-content}.concept-work-grid span{width:16px;height:16px;background:#abd3ba;border:1px solid #65987a;border-radius:3px}
+.concept-caption{margin:12px 0;padding:12px 14px;border-left:3px solid #4f9970;background:#eaf5ee;border-radius:0 7px 7px 0;min-height:80px}
+.concept-caption strong{font-size:12px;color:#155b40;display:block;margin-bottom:3px}
+.concept-caption p{font-size:12px!important;margin:0!important;line-height:1.8}
+.concept-notice{font-size:11px!important;color:#4e6858;margin:10px 0 5px!important;line-height:1.8}
+.concept-legend{font-size:9px!important;color:#667a6c;margin:8px 0 0!important}
+.concept-diagram{display:block;width:100%;max-width:670px;min-width:400px;margin:0 auto;overflow:visible}
+.concept-stage:has(.concept-diagram){overflow-x:auto}
+.concept-edge{stroke:#87a594;stroke-width:2;fill:none}.concept-edge.done{stroke:#258451;stroke-width:4}
+.concept-node rect{fill:#edf6f0;stroke:#8eb69f;stroke-width:2}
+.concept-node.focus rect{fill:#ffedbb;stroke:#b98222;stroke-width:3}
+.concept-node.done rect{fill:#d4eddf;stroke:#318955;stroke-width:3}
+.concept-node text{font:600 13px ui-monospace,monospace;text-anchor:middle;dominant-baseline:central;fill:#254d36}
+.concept-node .concept-node-caption{font:11px system-ui,sans-serif;fill:#557261}
+.concept-edge-label{font:11px system-ui,sans-serif;text-anchor:middle;fill:#557261;paint-order:stroke;stroke:white;stroke-width:4px;stroke-linejoin:round}
+@media(max-width:760px){.concept-demo{padding:14px}.concept-stage{padding:12px}.concept-demo h4{font-size:15px}.concept-definition{font-size:12px!important}.concept-value{font-size:12px}.concept-tile{padding:8px 9px}.concept-items{gap:7px}.concept-caption{padding:10px 12px}.concept-controls label{margin-left:0}.concept-diagram{min-width:430px}.concept-legend{line-height:1.8}}
+@media(prefers-reduced-motion:reduce){.concept-demo *{animation:none!important;transition:none!important}}
+@media print{.concept-controls,.concept-slider,.concept-legend{display:none!important}.concept-demo{break-inside:avoid;background:white;border-color:#bbb;padding:12px;margin:12px 0}.concept-stage{overflow:visible!important}.concept-diagram{min-width:0;max-width:500px}.concept-caption{min-height:0}.concept-tile{box-shadow:none}.concept-definition{font-size:11px!important}}

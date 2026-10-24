@@ -118,9 +118,10 @@ def main():
                 definitions.append(ast.Module(body=[node], type_ignores=[]))
     payload = json.dumps(traces, ensure_ascii=False, separators=(',', ':')).replace('<', '\\u003c')
     html = replace_generated(html, 'ANIMATIONS',
-        '<style>\n' + (ROOT / 'tools/dsa_animations.css').read_text() + '\n</style>\n'
+        '<style>\n' + (ROOT / 'tools/dsa_animations.css').read_text() + '\n' + (ROOT / 'tools/dsa_concepts.css').read_text() + '\n</style>\n'
         '<script type="application/json" id="dsa-execution-traces">' + payload + '</script>\n'
-        '<script>\n' + (ROOT / 'tools/dsa_animations.js').read_text() + '\n</script>')
+        '<script>\n' + (ROOT / 'tools/dsa_animations.js').read_text() + '\n</script>\n'
+        '<script>\n' + (ROOT / 'tools/dsa_concepts.js').read_text() + '\n</script>')
     PAGE.write_text(html)
     print(f'Built {len(traces)} animations, {sum(len(t["frames"]) for t in traces)} execution steps; {PAGE.stat().st_size:,} bytes.')
 

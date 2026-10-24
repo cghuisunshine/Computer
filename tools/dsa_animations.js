@@ -232,6 +232,7 @@
     function seek(value) { pause(); index = Math.max(0, Math.min(trace.frames.length - 1, value)); render(); }
     play.addEventListener('click', () => {
       if (active) { pause(); return; }
+      window.dispatchEvent(new Event('dsa-playback-start'));
       if (playing) playing.pause();
       if (index >= trace.frames.length - 1) { index = 0; render(); }
       active = true; playing = api; play.textContent = 'Ⅱ Pause'; play.setAttribute('aria-pressed', 'true'); timer = setTimeout(tick, 1200 / Number(speed.value));
@@ -357,7 +358,7 @@
         scene.querySelectorAll('[data-key]').forEach(node => {
           if (typeof node.animate !== 'function') return;
           const old = oldPositions.get(node.dataset.key), rect = node.getBoundingClientRect();
-          if (old && (old.x !== rect.x || old.y !== rect.y)) node.animate([{transform: `translate(${old.x - rect.x}px,${old.y - rect.y}px)`}, {transform: 'translate(0,0)'}], {duration: 400, easing: 'ease-out'});
+          if (old && (old.left !== rect.left || old.top !== rect.top)) node.animate([{transform: `translate(${old.left - rect.left}px,${old.top - rect.top}px)`}, {transform: 'translate(0,0)'}], {duration: 400, easing: 'ease-out'});
           else if (!old) node.animate([{opacity: 0, transform: 'translateY(-7px)'}, {opacity: 1, transform: 'translateY(0)'}], {duration: 320, easing: 'ease-out'});
         });
       }
@@ -384,5 +385,6 @@
     makePlayer(card, traces[number], number);
   });
   document.addEventListener('visibilitychange', () => { if (document.hidden && playing) playing.pause(); });
+  window.addEventListener('dsa-playback-start', () => { if (playing) playing.pause(); });
   window.addEventListener('beforeprint', () => { if (playing) playing.pause(); });
 })();
