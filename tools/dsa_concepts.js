@@ -2,7 +2,7 @@
 (() => {
   'use strict';
   const tile = (id, value, caption = '', tone = '') => ({id, value: String(value), caption, tone});
-  const lane = (label, items) => ({label, items});
+  const lane = (label, items, extra = {}) => ({label, items, ...extra});
   const step = (title, explain, lanes = [], extra = {}) => ({title, explain, lanes, ...extra});
   const numbers = (values, prefix = 'v', active = -1, captions = {}) => values.map((v, i) => tile(prefix + i, v, captions[i] || `index ${i}`, i === active ? 'focus' : ''));
   const node = (id, value, x, y, tone = '', caption = '') => ({id, value: String(value), x, y, tone, caption});
@@ -84,25 +84,37 @@
 
   const arrivals = ['Ada', 'Lin', 'Sam'];
   const customer = (name, prefix, caption = '', tone = '') => tile(prefix + name, name, caption, tone);
+  const containers = (count, popped = false, dequeued = false) => [
+    lane('Stack · bottom → top', arrivals.slice(0, count - (popped ? 1 : 0)).map((n, j, a) => customer(n, 's', j === a.length - 1 ? 'top' : 'earlier arrival')), {layout: 'stack', area: 'stack'}),
+    lane('Stack · removed', popped ? [customer('Sam', 's', 'last in → first out', 'done')] : [], {layout: 'tray', area: 'stack-out'}),
+    lane('Queue · front → back', arrivals.slice(dequeued ? 1 : 0, count).map((n, j) => customer(n, 'q', j === 0 ? 'front · next to leave' : 'waiting')), {layout: 'queue', area: 'queue'}),
+    lane('Queue · removed', dequeued ? [customer('Ada', 'q', 'first in → first out', 'done')] : [], {layout: 'tray', area: 'queue-out'})
+  ];
   add('stack-queue-definition', 'linear-structures', {definition: true}, 'Stack vs queue · same arrivals, different exits',
     'A stack removes the most recently added item (LIFO). A queue removes the earliest added item (FIFO). These are rules for behavior, regardless of implementation.',
-    'Watch Sam leave the stack while Ada leaves the queue. The arrival order was identical.', [
-      step('Empty containers', 'Think of the stack as undo history and the queue as a checkout line.', [lane('Stack · bottom → top', []), lane('Queue · front → back', [])]),
-      ...arrivals.map((name, i) => step(`Arrival: ${name}`, 'Add at the right end of both containers.', [lane('Stack · bottom → top', arrivals.slice(0, i + 1).map((n, j) => customer(n, 's', j === i ? 'top' : '', j === i ? 'focus' : ''))), lane('Queue · front → back', arrivals.slice(0, i + 1).map((n, j) => customer(n, 'q', j === 0 ? 'front' : '', j === i ? 'focus' : '')))])),
-      step('Remove once', 'Stack pop returns Sam, the newest arrival. Queue dequeue returns Ada, the oldest arrival.', [lane('Stack · remaining', [customer('Ada', 's'), customer('Lin', 's', 'top')]), lane('Stack · removed', [customer('Sam', 's', 'last in, first out', 'done')]), lane('Queue · remaining', [customer('Lin', 'q', 'front'), customer('Sam', 'q')]), lane('Queue · removed', [customer('Ada', 'q', 'first in, first out', 'done')])])
+    'The stack behaves like plates: add and remove at the top. The queue behaves like a checkout line: join at the back, leave at the front.', [
+      step('Two different shapes, two different rules', 'Ada, Lin, then Sam will arrive at both containers in the same order.', containers(0), {summary: 'Stack: empty. Queue: empty.'}),
+      ...arrivals.map((name, i) => step(`Arrival ${i + 1}: ${name}`, `Place ${name} on top of the stack. In the queue, ${name} joins the back of the line.`, containers(i + 1), {action: `push(${name}) · enqueue(${name})`, summary: `Stack top: ${name}. Queue front: Ada; back: ${name}.`})),
+      step('Pop from the top of the stack', 'Sam was added last and is removed first. Ada and Lin stay in their original stack positions.', containers(3, true), {action: 'stack.pop() → Sam', summary: 'Stack: Ada, Lin (top). Removed: Sam. Queue unchanged.'}),
+      step('Dequeue from the front of the line', 'Ada arrived first and leaves first. Lin is now at the front; Sam still waits behind Lin.', containers(3, true, true), {action: 'queue.popleft() → Ada', summary: 'Stack removed Sam. Queue removed Ada. Same arrivals, different exits.'})
     ]);
-  const linkedDiagram = (prepend, current) => ({
-    nodes: [node('head', 'head', 55, 95), ...(prepend ? [node('n10', 10, 170, 95, current === 10 ? 'focus' : '', 'value | next')] : []), node('n20', 20, 290, 95, current === 20 ? 'focus' : '', 'value | next'), node('n30', 30, 410, 95, current === 30 ? 'focus' : '', 'value | next'), node('null', 'None', 520, 95, current === null ? 'done' : '')],
-    edges: [edge('head', prepend ? 'n10' : 'n20', '', true), ...(prepend ? [edge('n10', 'n20', 'next', true)] : []), edge('n20', 'n30', 'next', true), edge('n30', 'null', 'next', true)]
+  const linkedDiagram = (phase, current) => ({
+    kind: 'linked',
+    nodes: [node('head', 'head', 55, 160), ...(phase ? [{...node('n10', 10, 175, 65, current === 10 || current === undefined ? 'focus' : '', 'new node'), kind: 'link'}] : []), {...node('n20', 20, 310, 160, current === 20 ? 'focus' : '', 'value | next'), kind: 'link'}, {...node('n30', 30, 440, 160, current === 30 ? 'focus' : '', 'value | next'), kind: 'link'}, node('null', 'None', 550, 160, current === null ? 'done' : '')],
+    edges: [edge('head', phase >= 3 ? 'n10' : 'n20', '', true), ...(phase >= 2 ? [edge('n10', 'n20', 'next', true, phase === 2 ? 'done' : '')] : []), edge('n20', 'n30', 'next', true), edge('n30', 'null', 'next', true)],
+    pointers: current !== undefined ? [{id: 'current', label: 'current', target: current === null ? 'null' : 'n' + current}] : []
   });
   add('linked-definition', 'linear-structures', {heading: 'Linked lists:'}, 'Linked list · follow the arrows',
     'A singly linked list is a chain of nodes. Each node stores a value and a next reference; head identifies the first node, and None ends the chain.',
     'The drawing has no array indices. To reach 30, follow next links; prepending changes only the new node and head.', [
-      step('Start at head', 'head points to the node holding 20. That node points to 30.', [], {diagram: linkedDiagram(false, 20)}),
-      step('Prepend 10', 'Create a node whose next points to the old head, then move head to it. The old nodes stay where they are.', [], {diagram: linkedDiagram(true, 10)}),
-      step('Follow one link', 'current = current.next moves the reference from 10 to 20. It does not move a node.', [], {diagram: linkedDiagram(true, 20)}),
-      step('Follow the next link', 'Advance again to reach 30. Access requires traversal from head.', [], {diagram: linkedDiagram(true, 30)}),
-      step('Reach the end', '30.next is None, so the traversal stops.', [], {diagram: linkedDiagram(true, null)})
+      step('Start with the existing chain', 'head points to 20, which points to 30. Each node has a value compartment and a next compartment.', [], {diagram: linkedDiagram(0), summary: 'head → 20 → 30 → None'}),
+      step('Allocate a separate node', 'Create node 10 in a free location. The existing head and links have not changed. The blank next compartment has not been connected yet.', [], {diagram: linkedDiagram(1), action: 'new = Node(10)', summary: 'New node: 10. Existing chain unchanged.'}),
+      step('Connect the new node to the old head', 'Set new.next to the node holding 20. Keep head pointing to 20 until the new link is ready.', [], {diagram: linkedDiagram(2), action: 'new.next = head', summary: '10.next → 20; head still → 20.'}),
+      step('Redirect head', 'Change only the head reference to point at 10. None of the allocated nodes moves.', [], {diagram: linkedDiagram(3), action: 'head = new', summary: 'head → 10 → 20 → 30 → None'}),
+      step('Start a traversal', 'Bind current to the same node as head. The current arrow is a reference, not a node moving through memory.', [], {diagram: linkedDiagram(3, 10), action: 'current = head', summary: 'current → 10'}),
+      step('Follow one link', 'current.next refers to 20. Move the current arrow to that node.', [], {diagram: linkedDiagram(3, 20), action: 'current = current.next', summary: 'current: 10 → 20'}),
+      step('Follow the next link', 'Advance the current reference to 30. The chain remains intact.', [], {diagram: linkedDiagram(3, 30), action: 'current = current.next', summary: 'current: 20 → 30'}),
+      step('Reach the end', '30.next is None. The current reference becomes None, so traversal stops.', [], {diagram: linkedDiagram(3, null), action: 'current = current.next', summary: 'current → None; stop.'})
     ]);
 
   const treeNodes = [[8, 300, 35], [3, 160, 115], [10, 440, 115], [1, 80, 200], [6, 235, 200], [14, 515, 200]];
@@ -128,7 +140,7 @@
     ]);
   const graphPositions = {A: [95, 110], B: [250, 40], C: [250, 190], D: [440, 40], E: [440, 190]};
   const graphPairs = [['A', 'B'], ['A', 'C'], ['B', 'D'], ['C', 'D'], ['C', 'E']];
-  const graphDiagram = (focus = '', visited = [], path = [], pairs = graphPairs) => ({nodes: Object.entries(graphPositions).map(([v, [x, y]]) => node('g' + v, v, x, y, v === focus ? 'focus' : visited.includes(v) ? 'done' : '')), edges: pairs.map(([a, b]) => edge('g' + a, 'g' + b, '', false, path.some((v, i) => i && ((v === a && path[i - 1] === b) || (v === b && path[i - 1] === a))) ? 'done' : ''))});
+  const graphDiagram = (focus = '', visited = [], path = [], pairs = graphPairs, frontier = [], distances = {}) => ({nodes: Object.entries(graphPositions).map(([v, [x, y]]) => node('g' + v, v, x, y, v === focus ? 'focus' : frontier.includes(v) ? 'frontier' : visited.includes(v) ? 'done' : '', distances[v] !== undefined ? `distance ${distances[v]}` : '')), edges: pairs.map(([a, b]) => edge('g' + a, 'g' + b, '', false, path.some((v, i) => i && ((v === a && path[i - 1] === b) || (v === b && path[i - 1] === a))) ? 'done' : ''))});
   add('graph-definition', 'trees-graphs', {heading: 'Graphs:'}, 'Graph · vertices connected by edges',
     'A graph models entities as vertices and relationships as edges. It can contain cycles and multiple routes; edges may have directions or weights.',
     'A graph can express several routes between the same places. An adjacency list records each vertex’s neighbors.', [
@@ -140,18 +152,24 @@
   const neighbors = {A: ['B', 'C'], B: ['A', 'D'], C: ['A', 'D', 'E'], D: ['B', 'C'], E: ['C']};
   const traversalSteps = [];
   for (const mode of ['BFS', 'DFS']) {
-    const frontier = ['A'], seen = new Set(['A']), order = [];
-    traversalSteps.push(step(`${mode}: start at A`, mode === 'BFS' ? 'BFS uses a FIFO queue to expand distance layers.' : 'DFS uses a LIFO stack to follow a branch before returning.', [lane(mode === 'BFS' ? 'Queue · front → back' : 'Stack · bottom → top', [tile('frontierA', 'A')]), lane('Visit order', [])], {diagram: graphDiagram('', ['A'])}));
+    const frontier = ['A'], seen = new Set(['A']), order = [], distances = {A: 0};
+    const snapshot = (title, explain, focus, action, codeFocus) => step(title, explain, [lane(mode === 'BFS' ? 'Queue · front → back' : 'Stack · bottom → top', frontier.map(v => tile('frontier' + v, v, mode === 'BFS' ? `distance ${distances[v]}` : 'waiting')), {layout: mode === 'BFS' ? 'queue' : 'stack'}), lane('Visit order', order.map(v => tile('order' + v, v, '', 'done')))], {mode, codeFocus: codeFocus || (title.includes('start at') ? ['seen =', mode === 'BFS' ? 'queue =' : 'stack =', 'order ='] : title.includes('discover') ? ['seen.add(', mode === 'BFS' ? 'queue.append(' : 'stack.append('] : ['node =', 'order.append(']), diagram: graphDiagram(focus, order, [], graphPairs, frontier, mode === 'BFS' ? distances : {}), action, summary: `${mode} frontier: ${frontier.join(', ') || 'empty'}. Visited: ${order.join(' → ') || 'none'}.`});
+    traversalSteps.push(snapshot(`${mode}: start at A`, mode === 'BFS' ? 'BFS uses a FIFO queue. Blue nodes are discovered and waiting; green nodes have been visited. Distance counts edges from A.' : 'DFS uses a LIFO stack. The next node to visit is at the top.', '', `${mode === 'BFS' ? 'enqueue' : 'push'}(A)`));
     while (frontier.length) {
       const current = mode === 'BFS' ? frontier.shift() : frontier.pop(); order.push(current);
+      traversalSteps.push(snapshot(`${mode}: visit ${current}`, `Remove ${current} from the ${mode === 'BFS' ? 'queue front' : 'stack top'}. Inspect its neighbors next, one at a time.`, current, `${mode === 'BFS' ? 'dequeue' : 'pop'}() → ${current}`));
       const next = mode === 'BFS' ? neighbors[current] : [...neighbors[current]].reverse();
-      next.forEach(v => { if (!seen.has(v)) { seen.add(v); frontier.push(v); } });
-      traversalSteps.push(step(`${mode}: visit ${current}`, mode === 'BFS' ? 'Remove the queue front, then add unseen neighbors at the back. Mark them immediately.' : 'Remove the stack top, then push unseen neighbors in reverse listed order. Mark them immediately.', [lane(mode === 'BFS' ? 'Queue · front → back' : 'Stack · bottom → top', frontier.map(v => tile('frontier' + v, v))), lane('Visit order', order.map(v => tile('order' + v, v, '', 'done')))], {diagram: graphDiagram(current, [...seen])}));
+      next.forEach(v => { if (!seen.has(v)) {
+        seen.add(v); frontier.push(v); distances[v] = distances[current] + 1;
+        traversalSteps.push(snapshot(`${mode}: discover ${v} from ${current}`, `Mark ${v} as discovered immediately and add it at the ${mode === 'BFS' ? 'back of the queue' : 'top of the stack'}. Already discovered neighbors will be skipped.`, current, `${mode === 'BFS' ? 'enqueue' : 'push'}(${v})`));
+      } });
     }
+    traversalSteps.push(snapshot(`${mode}: traversal complete`, `The ${mode === 'BFS' ? 'queue' : 'stack'} is empty. Return the visit order: ${order.join(' → ')}.`, '', 'return order', ['return order']));
   }
   add('traversal-definition', 'trees-graphs', {code: 'Breadth-first search and iterative depth-first search'}, 'BFS vs DFS · choose how to explore',
     'Breadth-first search explores by increasing edge distance using a queue. Depth-first search follows a branch using a stack or recursive calls.',
     'Compare the visit orders on this graph. BFS guarantees shortest edge counts in an unweighted graph; DFS generally does not.', traversalSteps);
+  lessons.at(-1).modes = ['BFS', 'DFS'].map(id => ({id, label: id === 'BFS' ? 'BFS · Queue' : 'DFS · Stack', start: traversalSteps.findIndex(frame => frame.mode === id), end: traversalSteps.findLastIndex(frame => frame.mode === id)}));
 
   add('linear-definition', 'search-sort', {heading: 'Linear search:'}, 'Linear search · inspect one item at a time',
     'Linear search compares successive items with a target until it finds a match or reaches the end. The input does not need to be sorted.',
@@ -160,34 +178,66 @@
       step('What if it is absent?', 'For target 5, every item differs. Reaching the end proves absence; return -1.', [lane('Input · all inspected', [9, 2, 7].map((v, i) => tile('linear' + i, v, 'not 5', 'dim'))), lane('Answer', [tile('absent', -1, 'not found')])])
     ]);
   const binaryValues = [2, 4, 7, 9, 12, 15, 18];
+  const binaryRow = (low, high, mid = -1, found = false) => lane('Sorted input · target 12', binaryValues.map((v, i) => tile('binary' + i, v, '', i < low || i > high ? 'dim' : i === mid ? found ? 'done' : 'focus' : '')), {layout: 'indexed', pointers: {low, high, ...(mid >= 0 ? {mid} : {})}, range: [low, high]});
   add('binary-definition', 'search-sort', {heading: 'Binary search:'}, 'Binary search · discard a whole half',
     'Binary search finds a target in sorted data by comparing the middle candidate, then keeping only the half that can still contain the target.',
-    'Dim items are ruled out by sorted order. The interval shrinks even when a comparison does not find the answer.', [
-      step('Begin with all candidates', 'The target is 12. Sorted order is required before the first comparison.', [lane('Sorted input', numbers(binaryValues, 'binary'))], {equation: 'low = 0 · high = 6'}),
-      step('Inspect the middle', 'mid = 3, value = 9. Since 9 < 12, values at indices 0 through 3 are all too small.', [lane('Sorted input', numbers(binaryValues, 'binary', 3))], {equation: '(0 + 6) // 2 = 3'}),
-      step('Keep only the right half', 'Now low = 4 and high = 6. Inspect index 5: 15 is too large, so discard indices 5 and 6.', [lane('Candidates', binaryValues.map((v, i) => tile('binary' + i, v, `index ${i}`, i < 4 ? 'dim' : i === 5 ? 'focus' : '')))], {equation: '(4 + 6) // 2 = 5'}),
-      step('Find the remaining candidate', 'low = high = 4. Its value is 12, so return index 4.', [lane('Candidates', binaryValues.map((v, i) => tile('binary' + i, v, `index ${i}`, i === 4 ? 'done' : 'dim')))], {equation: 'return 4'})
+    'The array stays still. Only the low, high, and mid markers move. The blue bracket encloses the remaining candidates.', [
+      step('Begin with all candidates', 'Target: 12. Sorted order lets us eliminate a whole range after each comparison.', [binaryRow(0, 6)], {action: 'low = 0; high = 6', summary: 'Candidates: indices 0–6.'}),
+      step('Inspect index 3', 'mid = (0 + 6) // 2 = 3. The value 9 is smaller than 12.', [binaryRow(0, 6, 3)], {action: 'compare 9 < 12', summary: '9 is too small; everything to its left is also too small.'}),
+      step('Move low past the midpoint', 'Discard indices 0 through 3. The values stay in their slots so you can see exactly which half was eliminated.', [binaryRow(4, 6)], {action: 'low = mid + 1 = 4', summary: 'Candidates: indices 4–6.'}),
+      step('Inspect index 5', 'mid = (4 + 6) // 2 = 5. The value 15 is larger than 12.', [binaryRow(4, 6, 5)], {action: 'compare 15 > 12', summary: '15 is too large; everything to its right is also too large.'}),
+      step('Move high before the midpoint', 'Discard indices 5 and 6. Only index 4 remains.', [binaryRow(4, 4)], {action: 'high = mid - 1 = 4', summary: 'Candidate: index 4.'}),
+      step('Find the target', 'low, mid, and high now all identify index 4. Its value is 12, so return 4.', [binaryRow(4, 4, 4, true)], {action: 'return 4', summary: 'Found 12 at index 4.'})
     ]);
-  add('insertion-definition', 'search-sort', {heading: 'Insertion sort:'}, 'Insertion sort · make room in a sorted prefix',
+  const insertionRow = (items) => lane('Row · fixed index slots', items, {layout: 'cards'});
+  const held = (value) => lane('Held card · outside the row', value ? [tile('i' + value, value, 'key', 'focus')] : [tile('held-empty', '—', 'no card held', 'dim')], {layout: 'held'});
+  const card = (v, caption = '', tone = '') => tile('i' + v, v, caption, tone);
+  const gap = () => tile('hole', '□', 'gap to fill', 'gap');
+  add('insertion-definition', 'search-sort', {heading: 'Insertion sort:'}, 'Insertion sort · lift a card, make room, insert',
     'Insertion sort grows a sorted prefix by taking the next item, shifting larger items right, and inserting the item into the gap.',
-    'Holding the key aside prevents it from being overwritten while references shift.', [
-      step('Start with a sorted prefix', 'The first item is a sorted prefix of length one. The next key is 3.', [lane('Row', [tile('i7', 7, 'sorted prefix', 'done'), tile('i3', 3, 'next key', 'focus'), tile('i5', 5, 'unprocessed')])]),
-      step('Hold the key aside', 'Remember 3 separately. Its old position is now the gap to fill.', [lane('Row', [tile('i7', 7, 'sorted prefix', 'done'), tile('hole', '□', 'gap'), tile('i5', 5)]), lane('Held key', [tile('i3', 3, '', 'focus')])]),
-      step('Shift the larger item', '7 > 3, so move 7 one position right. The gap moves left.', [lane('Row', [tile('hole', '□', 'gap'), tile('i7', 7, 'shifted right', 'focus'), tile('i5', 5)]), lane('Held key', [tile('i3', 3)])]),
-      step('Insert into the gap', 'Place 3 before 7. The sorted prefix is now [3, 7].', [lane('Row', [tile('i3', 3, 'sorted', 'done'), tile('i7', 7, 'sorted', 'done'), tile('i5', 5, 'next key', 'focus')])]),
-      step('Repeat for 5', 'Hold 5, shift 7 right, then put 5 between 3 and 7. The whole row is sorted.', [lane('Row', [tile('i3', 3, 'sorted', 'done'), tile('i5', 5, 'sorted', 'done'), tile('i7', 7, 'sorted', 'done')])])
+    'The held card has its own space. A dashed gap shows where to insert it; index labels stay attached to slots.', [
+      step('Start with one sorted card', '7 is a sorted prefix of length one. The next card to insert is 3.', [insertionRow([card(7, 'sorted prefix', 'done'), card(3, 'next card', 'focus'), card(5, 'unprocessed')]), held()], {action: 'i = 1', summary: 'Row: [7, 3, 5]. Held: none.'}),
+      step('Lift 3 out of the row', 'Keep key = 3 safely aside. Treat its old slot as a gap while making room.', [insertionRow([card(7, 'sorted prefix', 'done'), gap(), card(5)]), held(3)], {action: 'key = 3', summary: 'Row: [7, □, 5]. Held: 3.'}),
+      step('Compare the card on the left', '7 > 3, so 7 must move right before we can insert 3.', [insertionRow([card(7, '7 > key 3', 'focus'), gap(), card(5)]), held(3)], {action: 'compare 7 > 3', summary: '7 blocks the insertion position.'}),
+      step('Shift 7 one slot right', 'The held 3 stays aside. Moving 7 opens a gap at index 0.', [insertionRow([gap(), card(7, 'shifted right', 'focus'), card(5)]), held(3)], {action: 'shift 7: index 0 → 1', summary: 'Row: [□, 7, 5]. Held: 3.'}),
+      step('Insert 3 into the gap', 'There is no earlier card to compare. Place 3 at index 0. The sorted prefix is now [3, 7].', [insertionRow([card(3, 'sorted', 'done'), card(7, 'sorted', 'done'), card(5, 'next card', 'focus')]), held()], {action: 'insert key at index 0', summary: 'Row: [3, 7, 5]. Held: none.'}),
+      step('Lift the next card, 5', 'Keep 5 aside. Now find its place within the sorted prefix [3, 7].', [insertionRow([card(3, 'sorted', 'done'), card(7, 'sorted', 'done'), gap()]), held(5)], {action: 'key = 5', summary: 'Row: [3, 7, □]. Held: 5.'}),
+      step('Compare 7 with 5', '7 > 5, so shift 7 one slot right.', [insertionRow([card(3, 'sorted', 'done'), card(7, '7 > key 5', 'focus'), gap()]), held(5)], {action: 'compare 7 > 5', summary: '7 must move right.'}),
+      step('Move the gap left', '7 moves from index 1 to index 2. The gap is now between 3 and 7.', [insertionRow([card(3, 'sorted', 'done'), gap(), card(7, 'shifted right', 'focus')]), held(5)], {action: 'shift 7: index 1 → 2', summary: 'Row: [3, □, 7]. Held: 5.'}),
+      step('Compare 3 with 5', '3 ≤ 5, so stop shifting. The gap immediately after 3 is the correct insertion position.', [insertionRow([card(3, '3 ≤ key 5', 'focus'), gap(), card(7)]), held(5)], {action: 'compare 3 ≤ 5; stop shifting', summary: 'Insert 5 between 3 and 7.'}),
+      step('Insert 5; sorting is complete', 'Fill the gap with the held card. Every card is now in the sorted prefix.', [insertionRow([card(3, 'sorted', 'done'), card(5, 'sorted', 'done'), card(7, 'sorted', 'done')]), held()], {action: 'insert key at index 1', summary: 'Row: [3, 5, 7]. Held: none.'})
     ]);
-  const mergeSteps = [
-    step('Divide the input', 'Break [7, 3, 5, 2] into two independent halves.', [lane('Input', numbers([7, 3, 5, 2], 'merge'))]),
-    step('Split until trivial', 'Split each half again. Each one-item list is already sorted; these are the base cases.', [lane('Left half → singleton [7]', [tile('merge0', 7)]), lane('Left half → singleton [3]', [tile('merge1', 3)]), lane('Right half → singleton [5]', [tile('merge2', 5)]), lane('Right half → singleton [2]', [tile('merge3', 2)])]),
-    step('Sort the small halves', 'Merge the singletons into [3, 7] and [2, 5].', [lane('Left · sorted', [tile('merge1', 3), tile('merge0', 7)]), lane('Right · sorted', [tile('merge3', 2), tile('merge2', 5)]), lane('Combined output', [])]),
-    step('Take the smaller front', 'Compare 3 and 2. Move 2 into the output.', [lane('Left · sorted', [tile('merge1', 3), tile('merge0', 7)]), lane('Right · sorted', [tile('merge2', 5)]), lane('Combined output', [tile('merge3', 2, '', 'done')])]),
-    step('Take 3, then 5', 'Compare the remaining fronts each time; append the smaller one.', [lane('Left · sorted', [tile('merge0', 7)]), lane('Right · sorted', []), lane('Combined output', [tile('merge3', 2, '', 'done'), tile('merge1', 3, '', 'done'), tile('merge2', 5, '', 'done')])]),
-    step('Append the remaining tail', 'The right half is empty. Append the remaining 7; no more comparisons are needed.', [lane('Combined output', [tile('merge3', 2, '', 'done'), tile('merge1', 3, '', 'done'), tile('merge2', 5, '', 'done'), tile('merge0', 7, '', 'done')])])
+  const mergeTree = phase => ({
+    nodes: [node('merge-root', phase === 'done' ? '[2, 3, 5, 7]' : '[7, 3, 5, 2]', 300, 35, ['root', 'merge'].includes(phase) ? 'focus' : phase === 'done' ? 'done' : '', 'whole problem'), node('merge-left', ['left-done', 'right', 'right-done', 'merge', 'done'].includes(phase) ? '[3, 7]' : '[7, 3]', 155, 125, phase === 'left' || phase === 'halves' ? 'focus' : ['left-done', 'right', 'right-done', 'merge', 'done'].includes(phase) ? 'done' : phase === 'root' ? 'dim' : '', 'left half'), node('merge-right', ['right-done', 'merge', 'done'].includes(phase) ? '[2, 5]' : '[5, 2]', 445, 125, phase === 'right' || phase === 'halves' ? 'focus' : ['right-done', 'merge', 'done'].includes(phase) ? 'done' : phase === 'root' ? 'dim' : '', 'right half'), ...[7, 3, 5, 2].map((v, i) => node('merge-leaf' + i, '[' + v + ']', [85, 225, 375, 515][i], 215, phase === 'leaves' ? 'focus' : ['root', 'halves'].includes(phase) ? 'dim' : 'done'))],
+    edges: [['merge-root', 'merge-left'], ['merge-root', 'merge-right'], ['merge-left', 'merge-leaf0'], ['merge-left', 'merge-leaf1'], ['merge-right', 'merge-leaf2'], ['merge-right', 'merge-leaf3']].map(([a, b]) => ['root', 'halves', 'leaves'].includes(phase) ? edge(a, b, '', true) : edge(b, a, '', true)),
+    label: ['root', 'halves', 'leaves'].includes(phase) ? 'Divide ↓ into smaller problems' : 'Combine ↑ sorted answers'
+  });
+  const mergeRuns = (left, right, output, active = []) => [
+    lane('Combined output', output.map(v => tile('merge' + v, v, 'placed', 'done')), {layout: 'run', capacity: 4}),
+    lane('Left · sorted run', left.map(v => tile('merge' + v, v, 'next candidate', active.includes(v) ? 'focus' : '')), {layout: 'run', capacity: 2}),
+    lane('Right · sorted run', right.map(v => tile('merge' + v, v, 'next candidate', active.includes(v) ? 'focus' : '')), {layout: 'run', capacity: 2})
   ];
-  add('merge-definition', 'search-sort', {heading: 'Merge sort:'}, 'Merge sort · divide, solve, combine',
+  const mergeSteps = [
+    step('Begin with the whole problem', 'Keep this split diagram visible throughout the algorithm. Arrows first point down while dividing, then up while combining.', [], {diagram: mergeTree('root'), action: 'sort([7, 3, 5, 2])', summary: 'Unsorted input: [7, 3, 5, 2].'}),
+    step('Split into two halves', 'Create left [7, 3] and right [5, 2]. Neither half is sorted yet.', [], {diagram: mergeTree('halves'), action: 'divide into left and right halves', summary: '[7, 3] | [5, 2]'}),
+    step('Reach one-card base cases', 'Split each half again. Every singleton is already sorted.', [], {diagram: mergeTree('leaves'), action: 'divide until each group has one item', summary: '[7] | [3] | [5] | [2]'}),
+    step('Compare the left singletons', 'Compare 7 and 3. The smaller front card is 3.', mergeRuns([7], [3], [], [7, 3]), {diagram: mergeTree('left'), action: 'compare 7 and 3', summary: 'Merging [7] and [3]. Output: [].'}),
+    step('Place 3 first', 'Take 3 from the right run and put it in the output. The right run is now empty.', mergeRuns([7], [], [3]), {diagram: mergeTree('left'), action: 'take 3 → output', summary: 'Left: [7]. Right: []. Output: [3].'}),
+    step('Copy the remaining 7', 'Only the left run has an item left. Copy its tail without another comparison.', mergeRuns([], [], [3, 7]), {diagram: mergeTree('left-done'), action: 'append remaining 7', summary: 'Sorted left half: [3, 7].'}),
+    step('Compare the right singletons', 'Now merge [5] and [2]. The smaller front card is 2.', mergeRuns([5], [2], [], [5, 2]), {diagram: mergeTree('right'), action: 'compare 5 and 2', summary: 'Merging [5] and [2]. Output: [].'}),
+    step('Place 2 first', 'Take 2 into the output. The right singleton run becomes empty.', mergeRuns([5], [], [2]), {diagram: mergeTree('right'), action: 'take 2 → output', summary: 'Left: [5]. Right: []. Output: [2].'}),
+    step('Copy the remaining 5', 'The second sorted half is [2, 5]. Both halves are ready for the final merge.', mergeRuns([], [], [2, 5]), {diagram: mergeTree('right-done'), action: 'append remaining 5', summary: 'Sorted halves: [3, 7] | [2, 5].'}),
+    step('Compare the two sorted fronts', 'Compare 3 from the left with 2 from the right. Only the front card of each run is a candidate.', mergeRuns([3, 7], [2, 5], [], [3, 2]), {diagram: mergeTree('merge'), action: 'compare 3 and 2', summary: 'Left: [3, 7]. Right: [2, 5]. Output: [].'}),
+    step('Take 2', 'Move the smaller card, 2, into the output. The next right candidate is 5.', mergeRuns([3, 7], [5], [2]), {diagram: mergeTree('merge'), action: 'take 2 → output', summary: 'Left: [3, 7]. Right: [5]. Output: [2].'}),
+    step('Compare 3 and 5', 'The left front is now smaller.', mergeRuns([3, 7], [5], [2], [3, 5]), {diagram: mergeTree('merge'), action: 'compare 3 and 5', summary: '3 ≤ 5; take from the left.'}),
+    step('Take 3', 'Move 3 to the next output slot. The next left candidate is 7.', mergeRuns([7], [5], [2, 3]), {diagram: mergeTree('merge'), action: 'take 3 → output', summary: 'Left: [7]. Right: [5]. Output: [2, 3].'}),
+    step('Compare 7 and 5', 'The right front is smaller.', mergeRuns([7], [5], [2, 3], [7, 5]), {diagram: mergeTree('merge'), action: 'compare 7 and 5', summary: '5 < 7; take from the right.'}),
+    step('Take 5', 'The right run is now empty. The left tail can be copied.', mergeRuns([7], [], [2, 3, 5]), {diagram: mergeTree('merge'), action: 'take 5 → output', summary: 'Left: [7]. Right: []. Output: [2, 3, 5].'}),
+    step('Append the remaining tail', 'Copy 7. All four values are now in sorted order, and the root problem is solved.', mergeRuns([], [], [2, 3, 5, 7]), {diagram: mergeTree('done'), action: 'append remaining 7', summary: 'Sorted result: [2, 3, 5, 7].'})
+  ];
+  add('merge-definition', 'search-sort', {heading: 'Merge sort:'}, 'Merge sort · split downward, combine upward',
     'Merge sort recursively sorts halves, then combines the sorted halves by repeatedly taking the smaller next item.',
-    'At each merge, both input halves must already be sorted. Splitting gives logarithmic depth; merging handles all items per level.', mergeSteps);
+    'The split tree stays in place. During a merge, compare the front cards, move just one, then compare again.', mergeSteps);
   add('quicksort-definition', 'search-sort', {heading: 'Merge sort:', afterTable: true}, 'Quicksort · partition around a pivot',
     'Quicksort chooses a pivot, partitions values into smaller and larger groups, and recursively sorts those groups. Equal values need a consistent partition rule.',
     'This conceptual three-way partition uses extra groups. In-place implementations use different partition mechanics; poor pivots can cause O(n²) time.', [
@@ -205,12 +255,21 @@
     ]);
 
   const factorialSteps = [];
-  for (let n = 4; n >= 1; n--) factorialSteps.push(step(n === 1 ? 'Reach the base case' : `Call factorial(${n})`, n === 1 ? 'factorial(1) returns 1 without another recursive call.' : `The call for ${n} waits for factorial(${n - 1}). The argument decreases, so the base case gets closer.`, [lane('Call stack · caller → active call', Array.from({length: 5 - n}, (_, i) => tile('f' + (4 - i), `factorial(${4 - i})`, 4 - i === n ? 'active call' : 'waiting', 4 - i === n ? 'focus' : '')))]));
+  const callFrames = (active, returning = false) => lane('Call stack · newest call on top', Array.from({length: 5 - active}, (_, i) => {
+    const n = 4 - i;
+    return tile('f' + n, `factorial(${n})`, n === active ? returning ? 'returning to caller' : 'active call' : `waiting: ${n} × factorial(${n - 1})`, n === active ? returning ? 'done' : 'focus' : '');
+  }), {layout: 'call-stack'});
+  for (let n = 4; n >= 1; n--) factorialSteps.push(step(`Call factorial(${n})`, n === 1 ? 'The new top frame has n = 1. This is the base case, so no further call is needed.' : `Keep this frame on the stack, remembering ${n} × factorial(${n - 1}). The smaller call goes above it.`, [callFrames(n), lane('Returned answer', [], {layout: 'tray'})], {action: `call factorial(${n})`, summary: `Active: factorial(${n}). ${4 - n} caller(s) waiting.`}));
+  factorialSteps.push(step('Return 1 from the base case', 'factorial(1) returns 1. On the next step its caller, factorial(2), can resume.', [callFrames(1, true), lane('Returned answer', [tile('return-value', 1, 'base case', 'done')], {layout: 'tray'})], {action: 'return 1', summary: 'factorial(1) → 1; return to factorial(2).'}));
   let factorialResult = 1;
-  for (let n = 2; n <= 4; n++) { const old = factorialResult; factorialResult *= n; factorialSteps.push(step(`Return through factorial(${n})`, `The smaller call returned ${old}. Multiply ${n} × ${old} and return ${factorialResult}.`, [lane('Still waiting', Array.from({length: 4 - n}, (_, i) => tile('f' + (4 - i), `factorial(${4 - i})`, 'waiting'))), lane('Returned answer', [tile('f' + n, factorialResult, `${n} × ${old}`, 'done')])], {equation: `${n} × ${old} = ${factorialResult}`})); }
-  add('recursion-definition', 'patterns', {heading: 'Recursion:'}, 'Recursion · smaller calls, then returning answers',
+  for (let n = 2; n <= 4; n++) {
+    const old = factorialResult; factorialResult *= n;
+    factorialSteps.push(step(`Resume factorial(${n})`, `The smaller call has returned ${old}. The waiting frame now computes ${n} × ${old} = ${factorialResult}.`, [callFrames(n), lane('Returned answer', [tile('return-value', old, 'from the smaller call', 'done')], {layout: 'tray'})], {action: `${n} × ${old} = ${factorialResult}`, summary: `factorial(${n}) resumes with ${old}.`, equation: `${n} × ${old} = ${factorialResult}`}));
+    factorialSteps.push(step(`Return ${factorialResult} from factorial(${n})`, n === 4 ? 'The last frame returns 24. No recursive callers remain.' : `Return ${factorialResult} to the waiting factorial(${n + 1}) frame.`, [n === 4 ? lane('Call stack · newest call on top', [], {layout: 'call-stack'}) : callFrames(n, true), lane('Returned answer', [tile('return-value', factorialResult, n === 4 ? 'final answer' : 'back to caller', 'done')], {layout: 'tray'})], {action: `return ${factorialResult}`, summary: `factorial(${n}) → ${factorialResult}${n === 4 ? '; finished.' : '.'}`}));
+  }
+  add('recursion-definition', 'patterns', {heading: 'Recursion:'}, 'Recursion · stack calls, then return answers',
     'Recursion solves a problem using calls to the same function on smaller instances. A base case stops the calls; each return completes a waiting computation.',
-    'Calls build up first, then answers flow back. A progress measure must move toward the base case.', factorialSteps);
+    'New calls appear on top. Older frames keep their unfinished multiplication. Returning an answer lets the caller resume.', factorialSteps);
   add('two-pointers-definition', 'patterns', {heading: 'Choose an algorithmic pattern', afterTable: true}, 'Two pointers · move positions using a reason',
     'A two-pointer algorithm maintains two positions and moves them according to an invariant. For pair sums in sorted data, each comparison can rule out one endpoint.',
     'This rule relies on sorted order. The two indices must stay distinct.', [
@@ -230,7 +289,7 @@
     'For a fixed sum window, only the leaving and entering values change the sum.', windowSteps);
   add('divide-definition', 'patterns', {heading: 'Choose an algorithmic pattern', afterTable: true}, 'Divide and conquer · independent smaller problems',
     'Divide and conquer splits a problem into smaller independent problems, solves them, and combines their answers. Base cases make the recursion terminate.',
-    'Merge sort is one concrete instance: the two halves can be sorted independently before merging.', [mergeSteps[0], mergeSteps[1], mergeSteps[2], step('Combine the independent answers', 'Merge [3, 7] with [2, 5]: repeatedly take the smaller front, producing [2, 3, 5, 7].', mergeSteps[5].lanes)]);
+    'Merge sort is one concrete instance: the two halves can be sorted independently before merging.', [mergeSteps[0], mergeSteps[1], mergeSteps[2], mergeSteps[8], mergeSteps[9], mergeSteps[10], mergeSteps[11], mergeSteps[12], mergeSteps[13], mergeSteps[14], mergeSteps[15]]);
   const intervals = [[0, 3], [1, 2], [2, 4], [3, 5]];
   const intervalTiles = (chosen = [], rejected = [], focus = -1, order = [1, 0, 2, 3]) => order.map(i => tile('interval' + i, `[${intervals[i][0]}, ${intervals[i][1]})`, `finish ${intervals[i][1]}`, i === focus ? 'focus' : chosen.includes(i) ? 'done' : rejected.includes(i) ? 'reject' : ''));
   add('greedy-definition', 'patterns', {heading: 'Greedy choices'}, 'Greedy · commit to a justified local choice',
@@ -315,25 +374,130 @@
     model.edges.forEach(e => {
       const a = byId.get(e.from), b = byId.get(e.to); if (!a || !b) throw new Error('Missing concept edge endpoint');
       const dx = b.x - a.x, dy = b.y - a.y;
-      const boundary = n => Math.min((n.value.length > 5 ? 70 : 31) / (Math.abs(dx) || 1e-9), 28 / (Math.abs(dy) || 1e-9));
+      const boundary = n => Math.min((n.kind === 'link' ? 40 : n.value.length > 5 ? 70 : 31) / (Math.abs(dx) || 1e-9), 28 / (Math.abs(dy) || 1e-9));
       const start = boundary(a), end = boundary(b);
       const ax = a.x + dx * start, ay = a.y + dy * start;
       const bx = b.x - dx * end, by = b.y - dy * end;
-      const line = svg('line', {x1: ax, y1: ay, x2: bx, y2: by, class: 'concept-edge ' + (e.tone || '')});
+      const line = svg('line', {x1: ax, y1: ay, x2: bx, y2: by, class: 'concept-edge ' + (e.tone || ''), 'data-motion-key': `edge-${e.from}-${e.to}`});
       if (e.arrow) line.setAttribute('marker-end', `url(#${id}-arrow)`);
       picture.append(line);
       if (e.label) picture.append(svg('text', {x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 - 9, class: 'concept-edge-label'}, e.label));
     });
     model.nodes.forEach(n => {
       const group = svg('g', {class: 'concept-node ' + (n.tone || ''), 'data-motion-key': n.id, 'data-x': n.x, 'data-y': n.y, transform: `translate(${n.x} ${n.y})`});
-      const wide = n.value.length > 5;
-      group.append(svg('rect', {x: wide ? -65 : -26, y: -22, width: wide ? 130 : 52, height: 44, rx: wide ? 8 : 21}));
-      group.append(svg('text', {x: 0, y: 1}, n.value));
+      const wide = n.value.length > 5, linked = n.kind === 'link';
+      group.append(svg('rect', {x: linked ? -38 : wide ? -65 : -26, y: -22, width: linked ? 76 : wide ? 130 : 52, height: 44, rx: linked ? 5 : wide ? 8 : 21}));
+      group.append(svg('text', {x: linked ? -11 : 0, y: 1}, n.value));
+      if (linked) {
+        group.append(svg('line', {x1: 15, y1: -22, x2: 15, y2: 22, class: 'concept-node-divider'}));
+        group.append(svg('circle', {cx: 26, cy: 0, r: 3, fill: '#557261'}));
+      }
       if (n.caption) group.append(svg('text', {x: 0, y: 36, class: 'concept-node-caption'}, n.caption));
       picture.append(group);
     });
+    (model.pointers || []).forEach(p => {
+      const target = byId.get(p.target);
+      const fromLeft = target.y < 100, x = fromLeft ? target.x - 100 : target.x, y = fromLeft ? target.y : target.y - 75;
+      const group = svg('g', {class: 'concept-pointer', 'data-motion-key': 'pointer-' + p.id, 'data-x': x, 'data-y': y, transform: `translate(${x} ${y})`});
+      group.append(svg('line', {x1: fromLeft ? 35 : 0, y1: fromLeft ? 0 : 13, x2: fromLeft ? 58 : 0, y2: fromLeft ? 0 : 46, 'marker-end': `url(#${id}-arrow)`}));
+      group.append(svg('text', {x: 0, y: 0}, p.label)); picture.append(group);
+    });
     return picture;
   }
+  function laneLayout(row, story) {
+    if (row.layout) return row.layout;
+    if (/^Queue/.test(row.label) && !/removed/.test(row.label)) return 'queue';
+    if (/^Stack/.test(row.label) && !/removed/.test(row.label)) return 'stack';
+    if (story.id === 'set-definition' && row.label === 'visited') return 'set';
+    if (['dict-definition', 'frequency-definition'].includes(story.id) && ['grades', 'counts'].includes(row.label)) return 'map';
+    if (story.id === 'tuple-definition' && row.label.startsWith('point')) return 'tuple';
+    if (row.items.some(item => /^index \d+$/.test(item.caption))) return 'indexed';
+    return 'row';
+  }
+  function drawLane(row, story) {
+    const layout = laneLayout(row, story);
+    const line = make('div', 'concept-lane concept-layout-' + layout); line.dataset.layout = layout;
+    if (row.area) line.style.gridArea = row.area;
+    line.append(make('h5', '', row.label));
+    if (layout === 'stack' || layout === 'call-stack') line.append(make('div', 'concept-ports', layout === 'stack' ? '↓ push · ↑ pop · same top opening' : '↓ call · ↑ return · active frame on top'));
+    if (layout === 'queue') {
+      const ports = make('div', 'concept-ports'); ports.append(make('span', '', '← exit · front'), make('span', '', 'back · join ←')); line.append(ports);
+    }
+    const items = make('div', 'concept-items');
+    const indexed = ['indexed', 'cards', 'tuple'].includes(layout);
+    if (layout === 'indexed') line.dataset.currentIndex = row.pointers?.mid ?? row.pointers?.low ?? row.items.findIndex(item => item.tone === 'focus');
+    row.items.forEach((item, i) => {
+      const box = make('div', 'concept-tile ' + item.tone); box.dataset.motionKey = item.id;
+      if (layout === 'map' && item.value.includes('→')) {
+        const [key, ...value] = item.value.split('→'); box.append(make('span', 'concept-map-key', key.trim()), make('span', 'concept-map-value', value.join('→').trim()));
+      } else box.append(make('span', 'concept-value', item.value));
+      if (item.caption && !(indexed && /^index \d+$/.test(item.caption))) box.append(make('small', '', item.caption));
+      if (indexed) {
+        const slot = make('div', 'concept-slot');
+        const markers = Object.entries(row.pointers || {}).filter(([, position]) => position === i).map(([name]) => name);
+        if (row.pointers) {
+          const pointers = make('span', 'concept-slot-pointer');
+          markers.forEach(name => { const marker = make('span', '', '↓ ' + name); marker.dataset.motionKey = 'bound-' + name; pointers.append(marker); }); slot.append(pointers);
+        }
+        slot.append(box, make('span', 'concept-index', layout === 'tuple' ? `▣ slot ${i}` : `index ${i}`)); items.append(slot);
+      } else items.append(box);
+    });
+    if (row.capacity) for (let i = row.items.length; i < row.capacity; i++) items.append(make('div', 'concept-vacant', '·'));
+    if (!row.items.length && !row.capacity) items.append(make('span', 'concept-empty', '(empty)'));
+    line.append(items);
+    if (row.range) {
+      const bracket = make('div', 'concept-range');
+      bracket.style.marginLeft = `calc(${row.range[0]} * (var(--slot-width) + 9px))`;
+      bracket.style.width = `calc(${row.range[1] - row.range[0] + 1} * (var(--slot-width) + 9px) - 9px)`;
+      bracket.append(make('span', '', 'remaining candidates')); line.append(bracket);
+    }
+    return line;
+  }
+  function stateSummary(frame) {
+    if (frame.summary) return frame.summary;
+    if (!frame.lanes.length) return frame.title;
+    return frame.lanes.slice(0, 2).map(row => `${row.label}: ${row.items.length ? row.items.slice(0, 6).map(item => item.value).join(', ') + (row.items.length > 6 ? ', …' : '') : 'empty'}`).join(' · ');
+  }
+  function traversalProgram(mode) {
+    const traces = JSON.parse(document.getElementById('dsa-execution-traces').textContent);
+    const source = traces.find(trace => trace.title === 'Breadth-first search and iterative depth-first search').code.split('\n');
+    const name = mode.toLowerCase(), start = source.findIndex(line => line.startsWith(`def ${name}(`));
+    let end = start + 1;
+    while (end < source.length && (!source[end].trim() || /^\s/.test(source[end]))) end++;
+    const fn = source.slice(start, end).join('\n').trimEnd();
+    const graphStart = source.findIndex(line => line.startsWith('graph ='));
+    const graphEnd = source.findIndex((line, i) => i > graphStart && line === '}');
+    const prefix = mode === 'BFS' ? 'from collections import deque\n\n' : '';
+    const call = `print(${name}(graph, "A"))`;
+    return {lines: (prefix + fn + '\n\n' + call).split('\n'), copy: prefix + source.slice(graphStart, graphEnd + 1).join('\n') + '\n\n' + fn + '\n\n' + call};
+  }
+  function drawTraversalCode(frame, program) {
+    const panel = make('section', 'concept-code-card'); panel.setAttribute('aria-label', frame.mode + ' Python code');
+    const top = make('div', 'concept-code-top'), copy = make('button', '', 'Copy Python'); copy.type = 'button';
+    top.append(make('strong', '', frame.mode + ' · Python'), copy); panel.append(top);
+    panel.append(make('p', 'concept-code-note', 'Uses the graph shown here, starting at A. Highlighted lines explain this step.'));
+    const pre = make('pre'), code = make('code'); pre.append(code);
+    program.lines.forEach((text, i) => {
+      const line = make('span', 'concept-code-line', text || ' '); line.dataset.line = i + 1;
+      if (frame.codeFocus.some(prefix => text.trim().startsWith(prefix))) line.classList.add('is-active');
+      code.append(line);
+    });
+    copy.addEventListener('click', async () => {
+      try { await navigator.clipboard.writeText(program.copy); copy.textContent = 'Copied'; }
+      catch { const range = document.createRange(); range.selectNodeContents(code); const selection = window.getSelection(); selection.removeAllRanges(); selection.addRange(range); copy.textContent = 'Code selected'; }
+    });
+    panel.append(pre); return panel;
+  }
+  const references = {
+    'stack-queue-definition': ['VisuAlgo · stack, queue, and linked list', 'https://visualgo.net/en/list'],
+    'linked-definition': ['VisuAlgo · linked-list operations', 'https://visualgo.net/en/list'],
+    'insertion-definition': ['VisuAlgo · sorting operations', 'https://visualgo.net/en/sorting'],
+    'merge-definition': ['VisuAlgo · sorting operations', 'https://visualgo.net/en/sorting'],
+    'binary-definition': ['University of San Francisco · search visualization', 'https://www.cs.usfca.edu/~galles/visualization/Search.html'],
+    'recursion-definition': ['Python Tutor · objects and call frames', 'https://pythontutor.com/'],
+    'references-definition': ['Python Tutor · objects and references', 'https://pythontutor.com/'],
+    'traversal-definition': ['Red Blob Games · frontier expansion and graph search', 'https://www.redblobgames.com/pathfinding/a-star/introduction.html']
+  };
   const insertions = new Map();
   function findAnchor(story) {
     const body = document.querySelector('#' + story.chapter + ' .section-body');
@@ -362,6 +526,18 @@
     const count = make('span', 'concept-counter'); kicker.append(count); card.append(kicker);
     const heading = make('h4', '', story.title); heading.id = headingId; card.append(heading);
     card.append(make('p', 'concept-definition', story.definition));
+    const modeButtons = [], programs = new Map();
+    let segment = {start: 0, end: story.steps.length - 1};
+    if (story.modes) {
+      segment = story.modes[0];
+      const choices = make('div', 'concept-mode-choices'); choices.setAttribute('role', 'group'); choices.setAttribute('aria-label', 'Choose BFS or DFS');
+      story.modes.forEach(mode => {
+        const choice = make('button', '', mode.label); choice.type = 'button'; choice.dataset.conceptMode = mode.id;
+        choice.addEventListener('click', () => { pause(); segment = mode; index = mode.start; render(); });
+        modeButtons.push(choice); choices.append(choice); programs.set(mode.id, traversalProgram(mode.id));
+      });
+      card.append(choices, make('p', 'concept-mode-hint', 'Choose an algorithm above. Each has its own animation, Python code, and playback steps.'));
+    }
     const controls = make('div', 'concept-controls');
     const button = (text, action, cls = '') => { const n = make('button', cls, text); n.type = 'button'; n.dataset.conceptAction = action; controls.append(n); return n; };
     const play = button('▶ Play', 'play', 'primary'), back = button('← Back', 'back'), next = button('Next →', 'next'), reset = button('↺ Reset', 'reset');
@@ -371,17 +547,35 @@
     const stage = make('div', 'concept-stage'); stage.setAttribute('aria-label', 'Visual model for ' + story.title); card.append(stage);
     const caption = make('div', 'concept-caption'); caption.setAttribute('role', 'status');
     const captionTitle = make('strong'), explanation = make('p'); caption.append(captionTitle, explanation); card.append(caption);
+    const history = make('details', 'concept-history'); history.append(make('summary', '', 'Compare before → action → after'));
+    const comparison = make('div', 'concept-comparison'); history.append(comparison); card.append(history);
     const notice = make('p', 'concept-notice'); notice.append(make('b', '', 'What to notice: '), document.createTextNode(story.notice)); card.append(notice);
-    card.append(make('p', 'concept-legend', 'Amber = current focus · green = accepted or completed · red = rejected · dim = excluded. Press Play or use Next to move one idea at a time.'));
+    if (references[story.id]) {
+      const [title, url] = references[story.id], reference = make('p', 'concept-reference', 'Explore another visual explanation: '), link = make('a', '', title);
+      link.href = url; link.target = '_blank'; link.rel = 'noopener noreferrer'; reference.append(link); card.append(reference);
+    }
+    card.append(make('p', 'concept-legend', 'Amber = current focus · blue = discovered and waiting · green = accepted or completed · red = rejected · dim = excluded. Use Next for one operation; Back revisits the previous state.'));
     if (before) anchor.before(card);
     else { const previous = insertions.get(anchor) || anchor; previous.after(card); insertions.set(anchor, card); }
-    let index = 0, timer = null, running = false;
-    function pause() { clearTimeout(timer); timer = null; running = false; play.textContent = index === story.steps.length - 1 ? '↻ Replay' : '▶ Play'; play.setAttribute('aria-pressed', 'false'); if (activePlayer === pause) activePlayer = null; }
+    let index = segment.start, timer = null, running = false;
+    function pause() { clearTimeout(timer); timer = null; running = false; play.textContent = index === segment.end ? '↻ Replay' : '▶ Play'; play.setAttribute('aria-pressed', 'false'); if (story.modes) play.setAttribute('aria-label', 'Play ' + segment.id + ' animation'); if (activePlayer === pause) activePlayer = null; }
     function render() {
       const frame = story.steps[index];
-      const positions = new Map([...stage.querySelectorAll('[data-motion-key]')].map(n => [n.dataset.motionKey, n.getBoundingClientRect()]));
+      const positions = new Map([...stage.querySelectorAll('[data-motion-key]')].map(n => [n.dataset.motionKey, {rect: n.getBoundingClientRect(), layout: n.closest('.concept-lane')?.dataset.layout}]));
       stage.replaceChildren();
-      if (frame.diagram) stage.append(drawDiagram(frame.diagram, frame.title, story.id));
+      let visual = stage;
+      if (story.modes) {
+        const workspace = make('div', 'concept-traversal-workspace'); visual = make('div', 'concept-traversal-visual');
+        workspace.append(visual, drawTraversalCode(frame, programs.get(frame.mode))); stage.append(workspace);
+        modeButtons.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.conceptMode === frame.mode)));
+        slider.max = segment.end - segment.start;
+        play.setAttribute('aria-label', (running ? 'Pause ' : 'Play ') + frame.mode + ' animation');
+      }
+      stage.classList.toggle('concept-containers', story.id === 'stack-queue-definition');
+      if (frame.diagram) {
+        if (frame.diagram.label) visual.append(make('p', 'concept-diagram-direction', frame.diagram.label));
+        visual.append(drawDiagram(frame.diagram, frame.title, story.id));
+      }
       if (frame.grid) {
         const work = make('div', 'concept-work'); work.append(make('h5', '', 'Quadratic work · one mark per ordered pair'));
         const grid = make('div', 'concept-work-grid'); grid.style.gridTemplateColumns = `repeat(${frame.grid.size}, 16px)`;
@@ -391,42 +585,59 @@
         }
         work.append(grid); stage.append(work);
       }
-      frame.lanes.forEach(row => {
-        const line = make('div', 'concept-lane'); line.append(make('h5', '', row.label));
-        const items = make('div', 'concept-items');
-        row.items.forEach(item => { const box = make('div', 'concept-tile ' + item.tone); box.dataset.motionKey = item.id; box.append(make('span', 'concept-value', item.value)); if (item.caption) box.append(make('small', '', item.caption)); items.append(box); });
-        if (!row.items.length) items.append(make('span', 'concept-empty', '(empty)'));
-        line.append(items); stage.append(line);
-      });
+      if (frame.lanes.length === 3 && frame.lanes.every(row => row.layout === 'run')) {
+        const runs = make('div', 'concept-run-flow');
+        [frame.lanes[1], frame.lanes[2], frame.lanes[0]].forEach(row => runs.append(drawLane(row, story))); stage.append(runs);
+      } else frame.lanes.forEach(row => visual.append(drawLane(row, story)));
       if (frame.equation) stage.append(make('div', 'concept-equation', frame.equation));
+      stage.querySelectorAll('.concept-layout-indexed').forEach(row => {
+        const slot = row.querySelectorAll('.concept-slot')[Number(row.dataset.currentIndex)];
+        // Follow the active bounds on narrow screens without scrolling the page.
+        if (slot && row.scrollWidth > row.clientWidth) row.scrollLeft = slot.getBoundingClientRect().left - row.getBoundingClientRect().left + row.scrollLeft - (row.clientWidth - slot.getBoundingClientRect().width) / 2;
+      });
       captionTitle.textContent = frame.title; explanation.textContent = frame.explain;
-      count.textContent = `${index + 1} / ${story.steps.length}`; slider.value = String(index);
-      slider.setAttribute('aria-valuetext', `Step ${index + 1} of ${story.steps.length}: ${frame.title}`);
-      back.disabled = index === 0; next.disabled = index === story.steps.length - 1;
-      if (!running) play.textContent = index === story.steps.length - 1 ? '↻ Replay' : '▶ Play';
+      comparison.replaceChildren();
+      [['Before', index > segment.start ? stateSummary(story.steps[index - 1]) : 'Starting state'], ['Action', frame.action || frame.title], ['After', stateSummary(frame)]].forEach(([label, value]) => {
+        const part = make('div'); part.append(make('b', '', label), make('p', '', value)); comparison.append(part);
+      });
+      count.textContent = `${index - segment.start + 1} / ${segment.end - segment.start + 1}`; slider.value = String(index - segment.start);
+      slider.setAttribute('aria-valuetext', `Step ${index - segment.start + 1} of ${segment.end - segment.start + 1}: ${frame.title}`);
+      back.disabled = index === segment.start; next.disabled = index === segment.end;
+      if (!running) play.textContent = index === segment.end ? '↻ Replay' : '▶ Play';
       if (!reduced.matches) stage.querySelectorAll('[data-motion-key]').forEach(n => {
         if (typeof n.animate !== 'function') return;
-        const previous = positions.get(n.dataset.motionKey), rect = n.getBoundingClientRect();
+        const old = positions.get(n.dataset.motionKey), previous = old?.rect, rect = n.getBoundingClientRect();
         if (n.namespaceURI === SVG) {
           // SVG coordinates scale with the diagram; convert screen deltas back.
+          if (!n.hasAttribute('data-x')) { if (!previous) n.animate([{opacity: 0}, {opacity: 1}], {duration: 450 / Number(speed.value)}); return; }
           const scale = n.ownerSVGElement.getBoundingClientRect().width / 600 || 1;
           const x = Number(n.getAttribute('data-x')), y = Number(n.getAttribute('data-y'));
-          if (previous && (previous.left !== rect.left || previous.top !== rect.top)) n.animate([{transform: `translate(${x + (previous.left - rect.left) / scale}px,${y + (previous.top - rect.top) / scale}px)`}, {transform: `translate(${x}px,${y}px)`}], {duration: 650, easing: 'ease-in-out'});
+          if (previous && (previous.left !== rect.left || previous.top !== rect.top)) n.animate([{transform: `translate(${x + (previous.left - rect.left) / scale}px,${y + (previous.top - rect.top) / scale}px)`}, {transform: `translate(${x}px,${y}px)`}], {duration: 650 / Number(speed.value), easing: 'ease-in-out'});
           else if (n.classList.contains('focus')) n.animate([{opacity: 0.45}, {opacity: 1}], {duration: 500, easing: 'ease-out'});
-        } else if (previous && (previous.left !== rect.left || previous.top !== rect.top)) n.animate([{transform: `translate(${previous.left - rect.left}px,${previous.top - rect.top}px)`}, {transform: 'translate(0,0)'}], {duration: 650, easing: 'ease-in-out'});
-        else if (!previous) n.animate([{opacity: 0, transform: 'translateY(-10px)'}, {opacity: 1, transform: 'translateY(0)'}], {duration: 400, easing: 'ease-out'});
-        else if (n.classList.contains('focus')) n.animate([{transform: 'scale(0.93)', opacity: 0.55}, {transform: 'scale(1)', opacity: 1}], {duration: 450, easing: 'ease-out'});
+        } else if (previous && (previous.left !== rect.left || previous.top !== rect.top)) {
+          const dx = previous.left - rect.left, dy = previous.top - rect.top;
+          let path = [{transform: `translate(${dx}px,${dy}px)`}, {transform: 'translate(0,0)'}];
+          if (n.closest('.concept-layout-tray') && old.layout === 'stack') {
+            const side = Math.min(dx + previous.width + 20, stage.getBoundingClientRect().right - rect.right - 6);
+            path = [[dx, dy], [dx, dy - 35], [side, dy - 35], [side, 0], [0, 0]].map(([x, y]) => ({transform: `translate(${x}px,${y}px)`}));
+          } else if (n.closest('.concept-layout-tray') && old.layout === 'queue') {
+            path = [[dx, dy], [dx - 24, dy], [dx - 24, 0], [0, 0]].map(([x, y]) => ({transform: `translate(${x}px,${y}px)`}));
+          }
+          n.animate(path, {duration: (path.length > 2 ? 950 : 650) / Number(speed.value), easing: 'ease-in-out'});
+        }
+        else if (!previous) n.animate([{opacity: 0, transform: n.closest('.concept-layout-queue') ? 'translateX(35px)' : 'translateY(-25px)'}, {opacity: 1, transform: 'translate(0,0)'}], {duration: 400 / Number(speed.value), easing: 'ease-out'});
       });
     }
-    function tick() { if (!running) return; index++; render(); if (index === story.steps.length - 1) pause(); else timer = setTimeout(tick, 2600 / Number(speed.value)); }
-    function seek(value) { pause(); index = Math.max(0, Math.min(story.steps.length - 1, value)); render(); }
+    function tick() { if (!running) return; index++; render(); if (index === segment.end) pause(); else timer = setTimeout(tick, 2600 / Number(speed.value)); }
+    function seek(value) { pause(); index = Math.max(segment.start, Math.min(segment.end, value)); render(); }
     play.addEventListener('click', () => {
       if (running) { pause(); return; }
       window.dispatchEvent(new Event('dsa-playback-start'));
-      if (index === story.steps.length - 1) { index = 0; render(); }
+      if (index === segment.end) { index = segment.start; render(); }
       running = true; activePlayer = pause; play.textContent = 'Ⅱ Pause'; play.setAttribute('aria-pressed', 'true'); timer = setTimeout(tick, 2600 / Number(speed.value));
+      if (story.modes) play.setAttribute('aria-label', 'Pause ' + segment.id + ' animation');
     });
-    back.addEventListener('click', () => seek(index - 1)); next.addEventListener('click', () => seek(index + 1)); reset.addEventListener('click', () => seek(0)); slider.addEventListener('input', () => seek(Number(slider.value)));
+    back.addEventListener('click', () => seek(index - 1)); next.addEventListener('click', () => seek(index + 1)); reset.addEventListener('click', () => seek(segment.start)); slider.addEventListener('input', () => seek(segment.start + Number(slider.value)));
     speed.addEventListener('change', () => { if (running) { clearTimeout(timer); timer = setTimeout(tick, 2600 / Number(speed.value)); } });
     card.closest('details.section').addEventListener('toggle', e => { if (!e.target.open) pause(); });
     play.setAttribute('aria-pressed', 'false'); render();

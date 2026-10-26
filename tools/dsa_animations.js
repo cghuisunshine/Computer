@@ -11,7 +11,7 @@
     'Lists use positions, tuples group fixed records, dictionaries use keys, and sets keep unique members. Adding A twice still leaves one member.',
     'The dictionary stores work already done. Each red increments the same entry; a new word starts at zero.',
     'Names pointing to the same object number share mutations. A shallow copy creates a new outer list and keeps references to the same inner lists.',
-    'Stack: remove from the right (last in, first out). Queue: add at the right and remove at the left (first in, first out).',
+    'Stack: add and remove at the top (last in, first out). Queue: join at the back and leave from the front (first in, first out). The list’s right end is drawn as the stack top.',
     'Each node stores a value and a next reference. Prepending changes head; traversal follows current.next until None.',
     'BST search follows one branch per comparison. Inorder recursion visits left subtree, node, then right subtree; watch the calls return.',
     'The smallest priority belongs at the root. The array describes a complete binary tree; children of index i are 2i+1 and 2i+2. A heap is not a sorted list.',
@@ -102,7 +102,7 @@
     Object.entries(positions).forEach(([name, [x, y]]) => drawNode(svg, x, y, name, vars.node === name ? 'trace-current' : seen.includes(name) ? 'trace-visited' : '', vars.neighbor === name ? 'neighbor' : ''));
     return svg;
   }
-  function drawNodes(frame, vars) {
+  function drawNodes(frame, vars, linkedSlots) {
     const objects = Object.values(frame.objects);
     const treeRoot = vars.tree || vars.root;
     if (objectAt(treeRoot, frame)?.type === 'TreeNode') {
@@ -129,13 +129,25 @@
         if (!node?.fields || nodes.some(n => n.ref.ref === ref.ref)) break;
         nodes.push({ref, value: node.fields.value ?? '?'}); ref = node.fields.next;
       }
-      const svg = svgScene('Linked list from head. Arrows follow next references; amber marks current.', Math.max(340, nodes.length * 95 + 60), 105);
+      const width = Math.max(380, linkedSlots.size * 95 + 95);
+      const svg = svgScene('Linked list from head. Nodes keep their positions; arrows follow next references and amber marks current.', width, 135);
+      const xAt = ref => 42 + (linkedSlots.get(ref.ref) ?? 0) * 95;
       nodes.forEach(({ref, value}, i) => {
-        const x = 42 + i * 95;
-        svg.append(svgElement('path', {d: `M ${x + 20} 42 h 50 l -7 -5 m 7 5 l -7 5`}));
-        drawNode(svg, x, 42, value, vars.current?.ref === ref.ref ? 'trace-current' : '', (i ? '' : 'head · ') + shortId(ref.ref));
+        const x = xAt(ref), toX = i + 1 < nodes.length ? xAt(nodes[i + 1].ref) - 22 : width - 60;
+        const cell = svgElement('g', {'data-object-id': ref.ref, 'data-x': x});
+        cell.append(svgElement('rect', {x: x - 23, y: 47, width: 55, height: 40, rx: 4, class: vars.current?.ref === ref.ref ? 'trace-current' : 'trace-link-box'}));
+        cell.append(svgElement('line', {x1: x + 12, y1: 47, x2: x + 12, y2: 87}));
+        cell.append(svgElement('text', {x: x - 6, y: 67}, value));
+        cell.append(svgElement('text', {x, y: 104, class: 'trace-node-label'}, shortId(ref.ref)));
+        svg.append(cell);
+        svg.append(svgElement('path', {d: `M ${x + 33} 67 H ${toX} l -6 -4 m 6 4 l -6 4`}));
+        if (!i) {
+          svg.append(svgElement('text', {x, y: 15, class: 'trace-node-label'}, 'head'));
+          svg.append(svgElement('path', {d: `M ${x} 25 V 43 l -4 -6 m 4 6 l 4 -6`}));
+        }
+        if (vars.current?.ref === ref.ref) svg.append(svgElement('text', {x, y: 123, class: 'trace-node-label'}, '↑ current'));
       });
-      svg.append(svgElement('text', {x: nodes.length * 95 + 25, y: 42}, 'None'));
+      svg.append(svgElement('text', {x: width - 35, y: 67}, 'None'));
       return svg;
     }
     const jobs = objectAt(vars.jobs, frame);
@@ -175,6 +187,12 @@
     return [`Next: line ${frame.line}`, message];
   }
   function makePlayer(card, trace, number) {
+    // Reserve object locations from the complete trace so prepending changes
+    // links without making existing nodes slide as if they were array cells.
+    const linkedSlots = new Map();
+    for (const frame of [...trace.frames].reverse()) for (const object of Object.values(frame.objects)) {
+      if (object.type === 'Node' && !linkedSlots.has(object.id)) linkedSlots.set(object.id, linkedSlots.size);
+    }
     card.classList.add('trace-enabled');
     card.dataset.trace = String(number);
     const pre = card.querySelector('pre');
@@ -191,6 +209,16 @@
     const panel = el('section', 'trace-player'); panel.setAttribute('aria-label', `${trace.title} animation`);
     const kicker = el('div', 'trace-kicker', 'Watch the code');
     const count = el('span', 'trace-count'); kicker.append(count); panel.append(kicker);
+    const functionShortcuts = [];
+    if (trace.title === 'Breadth-first search and iterative depth-first search') {
+      const choices = el('div', 'trace-function-shortcuts'); choices.setAttribute('role', 'group'); choices.setAttribute('aria-label', 'Jump to a traversal function');
+      for (const name of ['bfs', 'dfs']) {
+        const start = trace.frames.findIndex(frame => frame.event === 'line' && frame.stack.at(-1)?.name === name);
+        const jump = el('button', '', 'Trace ' + name.toUpperCase()); jump.type = 'button'; jump.dataset.traceFunction = name;
+        jump.addEventListener('click', () => seek(start)); choices.append(jump); functionShortcuts.push(jump);
+      }
+      panel.append(choices);
+    }
     const controls = el('div', 'trace-controls');
     const button = (label, action, cls = '') => { const b = el('button', cls, label); b.type = 'button'; b.dataset.action = action; controls.append(b); return b; };
     const play = button('▶ Play', 'play', 'primary');
@@ -207,7 +235,7 @@
     panel.append(el('p', 'trace-concept', concepts[number]));
     const scene = el('div', 'trace-scene'); scene.setAttribute('aria-label', 'Data structure visualization'); panel.append(scene);
     const variableArea = el('div', 'trace-variables'); panel.append(variableArea);
-    panel.append(el('span', 'trace-stack-label', 'Call stack · caller → active call'));
+    panel.append(el('span', 'trace-stack-label', 'Call stack · newest call on top'));
     const stack = el('div', 'trace-stack'); panel.append(stack);
     panel.append(el('span', 'trace-output-label', 'Printed output so far'));
     const output = el('pre', 'trace-output'); panel.append(output);
@@ -250,6 +278,13 @@
       group.append(el('h4', '', `${alias.length ? alias.join(' = ') + ' → ' : ''}${object.type} ${shortId(object.id)}`));
       if (object.items) {
         const row = el('div', 'trace-array');
+        if (!compact && alias.includes('stack')) {
+          row.classList.add('trace-plates');
+          group.append(el('div', 'trace-ports', '↓ push · ↑ pop · top opening'));
+        } else if (!compact && alias.includes('queue')) {
+          row.classList.add('trace-queue');
+          group.append(el('div', 'trace-ports', '← leave from front · join at back ←'));
+        } else if (!compact && object.type === 'set') row.classList.add('trace-members');
         const occurrences = {};
         const max = Math.max(1, ...object.items.filter(v => typeof v === 'number').map(Math.abs));
         object.items.forEach((value, i) => {
@@ -296,6 +331,7 @@
     }
     function render() {
       const frame = trace.frames[index], previous = index ? trace.frames[index - 1] : null;
+      functionShortcuts.forEach(button => button.setAttribute('aria-pressed', String(frame.stack.some(call => call.name === button.dataset.traceFunction))));
       const vars = variables(frame), previousVars = previous ? variables(previous) : {};
       const names = {};
       Object.entries(vars).forEach(([name, value]) => { if (value?.ref) (names[value.ref] ||= []).push(name); });
@@ -317,14 +353,17 @@
         badge.append(document.createTextNode(value?.ref ? `${frame.objects[value.ref].type} ${shortId(value.ref)}` : format(value, frame.objects)));
         badge.classList.toggle('is-new', previous !== null && !same(previousVars[name], value)); variableArea.append(badge);
       });
-      stack.replaceChildren(...frame.stack.map(call => {
+      stack.replaceChildren(...frame.stack.map((call, depth) => {
         const args = Object.entries(call.vars).filter(([, value]) => !value?.ref).slice(0, 3).map(([key, value]) => key + '=' + brief(value, frame.objects)).join(', ');
-        return el('span', '', call.name === '<module>' ? 'example' : `${call.name}(${args})`);
+        const box = el('span', '', call.name === '<module>' ? 'example' : `${call.name}(${args})`);
+        const current = depth === frame.stack.length - 1;
+        box.append(el('small', '', current ? frame.event === 'done' ? 'finished' : frame.event === 'return' ? 'returning to caller' : 'active · executes next' : call.name === 'factorial' ? `waiting: ${call.vars.n} × factorial(${call.vars.n - 1})` : `waiting at line ${call.line}`));
+        return box;
       }));
       output.textContent = frame.output || '(no output yet)';
       const oldPositions = new Map([...scene.querySelectorAll('[data-key]')].map(node => [node.dataset.key, node.getBoundingClientRect()]));
       scene.replaceChildren();
-      const diagram = drawGraph(frame, vars) || drawNodes(frame, vars);
+      const diagram = drawGraph(frame, vars) || drawNodes(frame, vars, linkedSlots);
       if (diagram) scene.append(diagram);
       if (number === 15 && vars.n !== undefined) {
         const calls = frame.stack.filter(call => call.name === 'factorial');

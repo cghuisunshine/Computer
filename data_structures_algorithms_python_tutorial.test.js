@@ -154,8 +154,14 @@ test('copy preserves runnable Python; original labs, search, and quiz still work
 
 function seekConcept(dom, id, index) {
   const card = dom.window.document.getElementById('concept-' + id);
+  const story = dom.window.dsaConceptLessons.find(story => story.id === id);
+  const mode = story.modes?.find(mode => mode.id === story.steps[index].mode);
+  if (mode) {
+    const button = card.querySelector(`[data-concept-mode="${mode.id}"]`);
+    if (button.getAttribute('aria-pressed') !== 'true') button.click();
+  }
   const slider = card.querySelector('.concept-slider');
-  slider.value = String(index); slider.dispatchEvent(new dom.window.Event('input', {bubbles: true}));
+  slider.value = String(index - (mode?.start || 0)); slider.dispatchEvent(new dom.window.Event('input', {bubbles: true}));
   return card;
 }
 
@@ -172,7 +178,7 @@ test('all eight chapters have definition stories, with unique anchors and comple
     assert.equal(card.closest('details.section').id, story.chapter);
     assert.equal(card.querySelector('.concept-definition').textContent, story.definition);
     assert.ok(story.steps.length >= 3);
-    assert.equal(card.querySelectorAll('button').length, 4);
+    assert.equal(card.querySelectorAll('.concept-controls button').length, 4);
     assert.equal(card.querySelector('select').options.length, 3);
     assert.ok(card.querySelector('.concept-slider').getAttribute('aria-label').includes(story.title));
     assert.ok(card.querySelector('.concept-caption[role="status"]'));
@@ -185,7 +191,8 @@ test('every concept step renders its visual model and explanation, then rewinds'
   for (const story of dom.window.dsaConceptLessons) {
     story.steps.forEach((frame, i) => {
       const card = seekConcept(dom, story.id, i);
-      assert.equal(card.querySelector('.concept-counter').textContent, `${i + 1} / ${story.steps.length}`);
+      const mode = story.modes?.find(mode => mode.id === frame.mode);
+      assert.equal(card.querySelector('.concept-counter').textContent, `${i - (mode?.start || 0) + 1} / ${mode ? mode.end - mode.start + 1 : story.steps.length}`);
       assert.equal(card.querySelector('.concept-caption strong').textContent, frame.title);
       assert.equal(card.querySelector('.concept-caption p').textContent, frame.explain);
       const keys = [...card.querySelectorAll('[data-motion-key]')].map(node => node.getAttribute('data-motion-key'));
@@ -225,7 +232,8 @@ test('concept models preserve structure and algorithm invariants', () => {
   for (const outer of ['outer1', 'outer2']) for (const inner of ['inner1', 'inner2']) assert.ok(referenceEdges.some(e => e.from === outer && e.to === inner));
   const heap = byId('heap-definition').steps.at(-1).diagram.nodes.map(n => Number(n.value));
   for (let i = 1; i < heap.length; i++) assert.ok(heap[Math.floor((i - 1) / 2)] <= heap[i]);
-  assert.deepEqual(values(byId('traversal-definition').steps[5], 'Visit order'), ['A', 'B', 'C', 'D', 'E']);
+  const bfsFinal = byId('traversal-definition').steps.filter(frame => frame.title.startsWith('BFS:')).at(-1);
+  assert.deepEqual(values(bfsFinal, 'Visit order'), ['A', 'B', 'C', 'D', 'E']);
   assert.deepEqual(values(byId('traversal-definition').steps.at(-1), 'Visit order'), ['A', 'B', 'D', 'C', 'E']);
   for (const id of ['insertion-definition', 'merge-definition', 'divide-definition']) {
     const finalValues = byId(id).steps.at(-1).lanes[0].items.map(item => Number(item.value));
@@ -242,6 +250,136 @@ test('concept models preserve structure and algorithm invariants', () => {
   assert.equal(byId('dp-definition').steps.at(-1).lanes[0].items[1].value, '8');
   assert.deepEqual(values(byId('backtracking-definition').steps.at(-1), 'Saved answer copies'), ['[]', '[2]', '[1]', '[1, 2]']);
   assert.deepEqual(values(byId('shortest-path-definition').steps.at(-1), 'Shortest route'), ['A', 'C', 'E']);
+  assert.deepEqual(errors, []); dom.window.close();
+});
+
+test('linked-list insertion connects next before redirecting head and never moves an allocated node', () => {
+  const {dom, cards, seek, errors} = load();
+  const story = dom.window.dsaConceptLessons.find(s => s.id === 'linked-definition');
+  const connected = story.steps.find(frame => frame.action === 'new.next = head');
+  assert.ok(connected.diagram.edges.some(e => e.from === 'head' && e.to === 'n20'));
+  assert.ok(connected.diagram.edges.some(e => e.from === 'n10' && e.to === 'n20'));
+  const redirected = story.steps.find(frame => frame.action === 'head = new');
+  assert.ok(redirected.diagram.edges.some(e => e.from === 'head' && e.to === 'n10'));
+  const positions = new Map();
+  for (const frame of story.steps) for (const node of frame.diagram.nodes) {
+    const location = [node.x, node.y];
+    if (positions.has(node.id)) assert.deepEqual(location, positions.get(node.id));
+    positions.set(node.id, location);
+  }
+  const tracePositions = new Map();
+  traces[6].frames.forEach((_, i) => {
+    seek(cards[6], i);
+    cards[6].querySelectorAll('[data-object-id]').forEach(node => {
+      const id = node.dataset.objectId, x = node.dataset.x;
+      if (tracePositions.has(id)) assert.equal(x, tracePositions.get(id), id + ' stays in place');
+      tracePositions.set(id, x);
+    });
+  });
+  assert.equal(tracePositions.size, 3);
+  assert.deepEqual(errors, []); dom.window.close();
+});
+
+test('sorting keeps every card accounted for while exposing one comparison or transfer at a time', () => {
+  const {dom, errors} = load();
+  const story = id => dom.window.dsaConceptLessons.find(s => s.id === id);
+  for (const frame of story('insertion-definition').steps) {
+    const row = frame.lanes[0].items, held = frame.lanes[1].items.filter(item => item.value !== '—');
+    const gaps = row.filter(item => item.value === '□');
+    const values = [...row.filter(item => item.value !== '□'), ...held].map(item => Number(item.value)).sort((a, b) => a - b);
+    assert.deepEqual(Array.from(values), [3, 5, 7]);
+    assert.equal(gaps.length, held.length);
+  }
+  const merge = story('merge-definition').steps;
+  const finalMergeStart = merge.findIndex(frame => frame.title === 'Compare the two sorted fronts');
+  let previousOutput = 0;
+  for (const frame of merge.slice(finalMergeStart)) {
+    const values = frame.lanes.flatMap(row => row.items).map(item => Number(item.value)).sort((a, b) => a - b);
+    assert.deepEqual(Array.from(values), [2, 3, 5, 7]);
+    const output = frame.lanes[0].items.map(item => Number(item.value));
+    assert.deepEqual(Array.from(output), Array.from(output).sort((a, b) => a - b));
+    assert.ok(output.length - previousOutput >= 0 && output.length - previousOutput <= 1);
+    previousOutput = output.length;
+  }
+  assert.equal(previousOutput, 4);
+  const card = seekConcept(dom, 'merge-definition', finalMergeStart + 1);
+  const comparison = card.querySelector('.concept-comparison');
+  assert.match(comparison.textContent, /Before.*Action.*After/);
+  assert.ok(comparison.textContent.includes(merge[finalMergeStart].summary));
+  assert.ok(comparison.textContent.includes(merge[finalMergeStart + 1].summary));
+  assert.deepEqual(errors, []); dom.window.close();
+});
+
+test('binary-search bounds preserve the target and recursion retains unfinished caller frames', () => {
+  const {dom, errors} = load();
+  const story = id => dom.window.dsaConceptLessons.find(s => s.id === id);
+  let low = 0, high = 6;
+  for (const frame of story('binary-definition').steps) {
+    const bounds = frame.lanes[0].pointers;
+    assert.ok(bounds.low >= low && bounds.high <= high);
+    assert.ok(bounds.low <= 4 && bounds.high >= 4);
+    low = bounds.low; high = bounds.high;
+  }
+  const frames = story('recursion-definition').steps;
+  let depth = 0;
+  for (const frame of frames) {
+    const calls = frame.lanes[0].items;
+    assert.ok(Math.abs(calls.length - depth) <= 1);
+    calls.slice(0, -1).forEach(item => assert.match(item.caption, /waiting: \d × factorial/));
+    depth = calls.length;
+  }
+  assert.equal(depth, 0);
+  const stack = seekConcept(dom, 'stack-queue-definition', 3);
+  assert.ok(stack.querySelector('.concept-layout-stack'));
+  assert.ok(stack.querySelector('.concept-layout-queue'));
+  const graph = story('traversal-definition').steps.find(frame => frame.title === 'BFS: discover B from A');
+  assert.equal(graph.diagram.nodes.find(n => n.id === 'gB').tone, 'frontier');
+  assert.deepEqual(errors, []); dom.window.close();
+});
+
+test('DFS is directly selectable with its own code, animation, reset, replay, and completion', async () => {
+  const {dom, document, cards, timers, errors} = load();
+  const card = document.getElementById('concept-traversal-definition');
+  const bfs = card.querySelector('[data-concept-mode="BFS"]'), dfs = card.querySelector('[data-concept-mode="DFS"]');
+  const play = card.querySelector('[data-concept-action="play"]');
+  assert.equal(bfs.getAttribute('aria-pressed'), 'true');
+  assert.match(card.querySelector('.concept-code-card code').textContent, /def bfs\(/);
+  dfs.click();
+  assert.equal(dfs.getAttribute('aria-pressed'), 'true');
+  assert.equal(bfs.getAttribute('aria-pressed'), 'false');
+  assert.equal(card.querySelector('.concept-counter').textContent, '1 / 11');
+  assert.equal(card.querySelector('.concept-caption strong').textContent, 'DFS: start at A');
+  const code = card.querySelector('.concept-code-card code').textContent;
+  assert.match(code, /def dfs\(graph, start\)/); assert.match(code, /stack.pop\(\)/);
+  assert.doesNotMatch(code, /def bfs\(|queue.popleft/);
+  card.querySelector('[data-concept-action="next"]').click();
+  assert.match(card.querySelector('.concept-code-line.is-active').textContent, /node = stack.pop/);
+  card.querySelector('.concept-code-top button').click(); await new Promise(resolve => setImmediate(resolve));
+  assert.match(dom.window.copied, /graph = \{/);
+  assert.match(dom.window.copied, /def dfs\(/); assert.match(dom.window.copied, /print\(dfs\(graph, "A"\)\)/);
+  card.querySelector('[data-concept-action="reset"]').click();
+  assert.equal(card.querySelector('.concept-caption strong').textContent, 'DFS: start at A');
+  play.click();
+  let limit = 30;
+  while (timers.size && limit--) { const [id, tick] = timers.entries().next().value; timers.delete(id); tick(); }
+  assert.ok(limit > 0); assert.equal(card.querySelector('.concept-counter').textContent, '11 / 11');
+  assert.equal(card.querySelector('.concept-caption strong').textContent, 'DFS: traversal complete');
+  assert.equal(play.textContent, '↻ Replay');
+  assert.match(card.querySelector('.concept-code-line.is-active').textContent, /return order/);
+  const order = [...card.querySelectorAll('.concept-lane:last-child .concept-value')].map(n => n.textContent);
+  assert.deepEqual(order, ['A', 'B', 'D', 'C', 'E']);
+  play.click(); assert.equal(card.querySelector('.concept-caption strong').textContent, 'DFS: start at A');
+  bfs.click(); assert.equal(timers.size, 0);
+  assert.equal(card.querySelector('.concept-caption strong').textContent, 'BFS: start at A');
+  play.click(); limit = 30;
+  while (timers.size && limit--) { const [id, tick] = timers.entries().next().value; timers.delete(id); tick(); }
+  assert.ok(limit > 0); assert.equal(card.querySelector('.concept-caption strong').textContent, 'BFS: traversal complete');
+  assert.equal(dfs.getAttribute('aria-pressed'), 'false');
+  const trace = cards[9], jump = trace.querySelector('[data-trace-function="dfs"]');
+  jump.click();
+  const frame = traces[9].frames[Number(trace.querySelector('.trace-timeline').value)];
+  assert.equal(frame.stack.at(-1).name, 'dfs');
+  assert.equal(jump.getAttribute('aria-pressed'), 'true');
   assert.deepEqual(errors, []); dom.window.close();
 });
 
