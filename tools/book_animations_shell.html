@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="An offline animation companion for all 230 numbered sections of Data Structures and Algorithmic Thinking with Python.">
+<title>Data Structures · The Animation Companion</title>
+<style>/* BOOK_STYLE */</style>
+</head>
+<body>
+<a class="skip" href="#workspace">Skip to animation</a>
+<header class="masthead">
+  <a class="brand" href="#section-13" aria-label="Animation companion home"><span class="brand-icon" aria-hidden="true">▥</span><span><strong>Data structures, in motion.</strong><small>The animation companion</small></span></a>
+  <div class="mast-actions"><span class="offline"><i></i> Works offline</span><a href="data_structure_extracted.html">Open book ↗</a></div>
+</header>
+<main class="app">
+  <aside class="sidebar" aria-label="Animation contents">
+    <div class="nav-head"><p class="eyebrow">THE COMPLETE COLLECTION</p><h1>One section.<br>One idea in motion.</h1><p class="nav-description">230 sections across 22 chapters.<br>Trace the steps. Understand the rule.</p>
+      <label class="sr-only" for="search">Search sections</label><div class="search-wrap"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Search any concept…" autocomplete="off"><button id="clear-search" aria-label="Clear search" type="button">×</button></div>
+      <label class="sr-only" for="chapter-filter">Filter by chapter</label><select id="chapter-filter"><option value="all">All chapters</option></select>
+      <div class="nav-status"><span id="search-status" role="status">259 animated entries</span><button id="collapse-all" type="button">Collapse all</button></div>
+    </div>
+    <nav id="contents" aria-label="Chapters and animated sections"></nav>
+    <div class="nav-foot"><span id="completion-summary">0 / 230 sections explored</span><button id="clear-progress" type="button">Reset progress</button></div>
+  </aside>
+  <section class="workspace" id="workspace" aria-label="Animation player" tabindex="-1">
+    <div class="section-top"><button id="mobile-contents" type="button" aria-expanded="false" aria-controls="contents">☰ Contents</button><span class="eyebrow" id="breadcrumb">CHAPTER 1 · INTRODUCTION</span><span id="section-position" class="section-position"></span></div>
+    <div class="lesson-heading"><div><h2 id="lesson-title"></h2><p id="lesson-focus"></p></div><button id="complete" type="button" aria-pressed="false">Mark explored</button></div>
+    <div class="lesson-links"><a id="source-link" href="data_structure_extracted.html">Read source page ↗</a><a id="pdf-link" href="data_structure.pdf">PDF ↗</a><span id="entry-kind"></span></div>
+    <section class="lesson-introduction" aria-labelledby="intro-heading">
+      <span class="eyebrow">SECTION INTRODUCTION</span><h3 id="intro-heading">Before you play</h3>
+      <p id="intro-concept" class="intro-concept"></p>
+      <div class="intro-guide"><div><h4>The example</h4><p id="intro-example"></p></div><div><h4>What to watch for</h4><p id="intro-watch"></p></div></div>
+    </section>
+    <p id="exercise-note" class="exercise-note" hidden>This section contains multiple exercises. The animation illustrates a representative technique; the source link opens the complete section.</p>
+    <div class="lab">
+      <div class="lab-header"><div><span class="live-dot" aria-hidden="true"></span><strong id="animation-label">Interactive trace</strong></div><span id="frame-counter">Step 1</span></div>
+      <div class="example-bar">
+        <label id="variant-wrap" hidden>Algorithm <select id="variant"></select></label>
+        <form id="example-form"><label id="values-wrap" hidden>Values <input id="values" value="8, 3, 6, 1, 9, 4" aria-describedby="input-hint"></label><label id="target-wrap" hidden>Target <input id="target" type="number" value="6" min="-99" max="99"></label><label id="size-wrap" hidden>Size <input id="size" type="number" min="2" max="12" value="8"></label><label id="text-wrap" hidden>Text <input id="text-input" value="ABABABCABABABC" maxlength="24"></label><label id="pattern-wrap" hidden>Pattern <input id="pattern-input" value="ABABC" maxlength="8"></label><button id="apply-example" type="submit" hidden>Run example</button></form>
+        <span id="fixed-example">Illustrative example · all steps are computed locally</span>
+      </div>
+      <p id="input-hint" class="input-hint" hidden>Use 1–12 whole numbers from −99 to 99, separated by commas.</p><p id="input-error" class="input-error" role="alert" hidden></p>
+      <div class="lab-body">
+        <div class="visual-panel"><div class="scene" id="scene" aria-label="Current animation state"></div><div class="legend"><span><i class="focus"></i> Current</span><span><i class="done"></i> Accepted / complete</span><span><i class="reject"></i> Rejected</span><span><i class="dim"></i> Excluded</span></div><div class="metrics" id="metrics"></div></div>
+        <aside class="explanation" aria-label="Step explanation"><span class="eyebrow">WHAT IS HAPPENING</span><h3 id="step-title" role="status" aria-live="polite"></h3><p id="step-note"></p><div class="algorithm"><span class="eyebrow">ALGORITHM OUTLINE</span><ol id="pseudo"></ol></div><div class="invariant"><span class="eyebrow">RULE TO WATCH</span><p id="invariant"></p></div></aside>
+      </div>
+      <div class="playback"><div class="play-buttons"><button id="reset" type="button" aria-label="Reset animation">↺</button><button id="back" type="button" aria-label="Previous step">‹</button><button id="play" class="primary" type="button" aria-pressed="false">▶ Play</button><button id="next" type="button" aria-label="Next step">›</button></div><label class="timeline-label"><span class="sr-only">Animation step</span><input id="timeline" type="range" min="0" max="1" value="0" step="1"></label><label class="speed-label">Speed <select id="speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="1.5">1.5×</option><option value="2">2×</option></select></label></div>
+    </div>
+    <div class="below-lab"><p><kbd>Space</kbd> play / pause <span>·</span> <kbd>←</kbd> <kbd>→</kbd> step <span>·</span> Motion follows your system preference.</p><a id="reference-link" hidden target="_blank" rel="noopener"></a></div>
+    <div class="section-nav"><button id="previous-section" type="button"><small>PREVIOUS SECTION</small><span id="previous-title"></span></button><button id="next-section" type="button"><small>NEXT SECTION</small><span id="next-title"></span></button></div>
+    <footer class="page-footer">A separate, standalone companion to the extracted book. Examples illustrate the ideas; they do not reproduce every exercise. <span id="coverage"></span></footer>
+  </section>
+</main>
+<noscript><p class="no-script">JavaScript is needed to calculate and play these animations. Open the extracted book to read without JavaScript.</p></noscript>
+<script id="book-lessons" type="application/json">/* BOOK_LESSONS */null</script>
+<script>/* BOOK_ENGINE */</script>
+<script>/* BOOK_PLAYER */</script>
+</body>
+</html>

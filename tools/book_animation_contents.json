@@ -1,0 +1,1556 @@
+[
+  {
+    "page": 1,
+    "title": "Front matter",
+    "overview": true,
+    "chapter": "Front matter"
+  },
+  {
+    "page": 1,
+    "title": "Title page",
+    "overview": false,
+    "chapter": "Front matter"
+  },
+  {
+    "page": 3,
+    "title": "Acknowledgements",
+    "overview": false,
+    "chapter": "Front matter"
+  },
+  {
+    "page": 5,
+    "title": "Preface",
+    "overview": false,
+    "chapter": "Front matter"
+  },
+  {
+    "page": 7,
+    "title": "Complexity cheat sheets",
+    "overview": false,
+    "chapter": "Front matter"
+  },
+  {
+    "page": 9,
+    "title": "Printed table of contents",
+    "overview": false,
+    "chapter": "Front matter"
+  },
+  {
+    "page": 15,
+    "title": "0. Organization of Chapters",
+    "overview": true,
+    "chapter": "0. Organization of Chapters"
+  },
+  {
+    "page": 15,
+    "title": "0.1 What Is This Book About?",
+    "overview": false,
+    "chapter": "0. Organization of Chapters"
+  },
+  {
+    "page": 15,
+    "title": "0.2 Should I Buy This Book?",
+    "overview": false,
+    "chapter": "0. Organization of Chapters"
+  },
+  {
+    "page": 15,
+    "title": "0.3 Organization of Chapters",
+    "overview": false,
+    "chapter": "0. Organization of Chapters"
+  },
+  {
+    "page": 18,
+    "title": "0.4 Some Prerequisites",
+    "overview": false,
+    "chapter": "0. Organization of Chapters"
+  },
+  {
+    "page": 19,
+    "title": "1. Introduction",
+    "overview": true,
+    "chapter": "1. Introduction"
+  },
+  {
+    "page": 19,
+    "title": "1.1 Variables",
+    "overview": false,
+    "chapter": "1. Introduction"
+  },
+  {
+    "page": 19,
+    "title": "1.2 Data Types",
+    "overview": false,
+    "chapter": "1. Introduction"
+  },
+  {
+    "page": 20,
+    "title": "1.3 Data Structures",
+    "overview": false,
+    "chapter": "1. Introduction"
+  },
+  {
+    "page": 20,
+    "title": "1.4 Abstract Data Types (ADTs)",
+    "overview": false,
+    "chapter": "1. Introduction"
+  },
+  {
+    "page": 20,
+    "title": "1.5 What is an Algorithm?",
+    "overview": false,
+    "chapter": "1. Introduction"
+  },
+  {
+    "page": 20,
+    "title": "1.6 Why the Analysis of Algorithms?",
+    "overview": false,
+    "chapter": "1. Introduction"
+  },
+  {
+    "page": 20,
+    "title": "1.7 Goal of the Analysis of Algorithms",
+    "overview": false,
+    "chapter": "1. Introduction"
+  },
+  {
+    "page": 20,
+    "title": "1.8 What is Running Time Analysis?",
+    "overview": false,
+    "chapter": "1. Introduction"
+  },
+  {
+    "page": 21,
+    "title": "1.9 How to Compare Algorithms",
+    "overview": false,
+    "chapter": "1. Introduction"
+  },
+  {
+    "page": 21,
+    "title": "1.10 What is Rate of Growth?",
+    "overview": false,
+    "chapter": "1. Introduction"
+  },
+  {
+    "page": 21,
+    "title": "1.11 Commonly Used Rates of Growth",
+    "overview": false,
+    "chapter": "1. Introduction"
+  },
+  {
+    "page": 22,
+    "title": "1.12 Types of Analysis",
+    "overview": false,
+    "chapter": "1. Introduction"
+  },
+  {
+    "page": 22,
+    "title": "1.13 Asymptotic Notation",
+    "overview": false,
+    "chapter": "1. Introduction"
+  },
+  {
+    "page": 22,
+    "title": "1.14 Big-O Notation",
+    "overview": false,
+    "chapter": "1. Introduction"
+  },
+  {
+    "page": 23,
+    "title": "1.15 Omega-Ω Notation",
+    "overview": false,
+    "chapter": "1. Introduction"
+  },
+  {
+    "page": 24,
+    "title": "1.16 Theta-Θ Notation",
+    "overview": false,
+    "chapter": "1. Introduction"
+  },
+  {
+    "page": 25,
+    "title": "1.17 Why is it called Asymptotic Analysis?",
+    "overview": false,
+    "chapter": "1. Introduction"
+  },
+  {
+    "page": 25,
+    "title": "1.18 Guidelines for Asymptotic Analysis",
+    "overview": false,
+    "chapter": "1. Introduction"
+  },
+  {
+    "page": 26,
+    "title": "1.19 Simplifying properties of asymptotic notations",
+    "overview": false,
+    "chapter": "1. Introduction"
+  },
+  {
+    "page": 26,
+    "title": "1.21 Commonly used Logarithms and Summations",
+    "overview": false,
+    "chapter": "1. Introduction"
+  },
+  {
+    "page": 27,
+    "title": "1.21 Master Theorem for Divide and Conquer Recurrences",
+    "overview": false,
+    "chapter": "1. Introduction"
+  },
+  {
+    "page": 27,
+    "title": "1.22 Divide and Conquer Master Theorem: Problems & Solutions",
+    "overview": false,
+    "chapter": "1. Introduction"
+  },
+  {
+    "page": 28,
+    "title": "1.23 Master Theorem for Subtract and Conquer Recurrences",
+    "overview": false,
+    "chapter": "1. Introduction"
+  },
+  {
+    "page": 28,
+    "title": "1.24 Variant of Subtraction and Conquer Master Theorem",
+    "overview": false,
+    "chapter": "1. Introduction"
+  },
+  {
+    "page": 28,
+    "title": "1.25 Method of Guessing and Confirming",
+    "overview": false,
+    "chapter": "1. Introduction"
+  },
+  {
+    "page": 29,
+    "title": "1.26 Amortized Analysis",
+    "overview": false,
+    "chapter": "1. Introduction"
+  },
+  {
+    "page": 30,
+    "title": "1.27 Algorithms Analysis: Problems & Solutions",
+    "overview": false,
+    "chapter": "1. Introduction"
+  },
+  {
+    "page": 41,
+    "title": "2. Recursion and Backtracking",
+    "overview": true,
+    "chapter": "2. Recursion and Backtracking"
+  },
+  {
+    "page": 41,
+    "title": "2.1 Introduction",
+    "overview": false,
+    "chapter": "2. Recursion and Backtracking"
+  },
+  {
+    "page": 41,
+    "title": "2.2 What is Recursion?",
+    "overview": false,
+    "chapter": "2. Recursion and Backtracking"
+  },
+  {
+    "page": 41,
+    "title": "2.3 Why Recursion?",
+    "overview": false,
+    "chapter": "2. Recursion and Backtracking"
+  },
+  {
+    "page": 41,
+    "title": "2.4 Format of a Recursive Function",
+    "overview": false,
+    "chapter": "2. Recursion and Backtracking"
+  },
+  {
+    "page": 42,
+    "title": "2.5 Recursion and Memory (Visualization)",
+    "overview": false,
+    "chapter": "2. Recursion and Backtracking"
+  },
+  {
+    "page": 42,
+    "title": "2.6 Recursion versus Iteration",
+    "overview": false,
+    "chapter": "2. Recursion and Backtracking"
+  },
+  {
+    "page": 42,
+    "title": "2.7 Notes on Recursion",
+    "overview": false,
+    "chapter": "2. Recursion and Backtracking"
+  },
+  {
+    "page": 43,
+    "title": "2.8 Example Algorithms of Recursion",
+    "overview": false,
+    "chapter": "2. Recursion and Backtracking"
+  },
+  {
+    "page": 43,
+    "title": "2.9 Recursion: Problems & Solutions",
+    "overview": false,
+    "chapter": "2. Recursion and Backtracking"
+  },
+  {
+    "page": 43,
+    "title": "2.10 What is Backtracking?",
+    "overview": false,
+    "chapter": "2. Recursion and Backtracking"
+  },
+  {
+    "page": 44,
+    "title": "2.11 Example Algorithms of Backtracking",
+    "overview": false,
+    "chapter": "2. Recursion and Backtracking"
+  },
+  {
+    "page": 44,
+    "title": "2.12 Backtracking: Problems & Solutions",
+    "overview": false,
+    "chapter": "2. Recursion and Backtracking"
+  },
+  {
+    "page": 47,
+    "title": "3. Linked Lists",
+    "overview": true,
+    "chapter": "3. Linked Lists"
+  },
+  {
+    "page": 47,
+    "title": "3.1 What is a Linked List?",
+    "overview": false,
+    "chapter": "3. Linked Lists"
+  },
+  {
+    "page": 47,
+    "title": "3.2 Linked Lists ADT",
+    "overview": false,
+    "chapter": "3. Linked Lists"
+  },
+  {
+    "page": 47,
+    "title": "3.3 Why Linked Lists?",
+    "overview": false,
+    "chapter": "3. Linked Lists"
+  },
+  {
+    "page": 47,
+    "title": "3.4 Arrays Overview",
+    "overview": false,
+    "chapter": "3. Linked Lists"
+  },
+  {
+    "page": 48,
+    "title": "3.5 Comparison of Linked Lists with Arrays and Dynamic Arrays",
+    "overview": false,
+    "chapter": "3. Linked Lists"
+  },
+  {
+    "page": 49,
+    "title": "3.6 Singly Linked Lists",
+    "overview": false,
+    "chapter": "3. Linked Lists"
+  },
+  {
+    "page": 54,
+    "title": "3.7 Doubly Linked Lists",
+    "overview": false,
+    "chapter": "3. Linked Lists"
+  },
+  {
+    "page": 58,
+    "title": "3.8 Circular Linked Lists",
+    "overview": false,
+    "chapter": "3. Linked Lists"
+  },
+  {
+    "page": 62,
+    "title": "3.9 A Memory-efficient Doubly Linked List",
+    "overview": false,
+    "chapter": "3. Linked Lists"
+  },
+  {
+    "page": 63,
+    "title": "3.10 Unrolled Linked Lists",
+    "overview": false,
+    "chapter": "3. Linked Lists"
+  },
+  {
+    "page": 67,
+    "title": "3.11 Skip Lists",
+    "overview": false,
+    "chapter": "3. Linked Lists"
+  },
+  {
+    "page": 70,
+    "title": "3.12 Linked Lists: Problems & Solutions",
+    "overview": false,
+    "chapter": "3. Linked Lists"
+  },
+  {
+    "page": 90,
+    "title": "4. Stacks",
+    "overview": true,
+    "chapter": "4. Stacks"
+  },
+  {
+    "page": 90,
+    "title": "4.1 What is a Stack?",
+    "overview": false,
+    "chapter": "4. Stacks"
+  },
+  {
+    "page": 90,
+    "title": "4.2 How Stacks are Used",
+    "overview": false,
+    "chapter": "4. Stacks"
+  },
+  {
+    "page": 90,
+    "title": "4.3 Stack ADT",
+    "overview": false,
+    "chapter": "4. Stacks"
+  },
+  {
+    "page": 91,
+    "title": "4.4 Applications",
+    "overview": false,
+    "chapter": "4. Stacks"
+  },
+  {
+    "page": 91,
+    "title": "4.5 Implementation",
+    "overview": false,
+    "chapter": "4. Stacks"
+  },
+  {
+    "page": 95,
+    "title": "4.6 Comparison of Implementations",
+    "overview": false,
+    "chapter": "4. Stacks"
+  },
+  {
+    "page": 95,
+    "title": "4.7 Stacks: Problems & Solutions",
+    "overview": false,
+    "chapter": "4. Stacks"
+  },
+  {
+    "page": 111,
+    "title": "5. Queues",
+    "overview": true,
+    "chapter": "5. Queues"
+  },
+  {
+    "page": 111,
+    "title": "5.1 What is a Queue?",
+    "overview": false,
+    "chapter": "5. Queues"
+  },
+  {
+    "page": 111,
+    "title": "5.2 How are Queues Used",
+    "overview": false,
+    "chapter": "5. Queues"
+  },
+  {
+    "page": 111,
+    "title": "5.3 Queue ADT",
+    "overview": false,
+    "chapter": "5. Queues"
+  },
+  {
+    "page": 111,
+    "title": "5.4 Exceptions",
+    "overview": false,
+    "chapter": "5. Queues"
+  },
+  {
+    "page": 111,
+    "title": "5.5 Applications",
+    "overview": false,
+    "chapter": "5. Queues"
+  },
+  {
+    "page": 112,
+    "title": "5.6 Implementation",
+    "overview": false,
+    "chapter": "5. Queues"
+  },
+  {
+    "page": 116,
+    "title": "5.7 Queues: Problems & Solutions",
+    "overview": false,
+    "chapter": "5. Queues"
+  },
+  {
+    "page": 125,
+    "title": "6. Trees",
+    "overview": true,
+    "chapter": "6. Trees"
+  },
+  {
+    "page": 125,
+    "title": "6.1 What is a Tree?",
+    "overview": false,
+    "chapter": "6. Trees"
+  },
+  {
+    "page": 125,
+    "title": "6.2 Glossary",
+    "overview": false,
+    "chapter": "6. Trees"
+  },
+  {
+    "page": 126,
+    "title": "6.3 Binary Trees",
+    "overview": false,
+    "chapter": "6. Trees"
+  },
+  {
+    "page": 126,
+    "title": "6.4 Types of Binary Trees",
+    "overview": false,
+    "chapter": "6. Trees"
+  },
+  {
+    "page": 126,
+    "title": "6.5 Properties of Binary Trees",
+    "overview": false,
+    "chapter": "6. Trees"
+  },
+  {
+    "page": 128,
+    "title": "6.6 Binary Tree Traversals",
+    "overview": false,
+    "chapter": "6. Trees"
+  },
+  {
+    "page": 146,
+    "title": "6.7 Generic Trees (N-ary Trees)",
+    "overview": false,
+    "chapter": "6. Trees"
+  },
+  {
+    "page": 152,
+    "title": "6.8 Threaded Binary Tree Traversals (Stack or Queue-less Traversals)",
+    "overview": false,
+    "chapter": "6. Trees"
+  },
+  {
+    "page": 156,
+    "title": "6.9 Expression Trees",
+    "overview": false,
+    "chapter": "6. Trees"
+  },
+  {
+    "page": 158,
+    "title": "6.10 XOR Trees",
+    "overview": false,
+    "chapter": "6. Trees"
+  },
+  {
+    "page": 159,
+    "title": "6.11 Binary Search Trees (BSTs)",
+    "overview": false,
+    "chapter": "6. Trees"
+  },
+  {
+    "page": 171,
+    "title": "6.12 Balanced Binary Search Trees",
+    "overview": false,
+    "chapter": "6. Trees"
+  },
+  {
+    "page": 172,
+    "title": "6.13 AVL (Adelson-Velskii and Landis) Trees",
+    "overview": false,
+    "chapter": "6. Trees"
+  },
+  {
+    "page": 186,
+    "title": "6.14 Other Variations on Trees",
+    "overview": false,
+    "chapter": "6. Trees"
+  },
+  {
+    "page": 189,
+    "title": "6.15 Supplementary Questions",
+    "overview": false,
+    "chapter": "6. Trees"
+  },
+  {
+    "page": 190,
+    "title": "7. Priority Queues and Heaps",
+    "overview": true,
+    "chapter": "7. Priority Queues and Heaps"
+  },
+  {
+    "page": 190,
+    "title": "7.1 What is a Priority Queue?",
+    "overview": false,
+    "chapter": "7. Priority Queues and Heaps"
+  },
+  {
+    "page": 190,
+    "title": "7.2 Priority Queue ADT",
+    "overview": false,
+    "chapter": "7. Priority Queues and Heaps"
+  },
+  {
+    "page": 190,
+    "title": "7.3 Priority Queue Applications",
+    "overview": false,
+    "chapter": "7. Priority Queues and Heaps"
+  },
+  {
+    "page": 190,
+    "title": "7.4 Priority Queue Implementations",
+    "overview": false,
+    "chapter": "7. Priority Queues and Heaps"
+  },
+  {
+    "page": 191,
+    "title": "7.5 Heaps and Binary Heaps",
+    "overview": false,
+    "chapter": "7. Priority Queues and Heaps"
+  },
+  {
+    "page": 192,
+    "title": "7.6 Binary Heaps",
+    "overview": false,
+    "chapter": "7. Priority Queues and Heaps"
+  },
+  {
+    "page": 195,
+    "title": "7.7 Heapsort",
+    "overview": false,
+    "chapter": "7. Priority Queues and Heaps"
+  },
+  {
+    "page": 196,
+    "title": "7.8 Priority Queues [Heaps]: Problems & Solutions",
+    "overview": false,
+    "chapter": "7. Priority Queues and Heaps"
+  },
+  {
+    "page": 208,
+    "title": "8. Disjoint Sets ADT",
+    "overview": true,
+    "chapter": "8. Disjoint Sets ADT"
+  },
+  {
+    "page": 208,
+    "title": "8.1 Introduction",
+    "overview": false,
+    "chapter": "8. Disjoint Sets ADT"
+  },
+  {
+    "page": 208,
+    "title": "8.2 Equivalence Relations and Equivalence Classes",
+    "overview": false,
+    "chapter": "8. Disjoint Sets ADT"
+  },
+  {
+    "page": 208,
+    "title": "8.3 Disjoint Sets ADT",
+    "overview": false,
+    "chapter": "8. Disjoint Sets ADT"
+  },
+  {
+    "page": 208,
+    "title": "8.4 Applications",
+    "overview": false,
+    "chapter": "8. Disjoint Sets ADT"
+  },
+  {
+    "page": 209,
+    "title": "8.5 Tradeoffs in Implementing Disjoint Sets ADT",
+    "overview": false,
+    "chapter": "8. Disjoint Sets ADT"
+  },
+  {
+    "page": 209,
+    "title": "8.6 Fast FIND Implementation (Quick FIND)",
+    "overview": false,
+    "chapter": "8. Disjoint Sets ADT"
+  },
+  {
+    "page": 209,
+    "title": "8.7 Fast UNION Implementation (Quick UNION)",
+    "overview": false,
+    "chapter": "8. Disjoint Sets ADT"
+  },
+  {
+    "page": 209,
+    "title": "8.8 Fast UNION Implementation (Slow FIND)",
+    "overview": false,
+    "chapter": "8. Disjoint Sets ADT"
+  },
+  {
+    "page": 211,
+    "title": "8.9 Fast UNION Implementations (Quick FIND)",
+    "overview": false,
+    "chapter": "8. Disjoint Sets ADT"
+  },
+  {
+    "page": 212,
+    "title": "8.10 Summary",
+    "overview": false,
+    "chapter": "8. Disjoint Sets ADT"
+  },
+  {
+    "page": 212,
+    "title": "8.11 Disjoint Sets: Problems & Solutions",
+    "overview": false,
+    "chapter": "8. Disjoint Sets ADT"
+  },
+  {
+    "page": 214,
+    "title": "9. Graph Algorithms",
+    "overview": true,
+    "chapter": "9. Graph Algorithms"
+  },
+  {
+    "page": 214,
+    "title": "9.1 Introduction",
+    "overview": false,
+    "chapter": "9. Graph Algorithms"
+  },
+  {
+    "page": 214,
+    "title": "9.2 Glossary",
+    "overview": false,
+    "chapter": "9. Graph Algorithms"
+  },
+  {
+    "page": 216,
+    "title": "9.3 Applications of Graphs",
+    "overview": false,
+    "chapter": "9. Graph Algorithms"
+  },
+  {
+    "page": 216,
+    "title": "9.4 Graph Representation",
+    "overview": false,
+    "chapter": "9. Graph Algorithms"
+  },
+  {
+    "page": 221,
+    "title": "9.5 Graph Traversals",
+    "overview": false,
+    "chapter": "9. Graph Algorithms"
+  },
+  {
+    "page": 226,
+    "title": "9.6 Topological Sort",
+    "overview": false,
+    "chapter": "9. Graph Algorithms"
+  },
+  {
+    "page": 228,
+    "title": "9.7 Shortest Path Algorithms",
+    "overview": false,
+    "chapter": "9. Graph Algorithms"
+  },
+  {
+    "page": 233,
+    "title": "9.8 Minimal Spanning Trees",
+    "overview": false,
+    "chapter": "9. Graph Algorithms"
+  },
+  {
+    "page": 236,
+    "title": "9.9 Graph Algorithms: Problems & Solutions",
+    "overview": false,
+    "chapter": "9. Graph Algorithms"
+  },
+  {
+    "page": 252,
+    "title": "10. Sorting",
+    "overview": true,
+    "chapter": "10. Sorting"
+  },
+  {
+    "page": 252,
+    "title": "10.1 What is Sorting?",
+    "overview": false,
+    "chapter": "10. Sorting"
+  },
+  {
+    "page": 252,
+    "title": "10.2 Why is Sorting Necessary?",
+    "overview": false,
+    "chapter": "10. Sorting"
+  },
+  {
+    "page": 252,
+    "title": "10.3 Classification of Sorting Algorithms",
+    "overview": false,
+    "chapter": "10. Sorting"
+  },
+  {
+    "page": 252,
+    "title": "10.4 Other Classifications",
+    "overview": false,
+    "chapter": "10. Sorting"
+  },
+  {
+    "page": 253,
+    "title": "10.5 Bubble Sort",
+    "overview": false,
+    "chapter": "10. Sorting"
+  },
+  {
+    "page": 254,
+    "title": "10.6 Selection Sort",
+    "overview": false,
+    "chapter": "10. Sorting"
+  },
+  {
+    "page": 255,
+    "title": "10.7 Insertion Sort",
+    "overview": false,
+    "chapter": "10. Sorting"
+  },
+  {
+    "page": 256,
+    "title": "10.8 Shell Sort",
+    "overview": false,
+    "chapter": "10. Sorting"
+  },
+  {
+    "page": 258,
+    "title": "10.9 Merge Sort",
+    "overview": false,
+    "chapter": "10. Sorting"
+  },
+  {
+    "page": 259,
+    "title": "10.11 Quick Sort",
+    "overview": false,
+    "chapter": "10. Sorting"
+  },
+  {
+    "page": 263,
+    "title": "10.12 Tree Sort",
+    "overview": false,
+    "chapter": "10. Sorting"
+  },
+  {
+    "page": 264,
+    "title": "10.13 Comparison of Sorting Algorithms",
+    "overview": false,
+    "chapter": "10. Sorting"
+  },
+  {
+    "page": 264,
+    "title": "10.14 Linear Sorting Algorithms",
+    "overview": false,
+    "chapter": "10. Sorting"
+  },
+  {
+    "page": 264,
+    "title": "10.15 Counting Sort",
+    "overview": false,
+    "chapter": "10. Sorting"
+  },
+  {
+    "page": 265,
+    "title": "10.16 Bucket Sort (or Bin Sort)",
+    "overview": false,
+    "chapter": "10. Sorting"
+  },
+  {
+    "page": 266,
+    "title": "10.17 Radix Sort",
+    "overview": false,
+    "chapter": "10. Sorting"
+  },
+  {
+    "page": 266,
+    "title": "10.18 Topological Sort",
+    "overview": false,
+    "chapter": "10. Sorting"
+  },
+  {
+    "page": 266,
+    "title": "10.19 External Sorting",
+    "overview": false,
+    "chapter": "10. Sorting"
+  },
+  {
+    "page": 267,
+    "title": "10.20 Sorting: Problems & Solutions",
+    "overview": false,
+    "chapter": "10. Sorting"
+  },
+  {
+    "page": 279,
+    "title": "11. Searching",
+    "overview": true,
+    "chapter": "11. Searching"
+  },
+  {
+    "page": 279,
+    "title": "11.1 What is Searching?",
+    "overview": false,
+    "chapter": "11. Searching"
+  },
+  {
+    "page": 279,
+    "title": "11.2 Why do we need Searching?",
+    "overview": false,
+    "chapter": "11. Searching"
+  },
+  {
+    "page": 279,
+    "title": "11.3 Types of Searching",
+    "overview": false,
+    "chapter": "11. Searching"
+  },
+  {
+    "page": 279,
+    "title": "11.4 Unordered Linear Search",
+    "overview": false,
+    "chapter": "11. Searching"
+  },
+  {
+    "page": 279,
+    "title": "11.5 Sorted/Ordered Linear Search",
+    "overview": false,
+    "chapter": "11. Searching"
+  },
+  {
+    "page": 280,
+    "title": "11.6 Binary Search",
+    "overview": false,
+    "chapter": "11. Searching"
+  },
+  {
+    "page": 280,
+    "title": "11.7 Interpolation Search",
+    "overview": false,
+    "chapter": "11. Searching"
+  },
+  {
+    "page": 281,
+    "title": "11.8 Comparing Basic Searching Algorithms",
+    "overview": false,
+    "chapter": "11. Searching"
+  },
+  {
+    "page": 282,
+    "title": "11.9 Symbol Tables and Hashing",
+    "overview": false,
+    "chapter": "11. Searching"
+  },
+  {
+    "page": 282,
+    "title": "11.10 String Searching Algorithms",
+    "overview": false,
+    "chapter": "11. Searching"
+  },
+  {
+    "page": 282,
+    "title": "11.11 Searching: Problems & Solutions",
+    "overview": false,
+    "chapter": "11. Searching"
+  },
+  {
+    "page": 303,
+    "title": "12. Selection Algorithms [Medians]",
+    "overview": true,
+    "chapter": "12. Selection Algorithms [Medians]"
+  },
+  {
+    "page": 303,
+    "title": "12.1 What are Selection Algorithms?",
+    "overview": false,
+    "chapter": "12. Selection Algorithms [Medians]"
+  },
+  {
+    "page": 303,
+    "title": "12.2 Selection by Sorting",
+    "overview": false,
+    "chapter": "12. Selection Algorithms [Medians]"
+  },
+  {
+    "page": 303,
+    "title": "12.3 Partition-based Selection Algorithm",
+    "overview": false,
+    "chapter": "12. Selection Algorithms [Medians]"
+  },
+  {
+    "page": 303,
+    "title": "12.4 Linear Selection Algorithm - Median of Medians Algorithm",
+    "overview": false,
+    "chapter": "12. Selection Algorithms [Medians]"
+  },
+  {
+    "page": 303,
+    "title": "12.5 Finding the K Smallest Elements in Sorted Order",
+    "overview": false,
+    "chapter": "12. Selection Algorithms [Medians]"
+  },
+  {
+    "page": 303,
+    "title": "12.6 Selection Algorithms: Problems & Solutions",
+    "overview": false,
+    "chapter": "12. Selection Algorithms [Medians]"
+  },
+  {
+    "page": 312,
+    "title": "13. Symbol Tables",
+    "overview": true,
+    "chapter": "13. Symbol Tables"
+  },
+  {
+    "page": 312,
+    "title": "13.1 Introduction",
+    "overview": false,
+    "chapter": "13. Symbol Tables"
+  },
+  {
+    "page": 312,
+    "title": "13.2 What are Symbol Tables?",
+    "overview": false,
+    "chapter": "13. Symbol Tables"
+  },
+  {
+    "page": 312,
+    "title": "13.3 Symbol Table Implementations",
+    "overview": false,
+    "chapter": "13. Symbol Tables"
+  },
+  {
+    "page": 313,
+    "title": "13.4 Comparison Table of Symbols for Implementations",
+    "overview": false,
+    "chapter": "13. Symbol Tables"
+  },
+  {
+    "page": 314,
+    "title": "14. Hashing",
+    "overview": true,
+    "chapter": "14. Hashing"
+  },
+  {
+    "page": 314,
+    "title": "14.1 What is Hashing?",
+    "overview": false,
+    "chapter": "14. Hashing"
+  },
+  {
+    "page": 314,
+    "title": "14.2 Why Hashing?",
+    "overview": false,
+    "chapter": "14. Hashing"
+  },
+  {
+    "page": 314,
+    "title": "14.3 Hash Table ADT",
+    "overview": false,
+    "chapter": "14. Hashing"
+  },
+  {
+    "page": 314,
+    "title": "14.4 Understanding Hashing",
+    "overview": false,
+    "chapter": "14. Hashing"
+  },
+  {
+    "page": 315,
+    "title": "14.5 Components of Hashing",
+    "overview": false,
+    "chapter": "14. Hashing"
+  },
+  {
+    "page": 315,
+    "title": "14.6 Hash Table",
+    "overview": false,
+    "chapter": "14. Hashing"
+  },
+  {
+    "page": 316,
+    "title": "14.7 Hash Function",
+    "overview": false,
+    "chapter": "14. Hashing"
+  },
+  {
+    "page": 316,
+    "title": "14.8 Load Factor",
+    "overview": false,
+    "chapter": "14. Hashing"
+  },
+  {
+    "page": 317,
+    "title": "14.9 Collisions",
+    "overview": false,
+    "chapter": "14. Hashing"
+  },
+  {
+    "page": 317,
+    "title": "14.10 Collision Resolution Techniques",
+    "overview": false,
+    "chapter": "14. Hashing"
+  },
+  {
+    "page": 317,
+    "title": "14.11 Separate Chaining",
+    "overview": false,
+    "chapter": "14. Hashing"
+  },
+  {
+    "page": 317,
+    "title": "14.12 Open Addressing",
+    "overview": false,
+    "chapter": "14. Hashing"
+  },
+  {
+    "page": 318,
+    "title": "14.13 Comparison of Collision Resolution Techniques",
+    "overview": false,
+    "chapter": "14. Hashing"
+  },
+  {
+    "page": 319,
+    "title": "14.14 How Hashing Gets O(1) Complexity",
+    "overview": false,
+    "chapter": "14. Hashing"
+  },
+  {
+    "page": 319,
+    "title": "14.15 Hashing Techniques",
+    "overview": false,
+    "chapter": "14. Hashing"
+  },
+  {
+    "page": 319,
+    "title": "14.16 Problems for which Hash Tables are not suitable",
+    "overview": false,
+    "chapter": "14. Hashing"
+  },
+  {
+    "page": 319,
+    "title": "14.17 Bloom Filters",
+    "overview": false,
+    "chapter": "14. Hashing"
+  },
+  {
+    "page": 321,
+    "title": "14.18 Hashing: Problems & Solutions",
+    "overview": false,
+    "chapter": "14. Hashing"
+  },
+  {
+    "page": 329,
+    "title": "15. String Algorithms",
+    "overview": true,
+    "chapter": "15. String Algorithms"
+  },
+  {
+    "page": 329,
+    "title": "15.1 Introduction",
+    "overview": false,
+    "chapter": "15. String Algorithms"
+  },
+  {
+    "page": 329,
+    "title": "15.2 String Matching Algorithms",
+    "overview": false,
+    "chapter": "15. String Algorithms"
+  },
+  {
+    "page": 329,
+    "title": "15.3 Brute Force Method",
+    "overview": false,
+    "chapter": "15. String Algorithms"
+  },
+  {
+    "page": 330,
+    "title": "15.4 Rabin-Karp String Matching Algorithm",
+    "overview": false,
+    "chapter": "15. String Algorithms"
+  },
+  {
+    "page": 331,
+    "title": "15.5 String Matching with Finite Automata",
+    "overview": false,
+    "chapter": "15. String Algorithms"
+  },
+  {
+    "page": 332,
+    "title": "15.6 KMP Algorithm",
+    "overview": false,
+    "chapter": "15. String Algorithms"
+  },
+  {
+    "page": 334,
+    "title": "15.7 Boyer-Moore Algorithm",
+    "overview": false,
+    "chapter": "15. String Algorithms"
+  },
+  {
+    "page": 334,
+    "title": "15.8 Data Structures for Storing Strings",
+    "overview": false,
+    "chapter": "15. String Algorithms"
+  },
+  {
+    "page": 335,
+    "title": "15.9 Hash Tables for Strings",
+    "overview": false,
+    "chapter": "15. String Algorithms"
+  },
+  {
+    "page": 335,
+    "title": "15.10 Binary Search Trees for Strings",
+    "overview": false,
+    "chapter": "15. String Algorithms"
+  },
+  {
+    "page": 335,
+    "title": "15.11 Tries",
+    "overview": false,
+    "chapter": "15. String Algorithms"
+  },
+  {
+    "page": 337,
+    "title": "15.12 Ternary Search Trees",
+    "overview": false,
+    "chapter": "15. String Algorithms"
+  },
+  {
+    "page": 342,
+    "title": "15.13 Comparing BSTs, Tries and TSTs",
+    "overview": false,
+    "chapter": "15. String Algorithms"
+  },
+  {
+    "page": 342,
+    "title": "15.14 Suffix Trees",
+    "overview": false,
+    "chapter": "15. String Algorithms"
+  },
+  {
+    "page": 344,
+    "title": "15.15 String Algorithms: Problems & Solutions",
+    "overview": false,
+    "chapter": "15. String Algorithms"
+  },
+  {
+    "page": 351,
+    "title": "16. Algorithms Design Techniques",
+    "overview": true,
+    "chapter": "16. Algorithms Design Techniques"
+  },
+  {
+    "page": 351,
+    "title": "16.1 Introduction",
+    "overview": false,
+    "chapter": "16. Algorithms Design Techniques"
+  },
+  {
+    "page": 351,
+    "title": "16.2 Classification",
+    "overview": false,
+    "chapter": "16. Algorithms Design Techniques"
+  },
+  {
+    "page": 351,
+    "title": "16.3 Classification by Implementation Method",
+    "overview": false,
+    "chapter": "16. Algorithms Design Techniques"
+  },
+  {
+    "page": 352,
+    "title": "16.4 Classification by Design Method",
+    "overview": false,
+    "chapter": "16. Algorithms Design Techniques"
+  },
+  {
+    "page": 352,
+    "title": "16.5 Other Classifications",
+    "overview": false,
+    "chapter": "16. Algorithms Design Techniques"
+  },
+  {
+    "page": 354,
+    "title": "17. Greedy Algorithms",
+    "overview": true,
+    "chapter": "17. Greedy Algorithms"
+  },
+  {
+    "page": 354,
+    "title": "17.1 Introduction",
+    "overview": false,
+    "chapter": "17. Greedy Algorithms"
+  },
+  {
+    "page": 354,
+    "title": "17.2 Greedy Strategy",
+    "overview": false,
+    "chapter": "17. Greedy Algorithms"
+  },
+  {
+    "page": 354,
+    "title": "17.3 Elements of Greedy Algorithms",
+    "overview": false,
+    "chapter": "17. Greedy Algorithms"
+  },
+  {
+    "page": 354,
+    "title": "17.4 Does Greedy Always Work?",
+    "overview": false,
+    "chapter": "17. Greedy Algorithms"
+  },
+  {
+    "page": 354,
+    "title": "17.5 Advantages and Disadvantages of Greedy Method",
+    "overview": false,
+    "chapter": "17. Greedy Algorithms"
+  },
+  {
+    "page": 354,
+    "title": "17.6 Greedy Applications",
+    "overview": false,
+    "chapter": "17. Greedy Algorithms"
+  },
+  {
+    "page": 355,
+    "title": "17.7 Understanding Greedy Technique",
+    "overview": false,
+    "chapter": "17. Greedy Algorithms"
+  },
+  {
+    "page": 357,
+    "title": "17.8 Greedy Algorithms: Problems & Solutions",
+    "overview": false,
+    "chapter": "17. Greedy Algorithms"
+  },
+  {
+    "page": 362,
+    "title": "18. Divide and Conquer Algorithms",
+    "overview": true,
+    "chapter": "18. Divide and Conquer Algorithms"
+  },
+  {
+    "page": 362,
+    "title": "18.1 Introduction",
+    "overview": false,
+    "chapter": "18. Divide and Conquer Algorithms"
+  },
+  {
+    "page": 362,
+    "title": "18.2 What is Divide and Conquer Strategy?",
+    "overview": false,
+    "chapter": "18. Divide and Conquer Algorithms"
+  },
+  {
+    "page": 362,
+    "title": "18.3 Does Divide and Conquer Always Work?",
+    "overview": false,
+    "chapter": "18. Divide and Conquer Algorithms"
+  },
+  {
+    "page": 362,
+    "title": "18.4 Divide and Conquer Visualization",
+    "overview": false,
+    "chapter": "18. Divide and Conquer Algorithms"
+  },
+  {
+    "page": 363,
+    "title": "18.5 Understanding Divide and Conquer",
+    "overview": false,
+    "chapter": "18. Divide and Conquer Algorithms"
+  },
+  {
+    "page": 363,
+    "title": "18.6 Advantages of Divide and Conquer",
+    "overview": false,
+    "chapter": "18. Divide and Conquer Algorithms"
+  },
+  {
+    "page": 363,
+    "title": "18.7 Disadvantages of Divide and Conquer",
+    "overview": false,
+    "chapter": "18. Divide and Conquer Algorithms"
+  },
+  {
+    "page": 363,
+    "title": "18.8 Master Theorem",
+    "overview": false,
+    "chapter": "18. Divide and Conquer Algorithms"
+  },
+  {
+    "page": 364,
+    "title": "18.9 Divide and Conquer Applications",
+    "overview": false,
+    "chapter": "18. Divide and Conquer Algorithms"
+  },
+  {
+    "page": 364,
+    "title": "18.10 Finding peak element of an array",
+    "overview": false,
+    "chapter": "18. Divide and Conquer Algorithms"
+  },
+  {
+    "page": 367,
+    "title": "18.11 Finding peak element in two-dimensional array",
+    "overview": false,
+    "chapter": "18. Divide and Conquer Algorithms"
+  },
+  {
+    "page": 372,
+    "title": "18.12 Divide and Conquer: Problems & Solutions",
+    "overview": false,
+    "chapter": "18. Divide and Conquer Algorithms"
+  },
+  {
+    "page": 386,
+    "title": "19. Dynamic Programming",
+    "overview": true,
+    "chapter": "19. Dynamic Programming"
+  },
+  {
+    "page": 386,
+    "title": "19.1 Introduction",
+    "overview": false,
+    "chapter": "19. Dynamic Programming"
+  },
+  {
+    "page": 386,
+    "title": "19.2 What is Dynamic Programming Strategy?",
+    "overview": false,
+    "chapter": "19. Dynamic Programming"
+  },
+  {
+    "page": 386,
+    "title": "19.3 Properties of Dynamic Programming Strategy",
+    "overview": false,
+    "chapter": "19. Dynamic Programming"
+  },
+  {
+    "page": 386,
+    "title": "19.4 Greedy vs Divide and Conquer vs DP",
+    "overview": false,
+    "chapter": "19. Dynamic Programming"
+  },
+  {
+    "page": 387,
+    "title": "19.5 Can DP solve all problems?",
+    "overview": false,
+    "chapter": "19. Dynamic Programming"
+  },
+  {
+    "page": 387,
+    "title": "19.6 Dynamic Programming Approaches",
+    "overview": false,
+    "chapter": "19. Dynamic Programming"
+  },
+  {
+    "page": 387,
+    "title": "19.7 Understanding DP Approaches",
+    "overview": false,
+    "chapter": "19. Dynamic Programming"
+  },
+  {
+    "page": 390,
+    "title": "19.8 Examples of DP Algorithms",
+    "overview": false,
+    "chapter": "19. Dynamic Programming"
+  },
+  {
+    "page": 390,
+    "title": "19.9 Longest Common Subsequence",
+    "overview": false,
+    "chapter": "19. Dynamic Programming"
+  },
+  {
+    "page": 392,
+    "title": "19.10 Dynamic Programming: Problems & Solutions",
+    "overview": false,
+    "chapter": "19. Dynamic Programming"
+  },
+  {
+    "page": 420,
+    "title": "20. Complexity Classes",
+    "overview": true,
+    "chapter": "20. Complexity Classes"
+  },
+  {
+    "page": 420,
+    "title": "20.1 Introduction",
+    "overview": false,
+    "chapter": "20. Complexity Classes"
+  },
+  {
+    "page": 420,
+    "title": "20.2 Polynomial/Exponential Time",
+    "overview": false,
+    "chapter": "20. Complexity Classes"
+  },
+  {
+    "page": 420,
+    "title": "20.3 What is a Decision Problem?",
+    "overview": false,
+    "chapter": "20. Complexity Classes"
+  },
+  {
+    "page": 420,
+    "title": "20.4 Decision Procedure",
+    "overview": false,
+    "chapter": "20. Complexity Classes"
+  },
+  {
+    "page": 420,
+    "title": "20.5 What is a Complexity Class?",
+    "overview": false,
+    "chapter": "20. Complexity Classes"
+  },
+  {
+    "page": 421,
+    "title": "20.6 Types of Complexity Classes",
+    "overview": false,
+    "chapter": "20. Complexity Classes"
+  },
+  {
+    "page": 422,
+    "title": "20.7 Reductions",
+    "overview": false,
+    "chapter": "20. Complexity Classes"
+  },
+  {
+    "page": 424,
+    "title": "20.8 Complexity Classes: Problems & Solutions",
+    "overview": false,
+    "chapter": "20. Complexity Classes"
+  },
+  {
+    "page": 426,
+    "title": "21. Miscellaneous Concepts",
+    "overview": true,
+    "chapter": "21. Miscellaneous Concepts"
+  },
+  {
+    "page": 426,
+    "title": "21.1 Introduction",
+    "overview": false,
+    "chapter": "21. Miscellaneous Concepts"
+  },
+  {
+    "page": 426,
+    "title": "21.2 Hacks on Bit-wise Programming",
+    "overview": false,
+    "chapter": "21. Miscellaneous Concepts"
+  },
+  {
+    "page": 436,
+    "title": "References",
+    "overview": true,
+    "chapter": "References"
+  }
+]
