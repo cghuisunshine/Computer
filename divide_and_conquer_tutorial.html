@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="An interactive tutorial on Divide and Conquer, with Merge Sort, Binary Search, and Towers of Hanoi visualizers, Python code, and exercises." />
+  <title>Divide & Conquer — Interactive Tutorial</title>
+  <style>
+    :root { --ink:#16253a; --muted:#5d6b7d; --paper:#f6f8fc; --card:#fff; --line:#dce5f0; --navy:#10243b; --blue:#3168e0; --aqua:#4cc9b0; --orange:#ffb55c; --purple:#8462d3; --red:#e86c73; --shadow:0 10px 32px rgba(17,43,78,.06); }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; background:var(--paper); color:var(--ink); font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; line-height:1.62; }
+    a { color:#245bc1; } button, select, input { font:inherit; }
+    button { cursor:pointer; transition:background .15s, transform .15s, opacity .15s; }
+    button:active:not(:disabled){transform:translateY(1px)}
+    button:focus-visible, a:focus-visible, input:focus-visible { outline:3px solid #ffba59; outline-offset:3px; }
+    button:disabled { cursor:not-allowed; opacity:.42; }
+    .shell { display:grid; grid-template-columns:244px minmax(0,1fr); min-height:100vh; }
+    aside { background:#102238; padding:28px 19px; color:#bdcde0; position:sticky; top:0; height:100vh; overflow:auto; }
+    .brand { display:flex; align-items:center; gap:11px; color:white; margin-bottom:31px; font-weight:800; letter-spacing:-.4px; line-height:1.3; }
+    .brand-mark { width:40px; height:40px; border-radius:12px; background:linear-gradient(140deg,#3bd2c0,#5d82f0); display:grid; place-items:center; color:#102238; font-size:20px; font-weight:900; }
+    .side-label { font-size:10px; letter-spacing:1.7px; text-transform:uppercase; color:#8296ae; margin:18px 12px 10px; font-weight:800; }
+    nav a { display:block; color:#bed1e3; padding:11px 12px; border-radius:10px; font-size:14px; text-decoration:none; margin:2px 0; }
+    nav a:hover, nav a:focus-visible { background:#233c59; color:white; }
+    .sidebar-foot { margin-top:25px; padding:15px; border:1px solid #35506c; border-radius:12px; color:#abc0d7; font-size:12px; }
+    .sidebar-foot b { color:#f6fcff; }
+    main { width:100%; min-width:0; }
+    .content { max-width:1020px; padding:40px clamp(24px,5vw,72px) 90px; margin:auto; }
+    .hero { background:linear-gradient(119deg,#0f2c47 0%,#18395a 62%,#174e64 100%); color:white; padding:52px clamp(24px,5vw,72px) 44px; overflow:hidden; position:relative; }
+    .hero-inner { position:relative; max-width:890px; margin:auto; z-index:1; }
+    .hero:before { content:""; width:360px; height:360px; border:60px solid rgba(81,207,190,.08); border-radius:50%; position:absolute; top:-200px; right:-90px; }
+    .hero:after { content:""; width:170px; height:170px; border:40px solid rgba(136,152,247,.11); border-radius:50%; position:absolute; bottom:-140px; left:25%; }
+    .eyebrow { display:inline-block; font-size:11px; text-transform:uppercase; letter-spacing:2px; font-weight:850; color:#69dece; margin-bottom:12px; }
+    h1,h2,h3,p { margin-top:0; }
+    h1 { font-size:clamp(35px,5vw,59px); line-height:1.12; max-width:650px; letter-spacing:-2.4px; margin:0 0 16px; }
+    h2 { font-size:clamp(27px,3.2vw,35px); letter-spacing:-1.1px; line-height:1.22; margin-bottom:12px; }
+    h3 { font-size:18px; letter-spacing:-.3px; margin:0 0 10px; }
+    .lead { font-size:17px; color:#d5e5f2; max-width:670px; margin-bottom:25px; }
+    .hero-pills { display:flex; gap:9px; flex-wrap:wrap; }
+    .hero-pills span { border:1px solid #48718c; color:#ddf0f7; padding:6px 11px; border-radius:30px; font-size:12px; }
+    section { scroll-margin-top:24px; margin-bottom:64px; }
+    section > .section-kicker { display:block; font-size:11px; font-weight:850; letter-spacing:1.5px; color:#486ac7; text-transform:uppercase; margin-bottom:9px; }
+    .subtle { color:var(--muted); }
+    .section-intro { max-width:780px; color:var(--muted); margin-bottom:24px; }
+    .card { background:var(--card); border:1px solid var(--line); border-radius:18px; box-shadow:var(--shadow); padding:25px; }
+    .card + .card { margin-top:17px; }
+    .three-cols { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; margin:22px 0; }
+    .mini-card { border:1px solid var(--line); padding:18px; background:white; border-radius:15px; }
+    .mini-number { width:34px; height:34px; border-radius:10px; display:grid; place-items:center; font-weight:900; margin-bottom:13px; }
+    .c1 .mini-number{background:#e1eafb;color:#285ace}.c2 .mini-number{background:#dcf5ef;color:#0a8f78}.c3 .mini-number{background:#f1e9ff;color:#7952bb}
+    .mini-card p { margin:0; font-size:13px; color:var(--muted); }
+    .rule { border:0; border-top:1px solid var(--line); margin:22px 0; }
+    .equation { padding:14px 20px; background:#eff4fb; border:1px solid #d9e5f3; border-radius:11px; text-align:center; font-weight:750; font-size:20px; letter-spacing:.2px; overflow:auto; white-space:nowrap; }
+    .callout { border-left:4px solid #5e8fe9; background:#ecf3ff; border-radius:0 10px 10px 0; padding:13px 17px; font-size:14px; margin:15px 0; }
+    .callout.green { background:#eaf9f4; border-color:#3caf91; }
+    .callout.orange { background:#fff6e9; border-color:#e9a33c; }
+    .section-heading-row { display:flex; justify-content:space-between; align-items:flex-start; gap:20px; flex-wrap:wrap; }
+    .chip { border-radius:40px; background:#e6edff; color:#335cba; padding:5px 12px; font-size:12px; font-weight:750; white-space:nowrap; }
+    .controls { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin:18px 0 12px; }
+    .btn { background:#245dc8; color:#fff; border:1px solid #245dc8; padding:9px 15px; border-radius:9px; font-size:13px; font-weight:750; min-height:41px; }
+    .btn:hover:not(:disabled){background:#174baf}
+    .btn.ghost { background:white; color:#2b4d7d; border-color:#ccdaeb; }
+    .btn.ghost:hover:not(:disabled){background:#edf3fa}
+    .btn.success { background:#12856f; border-color:#12856f; }
+    .counter { font-size:13px; font-variant-numeric:tabular-nums; color:#5d6b7d; margin-left:auto; }
+    .visual-panel { background:#f6f9fd; border:1px solid #dfe8f3; border-radius:13px; padding:22px 16px; min-height:135px; }
+    .array-visual { display:flex; justify-content:center; align-items:center; gap:14px; flex-wrap:wrap; min-height:70px; }
+    .array-group { display:flex; gap:4px; padding:6px; border-radius:10px; border:1px dashed #b0bfdb; }
+    .array-item { min-width:37px; height:46px; border-radius:7px; display:grid; place-items:center; background:#dbe7ff; color:#244a97; font-weight:850; font-size:15px; }
+    .array-group:nth-child(2n) .array-item { background:#d9f4eb;color:#087b6a; }
+    .array-group:nth-child(3n) .array-item { background:#f1e4ff;color:#7149a7; }
+    .status { font-size:14px; color:#52667d; margin:14px 0 0; min-height:26px; }
+    .code-wrap { position:relative; margin-top:19px; }
+    .code-label { color:#8797ac; font-weight:700; font-size:11px; letter-spacing:.7px; position:absolute; right:15px; top:11px; }
+    pre { background:#11243a; color:#e6f2ff; padding:25px 18px 19px; margin:0; overflow:auto; font-size:12.5px; line-height:1.74; border-radius:13px; tab-size:4; }
+    code { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+    p code, li code { background:#edf2fb; color:#254ea4; font-size:.9em; padding:2px 5px; border-radius:5px; }
+    .two-cols { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:15px; }
+    .stat { border:1px solid var(--line); border-radius:13px; padding:16px; background:white; }
+    .stat strong { display:block; color:#1e548e; font-size:20px; margin-bottom:3px; }
+    .stat span { color:#63738b; font-size:12px; }
+    .binary-cells { display:grid; grid-template-columns:repeat(8,minmax(0,1fr)); gap:6px; margin:20px auto 8px; max-width:720px; }
+    .binary-cell { padding:14px 1px 11px; border:1px solid #bbcae2; border-radius:9px; text-align:center; background:#e7efff; color:#274b87; font-weight:850; font-size:15px; }
+    .binary-cell.off { background:#f0f2f6; border-color:#e3e8f0; color:#b4bdc8; }
+    .binary-cell.middle { background:#2c66d3; border-color:#235bbf; color:white; box-shadow:0 4px 10px #2c66d329; }
+    .binary-idx { font-size:10px; display:block; margin-top:5px; font-weight:600; opacity:.65; }
+    .tower-controls { display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin:18px 0; }
+    .tower-controls label { font-size:13px; font-weight:750; }
+    input[type=range] { accent-color:#2966d2; width:152px; }
+    .disk-value { background:#e4edff; color:#2959b7; border-radius:7px; min-width:30px; text-align:center; font-weight:850; padding:3px 7px; }
+    .hanoi-stage { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; background:#f6f9fd; padding:20px 12px 13px; border:1px solid #dfe8f3; border-radius:14px; }
+    .tower { min-width:0; }
+    .peg-area { height:230px; position:relative; }
+    .peg { position:absolute; width:8px; height:181px; border-radius:6px 6px 0 0; background:#a2b5c9; bottom:23px; left:50%; transform:translateX(-50%); }
+    .base { position:absolute; bottom:16px; height:10px; left:3%; width:94%; border-radius:6px; background:#8ca1b9; }
+    .disk { height:26px; border-radius:8px; position:absolute; left:50%; transform:translateX(-50%); display:grid; place-items:center; font-size:11px; font-weight:900; color:#fff; text-shadow:0 1px 2px #1c344c50; border:1px solid #ffffff4b; box-shadow:0 2px 3px #263d6624; transition:bottom .15s; }
+    .peg-name { font-size:14px; font-weight:850; text-align:center; color:#526887; }
+    .peg-role { text-align:center; font-size:11px; color:#8291a3; }
+    .move-message { padding:12px 15px; background:#eaf2ff; color:#244b83; font-size:14px; margin-top:14px; border-radius:9px; font-weight:650; min-height:48px; }
+    .move-progress { height:7px; border-radius:50px; overflow:hidden; background:#e2e9f4; margin-top:14px; }
+    .move-progress > div { height:100%; background:linear-gradient(90deg,#2b68df,#39b9ae); transition:width .18s; }
+    .steps { margin:14px 0; padding-left:25px; }
+    .steps li { padding:4px 0; }
+    .table-wrap { overflow-x:auto; background:white; border:1px solid var(--line); border-radius:14px; }
+    table { width:100%; border-collapse:collapse; text-align:left; font-size:14px; }
+    th,td { padding:14px 16px; border-bottom:1px solid var(--line); }
+    th { background:#f0f5fc; color:#415873; font-size:12px; letter-spacing:.3px; }
+    tr:last-child td { border:0; }
+    .quiz { background:white; border:1px solid var(--line); border-radius:14px; padding:20px; }
+    .quiz legend { font-weight:800; margin-bottom:10px; }
+    fieldset { border:0; padding:0; margin:0; }
+    .quiz label { display:block; padding:8px; border-radius:7px; cursor:pointer; font-size:14px; }
+    .quiz label:hover { background:#f0f5fc; }
+    .quiz-feedback { min-height:26px; font-size:14px; font-weight:700; margin-top:10px; }
+    .footer { border-top:1px solid var(--line); padding-top:20px; color:#748395; font-size:12px; }
+    @media(max-width:980px){.shell{grid-template-columns:1fr;} aside{position:relative; height:auto; padding:13px 18px;} .brand{margin-bottom:10px;} .side-label,.sidebar-foot {display:none;} nav{display:flex; overflow:auto; gap:5px;} nav a{white-space:nowrap;padding:8px 9px;} .content{padding-top:32px;} }
+    @media(max-width:620px){.three-cols,.two-cols {grid-template-columns:1fr;} .hero{padding-top:35px;padding-bottom:31px;} .card{padding:17px;} .hanoi-stage{gap:3px;padding:10px 3px;} .peg-area{height:206px;} .peg{height:160px;} .disk{height:23px;} .array-item{min-width:29px;height:38px;font-size:12px;} .array-visual{gap:6px;} .array-group{gap:2px;padding:3px;} .binary-cells{gap:3px;} .binary-cell{font-size:12px;padding:9px 0;} .controls{gap:7px;}.counter{width:100%;margin-left:0;} }
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto;}*{transition:none !important;}}
+  </style>
+</head>
+<body>
+<div class="shell">
+  <aside>
+    <div class="brand"><div class="brand-mark">D<span style="font-size:12px">&</span>C</div><div>Algorithm<br/>Studio</div></div>
+    <div class="side-label">Tutorial contents</div>
+    <nav aria-label="Tutorial sections">
+      <a href="#intro">01 · The core idea</a>
+      <a href="#merge">02 · Merge Sort</a>
+      <a href="#binary">03 · Binary Search</a>
+      <a href="#hanoi">04 · Towers of Hanoi</a>
+      <a href="#compare">05 · Compare algorithms</a>
+      <a href="#practice">06 · Check understanding</a>
+    </nav>
+    <div class="sidebar-foot"><b>Learn by doing.</b><br/>Walk through each algorithm, follow the recursion, then test yourself.</div>
+  </aside>
+  <main>
+    <header class="hero">
+      <div class="hero-inner">
+        <span class="eyebrow">Computer science / Recursion / Algorithms</span>
+        <h1>Divide <span style="color:#5ce0c9">&</span> Conquer</h1>
+        <p class="lead">Break a hard problem into smaller ones. Solve the pieces. Put the answers together. Explore three classic algorithms—including the Towers of Hanoi puzzle.</p>
+        <div class="hero-pills"><span>3 interactive visualizers</span><span>Python examples</span><span>Time complexity</span><span>Mini quiz</span></div>
+      </div>
+    </header>
+    <div class="content">
+      <section id="intro">
+        <span class="section-kicker">01 / Core idea</span>
+        <h2>One strategy, three steps</h2>
+        <p class="section-intro">Divide and Conquer is an algorithm design technique: make smaller instances of the same problem, solve them (often recursively), and use those results to solve the original problem.</p>
+        <div class="three-cols">
+          <div class="mini-card c1"><div class="mini-number">1</div><h3>Divide</h3><p>Split the problem into smaller subproblems.</p></div>
+          <div class="mini-card c2"><div class="mini-number">2</div><h3>Conquer</h3><p>Solve each subproblem, often by applying the same algorithm.</p></div>
+          <div class="mini-card c3"><div class="mini-number">3</div><h3>Combine</h3><p>Use the smaller solutions to obtain the complete solution.</p></div>
+        </div>
+        <div class="callout"><b>Base case matters:</b> Recursion needs a stopping rule—such as “an array of one element is already sorted” or “moving one disk requires only one move.”</div>
+        <p>Not every algorithm has an expensive combine step. In <b>Binary Search</b>, we only recurse into one half. In <b>Merge Sort</b>, we solve both halves and merge their answers. In <b>Towers of Hanoi</b>, two smaller moves surround one move of the largest disk.</p>
+      </section>
+
+      <section id="merge">
+        <span class="section-kicker">02 / Sorting</span>
+        <div class="section-heading-row"><h2>Merge Sort</h2><span class="chip">O(n log n)</span></div>
+        <p class="section-intro">Divide the array in half until only single elements remain. A one-element list is sorted. Then merge sorted lists by repeatedly choosing the smaller front element.</p>
+        <div class="card">
+          <h3>Interactive: split and merge</h3>
+          <p class="subtle" style="font-size:13px;margin-bottom:0">Click through the stages. Each outlined group is one subproblem.</p>
+          <div class="controls"><button class="btn ghost" id="merge-prev">← Previous</button><button class="btn" id="merge-next">Next step →</button><button class="btn ghost" id="merge-reset">Restart</button><span class="counter" id="merge-count">Step 1 / 7</span></div>
+          <div class="visual-panel"><div class="array-visual" id="merge-visual" aria-label="Merge sort arrays"></div></div>
+          <p class="status" id="merge-status" aria-live="polite"></p>
+        </div>
+        <div class="code-wrap"><span class="code-label">PYTHON</span><pre><code>def merge_sort(arr):
+    if len(arr) &lt;= 1:
+        return arr
+
+    mid = len(arr) // 2
+    left = merge_sort(arr[:mid])
+    right = merge_sort(arr[mid:])
+
+    result = []
+    i = j = 0
+    while i &lt; len(left) and j &lt; len(right):
+        if left[i] &lt;= right[j]:
+            result.append(left[i])
+            i += 1
+        else:
+            result.append(right[j])
+            j += 1
+
+    return result + left[i:] + right[j:]
+
+print(merge_sort([8, 3, 5, 1, 7, 2, 6, 4]))
+# [1, 2, 3, 4, 5, 6, 7, 8]</code></pre></div>
+        <div class="two-cols" style="margin-top:15px"><div class="stat"><strong>T(n) = 2T(n/2) + O(n)</strong><span>Two recursive halves; linear-time merge at each level.</span></div><div class="stat"><strong>O(n log n)</strong><span>There are log₂ n levels and O(n) work per level.</span></div></div>
+      </section>
+
+      <section id="binary">
+        <span class="section-kicker">03 / Searching</span>
+        <div class="section-heading-row"><h2>Binary Search</h2><span class="chip">O(log n)</span></div>
+        <p class="section-intro">Search a <b>sorted</b> array. Look at the middle element. If your target is larger, discard the left half; if smaller, discard the right half. Only one half survives each step.</p>
+        <div class="card">
+          <h3>Interactive: find 23</h3>
+          <p class="subtle" style="font-size:13px">Pick the half that can still contain the target. Grey cells have been discarded.</p>
+          <div class="binary-cells" id="binary-cells" aria-label="Binary search values"></div>
+          <p class="status" id="binary-status" aria-live="polite"></p>
+          <div class="controls"><button id="binary-left" class="btn ghost">← Search left</button><button id="binary-right" class="btn">Search right →</button><button id="binary-restart" class="btn ghost">Restart</button><span class="counter" id="binary-count">Comparisons: 1</span></div>
+        </div>
+        <div class="code-wrap"><span class="code-label">PYTHON</span><pre><code>def binary_search(arr, target):
+    low, high = 0, len(arr) - 1
+    while low &lt;= high:
+        mid = (low + high) // 2
+        if arr[mid] == target:
+            return mid
+        if arr[mid] &lt; target:
+            low = mid + 1
+        else:
+            high = mid - 1
+    return -1
+
+print(binary_search([2, 5, 8, 12, 16, 23, 38, 45], 23))
+# 5 (index starts at zero)</code></pre></div>
+        <div class="callout green"><b>Why so fast?</b> Every comparison approximately halves the remaining candidates: n → n/2 → n/4 → … → 1. Thus T(n) = T(n/2) + O(1) = <b>O(log n)</b>.</div>
+      </section>
+
+      <section id="hanoi">
+        <span class="section-kicker">04 / Recursive puzzle</span>
+        <div class="section-heading-row"><h2>Towers of Hanoi</h2><span class="chip">O(2ⁿ) moves</span></div>
+        <p class="section-intro">Move a stack of disks from peg <b>A</b> to peg <b>C</b>, using peg <b>B</b> as a helper. A larger disk may <b>never</b> sit on a smaller disk.</p>
+        <div class="card">
+          <h3>Interactive: solve the puzzle</h3>
+          <div class="tower-controls"><label for="disk-slider">Number of disks</label><input type="range" id="disk-slider" min="2" max="6" value="3" /><span class="disk-value" id="disk-value">3</span><span class="counter" id="hanoi-total">Minimum moves: 7</span></div>
+          <div class="hanoi-stage" id="hanoi-stage" aria-label="Towers of Hanoi state">
+            <div class="tower"><div class="peg-area" id="tower-A"><div class="peg"></div><div class="base"></div></div><div class="peg-name">A</div><div class="peg-role">Start</div></div>
+            <div class="tower"><div class="peg-area" id="tower-B"><div class="peg"></div><div class="base"></div></div><div class="peg-name">B</div><div class="peg-role">Helper</div></div>
+            <div class="tower"><div class="peg-area" id="tower-C"><div class="peg"></div><div class="base"></div></div><div class="peg-name">C</div><div class="peg-role">Destination</div></div>
+          </div>
+          <div class="move-progress" role="progressbar" aria-label="Hanoi progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="hanoi-progress"><div id="hanoi-progress-fill" style="width:0%"></div></div>
+          <div class="move-message" id="hanoi-message" aria-live="polite">Ready: move the stack from A to C.</div>
+          <div class="controls"><button id="hanoi-prev" class="btn ghost">← Previous</button><button id="hanoi-next" class="btn">Next move →</button><button id="hanoi-play" class="btn success">▶ Auto play</button><button id="hanoi-reset" class="btn ghost">Restart</button><span class="counter" id="hanoi-count">Move 0 / 7</span></div>
+        </div>
+        <h3 style="margin-top:29px">How Divide and Conquer solves Hanoi</h3>
+        <p>To move <b>n</b> disks from A to C, using B:</p>
+        <ol class="steps"><li><b>Divide / Conquer:</b> Move the top <b>n − 1</b> disks from <b>A to B</b> (using C).</li><li><b>Move:</b> Move the largest disk from <b>A to C</b>.</li><li><b>Conquer / Complete:</b> Move the <b>n − 1</b> disks from <b>B to C</b> (using A).</li></ol>
+        <div class="callout orange"><b>Base case:</b> When n = 1, move the one disk directly from source to destination. This stops the recursion.</div>
+        <div class="code-wrap"><span class="code-label">PYTHON</span><pre><code>def hanoi(n, source, helper, destination):
+    if n == 1:
+        print(f"Move disk 1: {source} → {destination}")
+        return
+
+    # 1. Move top n-1 disks out of the way.
+    hanoi(n - 1, source, destination, helper)
+
+    # 2. Move the largest disk.
+    print(f"Move disk {n}: {source} → {destination}")
+
+    # 3. Move n-1 disks onto the largest disk.
+    hanoi(n - 1, helper, source, destination)
+
+hanoi(3, "A", "B", "C")</code></pre></div>
+        <div class="card" style="margin-top:17px"><h3>Why does it take 2ⁿ − 1 moves?</h3><p>Let <b>T(n)</b> be the fewest moves needed for n disks. To move the largest disk, we must first move all n − 1 smaller disks away. After moving it, those n − 1 disks must be moved back onto it. This gives:</p><div class="equation">T(n) = 2T(n − 1) + 1, &nbsp; T(1) = 1</div><p style="margin-top:15px">Expand the recurrence:</p><p style="font-family:ui-monospace,monospace;font-size:13px;line-height:1.9">T(n) = 2[2T(n − 2) + 1] + 1<br/> &nbsp;&nbsp;&nbsp;&nbsp; = 4T(n − 2) + 3<br/> &nbsp;&nbsp;&nbsp;&nbsp; = 8T(n − 3) + 7<br/> &nbsp;&nbsp;&nbsp;&nbsp; = 2ⁿ − 1</p><div class="callout green">Unlike Merge Sort, Hanoi subproblems have size <b>n − 1</b>, not n/2. Divide and Conquer does <b>not</b> always mean cutting the input in half.</div><div class="two-cols"><div class="stat"><strong>3 disks → 7 moves</strong><span>2³ − 1 = 7</span></div><div class="stat"><strong>6 disks → 63 moves</strong><span>2⁶ − 1 = 63 (exponential growth)</span></div></div></div>
+      </section>
+
+      <section id="compare"><span class="section-kicker">05 / Big picture</span><h2>Compare the algorithms</h2><p class="section-intro">All three use recursive thinking, but the number and sizes of subproblems determine their efficiency.</p>
+        <div class="table-wrap"><table><thead><tr><th>Algorithm</th><th>Recursive work</th><th>Recurrence</th><th>Time</th></tr></thead><tbody><tr><td><b>Merge Sort</b></td><td>Sort two halves; merge</td><td>2T(n/2) + O(n)</td><td>O(n log n)</td></tr><tr><td><b>Binary Search</b></td><td>Search one half</td><td>T(n/2) + O(1)</td><td>O(log n)</td></tr><tr><td><b>Towers of Hanoi</b></td><td>Move n−1 disks twice</td><td>2T(n−1) + 1</td><td>Θ(2ⁿ)</td></tr></tbody></table></div>
+        <p class="subtle" style="font-size:12px;margin-top:12px">Note: for Towers of Hanoi, n represents the number of disks; for the array algorithms, n is the array length. Binary Search requires sorted data. Merge Sort's O(n log n) bound includes the usual linear-time merging.</p>
+      </section>
+
+      <section id="practice"><span class="section-kicker">06 / Practice</span><h2>Check your understanding</h2><p class="section-intro">Try these before looking at the answer. The same questions work well as a short classroom quiz.</p>
+        <div class="two-cols">
+          <div class="quiz"><fieldset><legend>1. How many moves does Hanoi need for 4 disks?</legend><label><input type="radio" name="q1" value="8"> 8</label><label><input type="radio" name="q1" value="15"> 15</label><label><input type="radio" name="q1" value="16"> 16</label></fieldset><button class="btn ghost" style="margin-top:13px" id="check1">Check answer</button><div class="quiz-feedback" id="answer1" aria-live="polite"></div></div>
+          <div class="quiz"><fieldset><legend>2. Which algorithm discards half its candidates each step?</legend><label><input type="radio" name="q2" value="Merge Sort"> Merge Sort</label><label><input type="radio" name="q2" value="Binary Search"> Binary Search</label><label><input type="radio" name="q2" value="Hanoi"> Towers of Hanoi</label></fieldset><button class="btn ghost" style="margin-top:13px" id="check2">Check answer</button><div class="quiz-feedback" id="answer2" aria-live="polite"></div></div>
+        </div>
+        <div class="callout" style="margin-top:19px"><b>Challenge:</b> In the Python Hanoi code, change <code>hanoi(3, "A", "B", "C")</code> to <code>hanoi(4, "A", "B", "C")</code>. Trace just the <i>first three moves</i> by hand. Then use the visualizer to check your prediction.</div>
+      </section>
+      <div class="footer">Divide &amp; Conquer · Interactive learning page · Works offline · Designed for students learning recursion and algorithm complexity.</div>
+    </div>
+  </main>
+</div>
+<script>
+'use strict';
+const $ = (id) => document.getElementById(id);
+
+// MERGE SORT: snapshots of the conceptual divide/merge stages.
+const mergeStages = [
+  { groups:[[8,3,5,1,7,2,6,4]], message:'Start with the unsorted array.' },
+  { groups:[[8,3,5,1],[7,2,6,4]], message:'Divide: split the array into two halves.' },
+  { groups:[[8,3],[5,1],[7,2],[6,4]], message:'Divide again: split each half into smaller pairs.' },
+  { groups:[[8],[3],[5],[1],[7],[2],[6],[4]], message:'Base case: every one-element array is already sorted.' },
+  { groups:[[3,8],[1,5],[2,7],[4,6]], message:'Combine: merge each pair of singletons in sorted order.' },
+  { groups:[[1,3,5,8],[2,4,6,7]], message:'Combine again: merge pairs into two sorted halves.' },
+  { groups:[[1,2,3,4,5,6,7,8]], message:'Done! Merge the two sorted halves into one sorted array.' }
+];
+let mergeStep=0;
+function renderMerge() {
+  const s=mergeStages[mergeStep];
+  $('merge-visual').replaceChildren();
+  s.groups.forEach(group=>{
+    const outer=document.createElement('div');outer.className='array-group';
+    group.forEach(value=>{const el=document.createElement('div');el.className='array-item';el.textContent=value;outer.appendChild(el);});
+    $('merge-visual').appendChild(outer);
+  });
+  $('merge-status').textContent=s.message;
+  $('merge-count').textContent=`Step ${mergeStep+1} / ${mergeStages.length}`;
+  $('merge-prev').disabled=mergeStep===0;
+  $('merge-next').disabled=mergeStep===mergeStages.length-1;
+}
+$('merge-prev').addEventListener('click',()=>{mergeStep=Math.max(0,mergeStep-1);renderMerge();});
+$('merge-next').addEventListener('click',()=>{mergeStep=Math.min(mergeStages.length-1,mergeStep+1);renderMerge();});
+$('merge-reset').addEventListener('click',()=>{mergeStep=0;renderMerge();});
+renderMerge();
+
+// BINARY SEARCH: choose the valid half, with immediate feedback.
+const binaryArr=[2,5,8,12,16,23,38,45], target=23;
+let low=0, high=binaryArr.length-1, comparisons=1, binaryFeedback='';
+function renderBinary() {
+  const mid=Math.floor((low+high)/2), found=low<=high&&binaryArr[mid]===target;
+  $('binary-cells').replaceChildren();
+  binaryArr.forEach((v,i)=>{
+    const e=document.createElement('div');
+    e.className='binary-cell'+(i<low||i>high?' off':i===mid?' middle':'');
+    e.innerHTML=`${v}<span class="binary-idx">index ${i}</span>`;
+    $('binary-cells').appendChild(e);
+  });
+  $('binary-status').textContent=found?`Found 23 at index ${mid}! (${comparisons} comparisons.)`:binaryFeedback||`Middle = ${binaryArr[mid]}. Is 23 larger or smaller? Choose the correct half.`;
+  $('binary-left').disabled=found;
+  $('binary-right').disabled=found;
+  $('binary-count').textContent=`Comparisons: ${comparisons}`;
+}
+function chooseHalf(direction) {
+  const mid=Math.floor((low+high)/2);
+  if (binaryArr[mid]===target) return;
+  const right=target>binaryArr[mid];
+  if ((direction==='right')!==right) { binaryFeedback=`Not quite: 23 is ${right?'larger':'smaller'} than ${binaryArr[mid]}. Try the ${right?'right':'left'} half.`; renderBinary(); return; }
+  if (right) low=mid+1; else high=mid-1;
+  comparisons++;
+  binaryFeedback='';renderBinary();
+}
+$('binary-left').addEventListener('click',()=>chooseHalf('left'));
+$('binary-right').addEventListener('click',()=>chooseHalf('right'));
+$('binary-restart').addEventListener('click',()=>{low=0;high=binaryArr.length-1;comparisons=1;binaryFeedback='';renderBinary();});
+renderBinary();
+
+// HANOI: generate legal optimal moves and immutable snapshots for stepping backward.
+const pegs=['A','B','C'];
+const colors=['#ef9760','#5f9ee5','#4fbaaa','#9173d3','#db7596','#637db9'];
+let diskCount=3, hanoiSteps=[], hanoiSnapshots=[], hanoiStep=0, timer=null;
+function generateMoves(n, source, helper, dest, acc) {
+  if (n===1) {acc.push({disk:1,from:source,to:dest});return;}
+  generateMoves(n-1,source,dest,helper,acc);
+  acc.push({disk:n,from:source,to:dest});
+  generateMoves(n-1,helper,source,dest,acc);
+}
+function stopPlay() {
+  if (timer!==null) {clearInterval(timer);timer=null;}
+  $('hanoi-play').textContent='▶ Auto play';
+}
+function rebuildHanoi() {
+  stopPlay();
+  hanoiStep=0;hanoiSteps=[];
+  generateMoves(diskCount,'A','B','C',hanoiSteps);
+  let rods={A:Array.from({length:diskCount},(_,i)=>diskCount-i),B:[],C:[]};
+  hanoiSnapshots=[{A:[...rods.A],B:[],C:[]}];
+  for (const move of hanoiSteps) {
+    const moved=rods[move.from].pop();
+    if (moved!==move.disk || (rods[move.to].length&&rods[move.to].at(-1)<moved)) throw Error('Illegal generated Hanoi move');
+    rods[move.to].push(moved);
+    hanoiSnapshots.push({A:[...rods.A],B:[...rods.B],C:[...rods.C]});
+  }
+  renderHanoi();
+}
+function renderHanoi() {
+  const rods=hanoiSnapshots[hanoiStep];
+  pegs.forEach(name=>{
+    const area=$('tower-'+name);
+    area.querySelectorAll('.disk').forEach(el=>el.remove());
+    rods[name].forEach((disk,index)=>{
+      const el=document.createElement('div'); el.className='disk';
+      el.style.width=(35+disk/diskCount*57)+'%';
+      el.style.bottom=(26+index*27)+'px';
+      el.style.backgroundColor=colors[(disk-1)%colors.length];
+      el.textContent=disk;
+      el.setAttribute('aria-label','Disk '+disk);
+      area.appendChild(el);
+    });
+  });
+  const total=hanoiSteps.length;
+  $('hanoi-count').textContent=`Move ${hanoiStep} / ${total}`;
+  $('hanoi-total').textContent=`Minimum moves: ${total}`;
+  $('hanoi-progress-fill').style.width=(hanoiStep/total*100)+'%';
+  $('hanoi-progress').setAttribute('aria-valuenow',Math.round(hanoiStep/total*100));
+  $('hanoi-prev').disabled=hanoiStep===0;
+  $('hanoi-next').disabled=hanoiStep===total;
+  const move=hanoiSteps[hanoiStep-1];
+  $('hanoi-message').textContent=hanoiStep===0?'Ready: move the stack from A to C.':hanoiStep===total?`Solved! ${diskCount} disks moved in the optimal ${total} moves.`:`Move ${hanoiStep}: disk ${move.disk} from ${move.from} to ${move.to}.`;
+}
+$('disk-slider').addEventListener('input',event=>{diskCount=Number(event.target.value);$('disk-value').textContent=diskCount;rebuildHanoi();});
+$('hanoi-prev').addEventListener('click',()=>{stopPlay();hanoiStep=Math.max(0,hanoiStep-1);renderHanoi();});
+$('hanoi-next').addEventListener('click',()=>{stopPlay();hanoiStep=Math.min(hanoiSteps.length,hanoiStep+1);renderHanoi();});
+$('hanoi-reset').addEventListener('click',rebuildHanoi);
+$('hanoi-play').addEventListener('click',()=>{
+  if(timer!==null){stopPlay();return;}
+  if(hanoiStep===hanoiSteps.length)hanoiStep=0;
+  $('hanoi-play').textContent='Ⅱ Pause';
+  timer=setInterval(()=>{
+    hanoiStep=Math.min(hanoiSteps.length,hanoiStep+1);
+    renderHanoi();
+    if(hanoiStep===hanoiSteps.length)stopPlay();
+  },480);
+});
+rebuildHanoi();
+
+function checkQuiz(qNum,correct,explanation) {
+  const selected=document.querySelector(`input[name="q${qNum}"]:checked`);
+  const output=$('answer'+qNum);
+  if(!selected){output.style.color='#a76c1d';output.textContent='Choose an answer first.';return;}
+  const right=selected.value===correct;
+  output.style.color=right?'#087b69':'#ad4653';
+  output.textContent=(right?'✓ Correct. ':'✗ Try again. ')+explanation;
+}
+$('check1').addEventListener('click',()=>checkQuiz(1,'15','2⁴ − 1 = 15 moves.'));
+$('check2').addEventListener('click',()=>checkQuiz(2,'Binary Search','Binary Search eliminates about half the candidates after each comparison.'));
+</script>
+</body>
+</html>
