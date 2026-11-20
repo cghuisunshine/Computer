@@ -112,6 +112,17 @@
     .quiz label { display:block; padding:8px; border-radius:7px; cursor:pointer; font-size:14px; }
     .quiz label:hover { background:#f0f5fc; }
     .quiz-feedback { min-height:26px; font-size:14px; font-weight:700; margin-top:10px; }
+
+    .quiz-feedback:not(:empty) { margin-top:14px; padding:15px; border:1px solid var(--line); border-radius:10px; font-weight:400; line-height:1.55; }
+    .quiz-feedback.is-correct { background:#effbf7; border-color:#abdfcd; color:#225a4b; }
+    .quiz-feedback.is-incorrect { background:#fff8f2; border-color:#f0d6b9; color:#6a4a2d; }
+    .quiz-feedback .feedback-heading { font-size:15px; font-weight:800; margin-bottom:5px; }
+    .quiz-feedback .feedback-explanation { margin:8px 0; }
+    .quiz-feedback .choice-analysis { font-weight:700; margin:12px 0 5px; }
+    .quiz-feedback ul { margin:6px 0 0; padding-left:20px; }
+    .quiz-feedback li { margin-bottom:7px; }
+    .quiz-feedback li:last-child { margin-bottom:0; }
+    .quiz-feedback .correct-choice { font-weight:700; }
     .footer { border-top:1px solid var(--line); padding-top:20px; color:#748395; font-size:12px; }
     @media(max-width:980px){.shell{grid-template-columns:1fr;} aside{position:relative; height:auto; padding:13px 18px;} .brand{margin-bottom:10px;} .side-label,.sidebar-foot {display:none;} nav{display:flex; overflow:auto; gap:5px;} nav a{white-space:nowrap;padding:8px 9px;} .content{padding-top:32px;} }
     @media(max-width:620px){.three-cols,.two-cols {grid-template-columns:1fr;} .hero{padding-top:35px;padding-bottom:31px;} .card{padding:17px;} .hanoi-stage{gap:3px;padding:10px 3px;} .peg-area{height:206px;} .peg{height:160px;} .disk{height:23px;} .array-item{min-width:29px;height:38px;font-size:12px;} .array-visual{gap:6px;} .array-group{gap:2px;padding:3px;} .binary-cells{gap:3px;} .binary-cell{font-size:12px;padding:9px 0;} .controls{gap:7px;}.counter{width:100%;margin-left:0;} }
@@ -263,10 +274,15 @@ hanoi(3, "A", "B", "C")</code></pre></div>
         <p class="subtle" style="font-size:12px;margin-top:12px">Note: for Towers of Hanoi, n represents the number of disks; for the array algorithms, n is the array length. Binary Search requires sorted data. Merge Sort's O(n log n) bound includes the usual linear-time merging.</p>
       </section>
 
-      <section id="practice"><span class="section-kicker">06 / Practice</span><h2>Check your understanding</h2><p class="section-intro">Try these before looking at the answer. The same questions work well as a short classroom quiz.</p>
+      <section id="practice"><span class="section-kicker">06 / Practice</span><h2>Check your understanding</h2><p class="section-intro">Choose an answer, then click <b>Check answer &amp; explanation</b>. Every question reveals the correct choice, a step-by-step explanation, and why each alternative is right or wrong.</p>
         <div class="two-cols">
-          <div class="quiz"><fieldset><legend>1. How many moves does Hanoi need for 4 disks?</legend><label><input type="radio" name="q1" value="8"> 8</label><label><input type="radio" name="q1" value="15"> 15</label><label><input type="radio" name="q1" value="16"> 16</label></fieldset><button class="btn ghost" style="margin-top:13px" id="check1">Check answer</button><div class="quiz-feedback" id="answer1" aria-live="polite"></div></div>
-          <div class="quiz"><fieldset><legend>2. Which algorithm discards half its candidates each step?</legend><label><input type="radio" name="q2" value="Merge Sort"> Merge Sort</label><label><input type="radio" name="q2" value="Binary Search"> Binary Search</label><label><input type="radio" name="q2" value="Hanoi"> Towers of Hanoi</label></fieldset><button class="btn ghost" style="margin-top:13px" id="check2">Check answer</button><div class="quiz-feedback" id="answer2" aria-live="polite"></div></div>
+          <div class="quiz"><fieldset><legend>1. How many moves does Towers of Hanoi need for 4 disks?</legend><label><input type="radio" name="q1" value="0"> 8</label><label><input type="radio" name="q1" value="1"> 15</label><label><input type="radio" name="q1" value="2"> 16</label></fieldset><button type="button" class="btn ghost" style="margin-top:13px" id="check1">Check answer &amp; explanation</button><div class="quiz-feedback" id="answer1" aria-live="polite"></div></div>
+          <div class="quiz"><fieldset><legend>2. Which algorithm discards about half the remaining candidates after each comparison?</legend><label><input type="radio" name="q2" value="0"> Merge Sort</label><label><input type="radio" name="q2" value="1"> Binary Search</label><label><input type="radio" name="q2" value="2"> Towers of Hanoi</label></fieldset><button type="button" class="btn ghost" style="margin-top:13px" id="check2">Check answer &amp; explanation</button><div class="quiz-feedback" id="answer2" aria-live="polite"></div></div>
+          <div class="quiz"><fieldset><legend>3. Which recurrence best describes Merge Sort?</legend><label><input type="radio" name="q3" value="0"> T(n) = 2T(n/2) + O(n)</label><label><input type="radio" name="q3" value="1"> T(n) = T(n/2) + O(1)</label><label><input type="radio" name="q3" value="2"> T(n) = 2T(n − 1) + 1</label></fieldset><button type="button" class="btn ghost" style="margin-top:13px" id="check3">Check answer &amp; explanation</button><div class="quiz-feedback" id="answer3" aria-live="polite"></div></div>
+          <div class="quiz"><fieldset><legend>4. Why must the data be sorted before ordinary Binary Search works?</legend><label><input type="radio" name="q4" value="0"> The middle comparison tells us which half cannot contain the target.</label><label><input type="radio" name="q4" value="1"> Sorted arrays always take less memory.</label><label><input type="radio" name="q4" value="2"> Comparing with the middle automatically sorts an array.</label></fieldset><button type="button" class="btn ghost" style="margin-top:13px" id="check4">Check answer &amp; explanation</button><div class="quiz-feedback" id="answer4" aria-live="polite"></div></div>
+          <div class="quiz"><fieldset><legend>5. Before moving the largest disk in Towers of Hanoi, what must we do?</legend><label><input type="radio" name="q5" value="0"> Move the top n − 1 disks to the helper peg.</label><label><input type="radio" name="q5" value="1"> Move the largest disk immediately.</label><label><input type="radio" name="q5" value="2"> Place a larger disk on a smaller one.</label></fieldset><button type="button" class="btn ghost" style="margin-top:13px" id="check5">Check answer &amp; explanation</button><div class="quiz-feedback" id="answer5" aria-live="polite"></div></div>
+          <div class="quiz"><fieldset><legend>6. What is the base case in the Merge Sort implementation shown above?</legend><label><input type="radio" name="q6" value="0"> When the array has zero or one element.</label><label><input type="radio" name="q6" value="1"> Whenever the array has two elements.</label><label><input type="radio" name="q6" value="2"> Only after all arrays are merged.</label></fieldset><button type="button" class="btn ghost" style="margin-top:13px" id="check6">Check answer &amp; explanation</button><div class="quiz-feedback" id="answer6" aria-live="polite"></div></div>
+          <div class="quiz"><fieldset><legend>7. For 3-disk Hanoi from A to C using B, what is the FIRST move?</legend><label><input type="radio" name="q7" value="0"> Move disk 1 from A to C.</label><label><input type="radio" name="q7" value="1"> Move disk 1 from A to B.</label><label><input type="radio" name="q7" value="2"> Move disk 2 from A to B.</label></fieldset><button type="button" class="btn ghost" style="margin-top:13px" id="check7">Check answer &amp; explanation</button><div class="quiz-feedback" id="answer7" aria-live="polite"></div></div>
         </div>
         <div class="callout" style="margin-top:19px"><b>Challenge:</b> In the Python Hanoi code, change <code>hanoi(3, "A", "B", "C")</code> to <code>hanoi(4, "A", "B", "C")</code>. Trace just the <i>first three moves</i> by hand. Then use the visualizer to check your prediction.</div>
       </section>
@@ -407,16 +423,59 @@ $('hanoi-play').addEventListener('click',()=>{
 });
 rebuildHanoi();
 
-function checkQuiz(qNum,correct,explanation) {
-  const selected=document.querySelector(`input[name="q${qNum}"]:checked`);
-  const output=$('answer'+qNum);
-  if(!selected){output.style.color='#a76c1d';output.textContent='Choose an answer first.';return;}
-  const right=selected.value===correct;
-  output.style.color=right?'#087b69':'#ad4653';
-  output.textContent=(right?'✓ Correct. ':'✗ Try again. ')+explanation;
+// Each answer includes the correct solution, step-by-step reasoning, and explanations of every choice.
+const practiceQuestions = [{"question":"How many moves does Towers of Hanoi need for 4 disks?","choices":[{"label":"8","reason":"8 is not enough. It takes 7 moves to reposition the top three disks twice, plus one move for the largest disk."},{"label":"15","reason":"Correct. T(4) = 2 × T(3) + 1 = 2 × 7 + 1 = 15."},{"label":"16","reason":"16 is 2⁴, but the minimum-move formula subtracts one: 2⁴ − 1 = 15."}],"correct":1,"explanation":"To move four disks, move the three smaller disks to the helper peg (7 moves), move disk 4 to the destination (1 move), then move the three smaller disks onto it (7 moves). Total: 7 + 1 + 7 = 15 = 2⁴ − 1."},{"question":"Which algorithm discards about half the remaining candidates after each comparison?","choices":[{"label":"Merge Sort","reason":"Merge Sort divides the input into two halves, but it solves BOTH halves and combines them; it does not discard half its data."},{"label":"Binary Search","reason":"Correct. On a sorted array, comparing the target with the middle element rules out one entire half."},{"label":"Towers of Hanoi","reason":"Hanoi recursively moves n − 1 disks twice; it does not search or eliminate half its candidates."}],"correct":1,"explanation":"Binary Search needs sorted input. If the target is larger than the middle element, it cannot be on the left; if smaller, it cannot be on the right. So only one half is searched next: T(n) = T(n/2) + O(1), giving O(log n) time."},{"question":"Which recurrence best describes Merge Sort?","choices":[{"label":"T(n) = 2T(n/2) + O(n)","reason":"Correct. Two halves are recursively sorted, and merging their sorted results takes linear work."},{"label":"T(n) = T(n/2) + O(1)","reason":"This is Binary Search: it follows only one half and does a constant amount of additional work."},{"label":"T(n) = 2T(n − 1) + 1","reason":"This is Towers of Hanoi: two subproblems each move n − 1 disks, with one largest-disk move between them."}],"correct":0,"explanation":"Merge Sort recursively sorts the left half and the right half: 2T(n/2). It must then examine and merge up to n elements: O(n). With log₂ n recursion levels and O(n) total merging per level, the running time is O(n log n)."},{"question":"Why must the data be sorted before ordinary Binary Search works?","choices":[{"label":"The middle comparison tells us which half cannot contain the target.","reason":"Correct. Sorting guarantees every element to the left is no larger than the middle, and every element to the right is no smaller."},{"label":"Sorted arrays always take less memory.","reason":"Sorting does not necessarily reduce memory use, and memory size is not the reason Binary Search works."},{"label":"Comparing with the middle automatically sorts an array.","reason":"A comparison only inspects two values. It does not rearrange or sort any element."}],"correct":0,"explanation":"Suppose the middle value is 12 and the target is 23. In ascending sorted order, every value to the left is ≤ 12, so 23 cannot be there. Without sorting, the target could be anywhere, and discarding a half would be unsafe."},{"question":"Before moving the largest disk in Towers of Hanoi, what must we do?","choices":[{"label":"Move the top n − 1 disks to the helper peg.","reason":"Correct. This exposes the largest disk so we can move it to the destination peg."},{"label":"Move the largest disk immediately.","reason":"The largest disk starts underneath all the others; you cannot move it until smaller disks are out of the way."},{"label":"Place a larger disk on a smaller one.","reason":"That would break the puzzle's central rule: a larger disk must never rest on a smaller one."}],"correct":0,"explanation":"The recursive plan is: (1) move the top n − 1 disks from source to helper, (2) move disk n to destination, and (3) move the n − 1 disks from helper to destination. This gives T(n) = 2T(n − 1) + 1."},{"question":"What is the base case in the Merge Sort implementation shown above?","choices":[{"label":"When the array has zero or one element.","reason":"Correct. An empty array or a one-element array is already sorted, so recursion stops."},{"label":"Whenever the array has two elements.","reason":"A pair might still need ordering. The code continues to split until length ≤ 1."},{"label":"Only after all arrays are merged.","reason":"That is the end of the entire algorithm, not the stopping condition for an individual recursive call."}],"correct":0,"explanation":"The code begins with `if len(arr) <= 1: return arr`. Without this base case, the function would keep calling itself instead of stopping. The halves become small enough to be trivially sorted, then they are merged back together."},{"question":"For 3-disk Hanoi from A to C using B, what is the FIRST move?","choices":[{"label":"Move disk 1 from A to C.","reason":"Correct. To move the top two disks from A to B, we first move the smallest disk from A to C temporarily."},{"label":"Move disk 1 from A to B.","reason":"That is a legal move, but it is not the first move of the optimal recursive solution from A to C with three disks."},{"label":"Move disk 2 from A to B.","reason":"Disk 2 is under disk 1, so it cannot move until disk 1 is removed."}],"correct":0,"explanation":"First we need to move disks 1 and 2 from A to B so disk 3 can move to C. To move those two disks, step 1 is disk 1: A → C; step 2 is disk 2: A → B; step 3 is disk 1: C → B. Only then can disk 3 go A → C."}];
+function checkQuiz(qNum) {
+  const question = practiceQuestions[qNum-1];
+  const selected = document.querySelector(`input[name="q${qNum}"]:checked`);
+  const output = $('answer'+qNum);
+  output.replaceChildren();
+  if (!selected) {
+    output.className='quiz-feedback is-incorrect';
+    output.textContent='Choose an answer first, then check the explanation.';
+    return;
+  }
+  const chosenIndex=Number(selected.value);
+  const right=chosenIndex===question.correct;
+  output.className='quiz-feedback '+(right?'is-correct':'is-incorrect');
+  const heading=document.createElement('div');
+  heading.className='feedback-heading';
+  heading.textContent=right?'✓ Correct!':'✗ Not quite — here is why.';
+  output.appendChild(heading);
+  if(!right){
+    const picked=document.createElement('p');
+    picked.textContent='Your answer: '+question.choices[chosenIndex].label;
+    output.appendChild(picked);
+  }
+  const correct=document.createElement('p');
+  correct.className='correct-choice';
+  correct.textContent='Correct answer: '+question.choices[question.correct].label;
+  output.appendChild(correct);
+  const explanation=document.createElement('p');
+  explanation.className='feedback-explanation';
+  explanation.textContent='Step-by-step explanation: '+question.explanation;
+  output.appendChild(explanation);
+  const subtitle=document.createElement('p');
+  subtitle.className='choice-analysis';
+  subtitle.textContent='Why each choice is correct or incorrect:';
+  output.appendChild(subtitle);
+  const list=document.createElement('ul');
+  question.choices.forEach((choice,index)=>{
+    const item=document.createElement('li');
+    item.textContent=(index===question.correct?'✓ ':'✗ ')+choice.label+': '+choice.reason;
+    list.appendChild(item);
+  });
+  output.appendChild(list);
 }
-$('check1').addEventListener('click',()=>checkQuiz(1,'15','2⁴ − 1 = 15 moves.'));
-$('check2').addEventListener('click',()=>checkQuiz(2,'Binary Search','Binary Search eliminates about half the candidates after each comparison.'));
+practiceQuestions.forEach((question,i)=>{
+  const n=i+1;
+  $('check'+n).addEventListener('click',()=>checkQuiz(n));
+  document.querySelectorAll(`input[name="q${n}"]`).forEach(input=>input.addEventListener('change',()=>{
+    const output=$('answer'+n);
+    output.replaceChildren();
+    output.className='quiz-feedback';
+  }));
+});
 </script>
 </body>
 </html>
