@@ -15,6 +15,7 @@ function load() {
     beforeParse(w) {
       w.setTimeout = fn => {timers.set(++serial, fn); return serial;};
       w.clearTimeout = id => timers.delete(id);
+      w.HTMLElement.prototype.scrollIntoView = function () {};
     }});
   const doc = dom.window.document, api = dom.window.DPTutorial;
   const choose = method => doc.querySelector(`[data-method="${method}"]`).click();
@@ -148,9 +149,78 @@ test('page is self-contained, all internal links resolve, and source attribution
   assert.equal(new Set(ids).size,ids.length);
   for(const a of doc.querySelectorAll('a[href^="#"]')) assert.ok(doc.getElementById(a.hash.slice(1)),a.href);
   for(const b of doc.querySelectorAll('.section-link')) assert.ok(doc.getElementById(b.dataset.target));
-  assert.equal(doc.querySelectorAll('script[src],link[rel="stylesheet"],img[src]').length,0);
+  assert.equal(doc.querySelectorAll('script[src],link[rel="stylesheet"]').length,0);
+  const images=[...doc.querySelectorAll('img')];
+  assert.equal(images.length,5,'all five chapter figures are included');
+  for(const image of images) {
+    assert.match(image.src,/^data:image\/svg\+xml;base64,/);
+    assert.ok(image.alt.length>20);
+    const svg=Buffer.from(image.src.split(',')[1],'base64').toString();
+    assert.match(svg,/<svg/);
+    assert.doesNotMatch(svg,/<script\b/);
+    assert.doesNotMatch(svg,/(?:xlink:)?href="(?!#|data:)/);
+  }
   assert.doesNotMatch(html,/\{\{[A-Z_]+\}\}/);
   assert.match(doc.getElementById('source').textContent,/krahets/);
   assert.match(doc.getElementById('source').textContent,/CC BY-NC-SA 4.0/);
+  dom.window.close();
+});
+
+test('route explorer enumerates every valid route once and backtracking counts the same complete routes', () => {
+  const {dom,api}=load();
+  function choose(n,k){let value=1;for(let i=1;i<=k;i++)value=value*(n-i+1)/i;return Math.round(value);}
+  for(let n=1;n<=9;n++) {
+    const expected=Array.from({length:Math.floor(n/2)+1},(_,k)=>choose(n-k,k)).reduce((a,b)=>a+b,0);
+    const found=api.routesFor(n),keys=found.map(r=>r.join(','));
+    assert.equal(found.length,expected);assert.equal(new Set(keys).size,expected);
+    for(const route of found){assert.ok(route.every(move=>move===1||move===2));assert.equal(route.reduce((a,b)=>a+b,0),n);}
+    const frames=api.backtrackFrames(n),successes=frames.filter(f=>f.kind==='Count route');
+    assert.equal(successes.length,expected);assert.equal(frames.at(-1).count,expected);
+    assert.deepEqual(Array.from(successes,f=>f.moves.join(',')).sort(),Array.from(keys).sort());
+    for(const [i,f] of frames.entries()) {
+      assert.equal(f.positions[0],0);assert.ok(f.positions.every(p=>p>=0&&p<=n));
+      assert.equal(f.positions.length,f.moves.length+1);
+      for(let j=1;j<f.positions.length;j++)assert.equal(f.positions[j]-f.positions[j-1],f.moves[j-1]);
+      if(f.kind==='Skip move')assert.ok(f.attempt>n);
+      if(i>0)assert.equal(f.count-frames[i-1].count,f.kind==='Count route'?1:0);
+    }
+  }
+  dom.window.close();
+});
+
+test('students can explore routes, step successful paths, rewind, and launch the n=9 comparison', () => {
+  const {dom,doc,api,errors}=load();
+  assert.equal(doc.querySelectorAll('[data-route]').length,3);
+  doc.querySelector('[data-route="2"]').click();
+  assert.match(doc.getElementById('route-status').textContent,/Landings: 0 → 2 → 3/);
+  for(let count=1;count<=3;count++){doc.getElementById('bt-found').click();assert.equal(doc.getElementById('bt-count').textContent,String(count));}
+  assert.equal(doc.getElementById('bt-found').disabled,true);
+  doc.getElementById('bt-back').click();assert.equal(doc.getElementById('bt-count').textContent,'2');
+  doc.getElementById('bt-reset').click();assert.equal(doc.getElementById('bt-count').textContent,'0');
+  const select=doc.getElementById('route-stairs');select.value='9';select.dispatchEvent(new dom.window.Event('change'));
+  assert.equal(doc.querySelectorAll('[data-route]').length,55);
+  doc.getElementById('bt-finish').click();assert.equal(doc.getElementById('bt-count').textContent,'55');
+  select.value='5';select.dispatchEvent(new dom.window.Event('change'));
+  assert.equal(doc.querySelectorAll('[data-route]').length,8);assert.equal(doc.getElementById('bt-count').textContent,'0');
+  for(const button of doc.querySelectorAll('[data-open-method]')) {
+    button.click();assert.equal(api.getState().method,button.dataset.openMethod);assert.equal(api.getState().n,Number(button.dataset.openN));assert.equal(api.getState().index,0);
+  }
+  assert.deepEqual(errors,[]);dom.window.close();
+});
+
+test('all five complete Python examples remain visible and runnable independently', () => {
+  const {dom,doc,api}=load();
+  const examples=[...doc.querySelectorAll('[data-python-example]')];assert.equal(examples.length,5);
+  for(const example of examples) {
+    const source=example.textContent;
+    const result=spawnSync('python3',['-c',source+'\nassert [climb(n) for n in range(1, 13)] == '+JSON.stringify(Array.from({length:12},(_,i)=>routes(i+1).length))],{encoding:'utf8'});
+    assert.equal(result.status,0,result.stderr);assert.equal(result.stdout.trim(),'55');
+    const method=example.dataset.pythonExample;
+    const original=fs.readFileSync(path.join(__dirname,'tools/dynamic_programming_examples',method+'.py'),'utf8').trim();
+    assert.equal(source,original);
+    if(method!=='backtracking')assert.equal(api.methods[method].code,source.split('\n\n\nif __name__')[0]);
+  }
+  assert.deepEqual([...doc.querySelectorAll('#worked-dp-table tbody td:last-child')].map(c=>Number(c.textContent)),[1,2,3,5,8,13,21,34,55]);
+  assert.equal(doc.querySelectorAll('#worked-rolling-table tbody tr').length,7);
   dom.window.close();
 });
