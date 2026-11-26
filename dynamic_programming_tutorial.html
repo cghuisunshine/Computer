@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Learn dynamic programming through climbing stairs: interactive recursion, memoization, tabulation, rolling variables, Python examples, and practice.">
+<title>Dynamic Programming · From recursion to reuse</title>
+<style>
+:root{--bg:#f4f6fa;--paper:#fff;--ink:#17243b;--muted:#526078;--line:#dbe2ed;--blue:#3355ce;--soft:#edf1ff;--green:#11694e;--mint:#e4f5ed;--amber:#885508;--gold:#fff1d5;--mono:ui-monospace,SFMono-Regular,Consolas,monospace;color-scheme:light}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:25px}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}a{color:var(--blue);text-underline-offset:4px}button,input,select{font:inherit}button{cursor:pointer;border:1px solid var(--line);border-radius:9px;padding:9px 16px;color:var(--ink);background:#fff;font-weight:650}button:hover{background:var(--soft);border-color:#acb9e8}button:disabled{opacity:.42;cursor:default}button.primary{background:var(--blue);border-color:var(--blue);color:#fff}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid var(--blue);outline-offset:4px}input[type=range]{accent-color:var(--blue)}h1,h2,h3,p{margin:0}h1{font-size:clamp(42px,6vw,76px);line-height:1.05;letter-spacing:-3px;font-weight:760}h2{font-size:clamp(25px,3vw,33px);line-height:1.25;letter-spacing:-.8px}h3{font-size:19px;line-height:1.4}p+p{margin-top:13px}code{font-family:var(--mono);font-size:.9em}p code,li code{background:var(--soft);padding:2px 5px;border-radius:4px}.wrap{max-width:1380px;margin:auto;padding:0 42px}.topline{display:flex;align-items:center;justify-content:space-between;padding:25px 0;border-bottom:1px solid var(--line);gap:20px}.brand{font-size:14px;font-weight:750;letter-spacing:.3px;display:flex;align-items:center;gap:10px}.brandmark{display:grid;place-items:center;background:var(--blue);color:white;width:33px;height:33px;border-radius:9px;font:700 14px var(--mono)}.toplinks{display:flex;gap:22px;font-size:14px}.toplinks a{text-decoration:none}.hero{display:grid;grid-template-columns:1.15fr 1fr;gap:55px;align-items:center;padding:65px 0 55px}.eyebrow{font-size:13px;letter-spacing:1.8px;font-weight:750;text-transform:uppercase;color:var(--blue);margin-bottom:15px}.hero h1 span{display:block;color:var(--blue)}.dek{color:var(--muted);max-width:520px;font-size:18px;margin-top:22px}.hero-links{display:flex;align-items:center;gap:25px;margin-top:26px;flex-wrap:wrap}.cta{display:inline-block;padding:12px 21px;background:var(--ink);color:#fff;border-radius:9px;font-size:15px;font-weight:650;text-decoration:none}.meta{display:flex;gap:12px;color:var(--muted);font-size:13px;margin-top:23px;flex-wrap:wrap}.meta span+span:before{content:'·';margin-right:12px}.hero-art{background:var(--soft);border:1px solid #d9e0fc;border-radius:20px;padding:22px 24px 16px;min-width:0}.hero-art svg{display:block;width:100%;height:auto}.art-caption{display:flex;justify-content:space-between;gap:10px;color:var(--muted);font-size:14px}.art-caption strong{color:var(--blue)}.page-layout{display:grid;grid-template-columns:205px minmax(0,1fr);gap:38px;align-items:start;padding-bottom:55px}.sidebar{position:sticky;top:23px}.nav-heading{font-size:12px;font-weight:750;letter-spacing:1.7px;text-transform:uppercase;color:var(--muted);padding:7px 12px}.sidebar a,.section-link{display:block;width:100%;font:500 14px/1.5 inherit;text-align:left;padding:10px 12px;background:transparent;color:var(--muted);text-decoration:none;border:0;border-radius:7px;margin:2px 0}.sidebar a:hover,.section-link:hover{background:#e8edf6;color:var(--blue)}.sidebar .lab-link{background:var(--soft);color:var(--blue);font-weight:700}.side-note{font-size:13px;color:var(--muted);padding:19px 12px;border-top:1px solid var(--line);margin-top:20px;line-height:1.7}.main{min-width:0}.section-top{display:flex;justify-content:space-between;gap:15px;align-items:start;margin-bottom:22px}.section-top p{color:var(--muted);font-size:15px;margin-top:9px}.badge{white-space:nowrap;font:12px var(--mono);padding:6px 9px;border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--muted)}.lab{border:1px solid var(--line);border-radius:15px;overflow:hidden;background:var(--paper);box-shadow:0 8px 30px #1a2c4e05}.methods{padding:8px;display:grid;grid-template-columns:repeat(4,1fr);gap:5px;border-bottom:1px solid var(--line);background:#f9fafc}.methods button{border-color:transparent;background:transparent;padding:12px 7px;font-size:14px}.methods button[aria-pressed=true]{background:white;color:var(--blue);border-color:#c9d3f8;box-shadow:0 2px 5px #17243b07}.lab-settings{padding:18px 23px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:20px;align-items:center;flex-wrap:wrap}.n-label{display:flex;align-items:center;gap:14px;font-size:14px;font-weight:650}.n-label input{width:140px}.n-label output{background:var(--soft);color:var(--blue);border-radius:6px;padding:2px 10px;font:700 15px var(--mono)}.method-bound{font:13px var(--mono);color:var(--muted)}.lab-scene{padding:25px 25px 18px;min-height:270px}.scene-heading{display:flex;align-items:center;justify-content:space-between;gap:15px;font-size:14px;color:var(--muted);margin-bottom:22px}.scene-heading strong{color:var(--ink)}.cells{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:9px}.cell{background:#f7f9fc;border:1px solid var(--line);border-radius:9px;padding:11px 4px;text-align:center;min-width:0}.cell .idx{font:12px var(--mono);color:var(--muted);display:block}.cell .val{display:block;font:650 25px/1.7 var(--mono);color:#8a95a6}.cell.known .val{color:var(--ink)}.cell.known{background:#f0f7f4;border-color:#d0e6db}.cell.dep{background:var(--soft);border-color:#9aacef}.cell.dep .val{color:var(--blue)}.cell.current{background:var(--gold);border:2px solid #c68a25;padding:10px 3px}.cell.current .val{color:var(--amber)}.cell small{font-size:12px;color:var(--muted);display:block;min-height:20px}.legend{display:flex;gap:17px;font-size:12px;color:var(--muted);margin-top:15px;flex-wrap:wrap}.legend span{display:flex;align-items:center;gap:6px}.key{width:10px;height:10px;border:1px solid #8a9bb7;border-radius:3px;background:#f0f7f4}.key.read{background:var(--soft);border-color:#9aacef}.key.now{background:var(--gold);border-color:#c68a25}.stack-row{margin-top:20px;padding-top:15px;border-top:1px solid var(--line);display:flex;gap:7px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--muted)}.stack-chip{font:12px var(--mono);padding:4px 8px;border:1px solid var(--line);border-radius:5px;background:white}.rolling{display:flex;justify-content:center;gap:18px;align-items:center;padding:22px 0}.register{padding:18px 35px;background:var(--soft);border:1px solid #b6c5fb;border-radius:12px;text-align:center}.register small{display:block;font:14px var(--mono);color:var(--blue)}.register strong{font:700 40px/1.6 var(--mono)}.register p{font-size:13px;color:var(--muted)}.roll-plus{font:30px var(--mono);color:var(--muted)}.event{padding:18px 24px;background:#f7f9fd;border-top:1px solid var(--line);min-height:110px}.event-tag{font-size:12px;letter-spacing:1.3px;text-transform:uppercase;font-weight:750;color:var(--blue);margin-bottom:5px}.event p{font-size:15px}.player{padding:18px 23px;border-top:1px solid var(--line)}.player-buttons{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.player-buttons button{font-size:14px;padding:9px 12px}.speed{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}select{appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='m2 2 4 4 4-4' fill='none' stroke='%23526078' stroke-width='1.5'/%3E%3C/svg%3E") no-repeat right 9px center;padding:7px 27px 7px 10px;border:1px solid var(--line);border-radius:6px;color:var(--ink)}.timeline{display:flex;gap:12px;margin-top:15px;align-items:center}.timeline input{flex:1;min-width:0}.timeline output{font:12px var(--mono);color:var(--muted);min-width:74px;text-align:right}.metrics{display:grid;grid-template-columns:repeat(3,1fr);background:#f9fafc;border-top:1px solid var(--line)}.metric{padding:14px 20px;border-right:1px solid var(--line)}.metric:last-child{border:0}.metric span{display:block;font-size:12px;color:var(--muted)}.metric strong{font:650 23px var(--mono)}.code-panel{background:#18243a;color:#edf1ff;border-radius:12px;overflow:hidden;margin-top:17px}.code-top{padding:12px 18px;border-bottom:1px solid #39465d;display:flex;justify-content:space-between;align-items:center;font:13px var(--mono)}.code-top button{background:#293750;border-color:#526078;color:#fff;font:12px inherit;padding:5px 10px}.python{margin:0;padding:15px 0 19px;overflow-x:auto;font:13px/1.9 var(--mono);tab-size:4}.python .line{display:block;padding:0 18px;min-width:max-content;border-left:3px solid transparent}.python .line.on{background:#35466b;border-color:#a4b8ff}.code-note{font-size:13px;color:var(--muted);margin-top:10px}.extra-section,.section-card{margin-top:44px;scroll-margin-top:25px}.section-card{padding:29px 30px;background:#fff;border:1px solid var(--line);border-radius:13px}.section-badge,.node-kind-pill,.chevron{display:none}.section-subtitle{color:var(--muted);margin-top:10px;font-size:16px}.node{margin-top:23px}.node-title{font-size:18px;font-weight:700}.node-content{margin-top:9px;color:#384963}.node-content p{margin-bottom:12px}.node-content pre{overflow-x:auto;padding:17px;background:var(--soft);color:#273e8e;border-radius:8px;font:14px/1.8 var(--mono)}.node-content li{margin:7px 0}.concept-pair{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:20px}.concept{padding:22px;border:1px solid var(--line);border-radius:12px;background:#fff}.concept p{font-size:15px;color:var(--muted);margin-top:9px}.mini-tree{display:block;width:100%;height:auto;margin:14px 0}.tree-note{font-size:14px;color:var(--muted)}.route-example{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}.route-example span{padding:7px 12px;border:1px solid var(--line);border-radius:7px;background:var(--soft);font:14px var(--mono)}.table-scroll{overflow:auto;margin-top:20px;border:1px solid var(--line);border-radius:12px;background:#fff}table{border-collapse:collapse;width:100%;min-width:600px;text-align:left;font-size:14px}th,td{padding:15px 17px;border-bottom:1px solid var(--line)}th{background:#edf1f8;color:var(--muted);font-size:13px}tr:last-child td{border-bottom:0}td:first-child{font-weight:650}.call-comparison{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:15px}.call-card{padding:17px 20px;border:1px solid var(--line);border-radius:10px;background:white}.call-card strong{font:700 26px var(--mono);display:block}.call-card span{font-size:13px;color:var(--muted)}.note{border-left:3px solid var(--blue);padding:12px 18px;background:var(--soft);margin-top:20px;font-size:14px;color:#36476c}.quiz-grid{display:grid;gap:14px;margin-top:20px}.question{border:1px solid var(--line);background:#fff;border-radius:11px;padding:22px}.question h3{font-size:17px;margin-bottom:14px}.answers{display:flex;gap:8px;flex-wrap:wrap}.answers button{font:14px var(--mono);font-weight:500}.answers button[aria-pressed=true]{background:var(--soft);border-color:var(--blue);color:var(--blue)}.feedback{font-size:14px;color:var(--muted);margin-top:12px;min-height:24px}.feedback.correct{color:var(--green)}.glossary{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:19px}.term{border-bottom:1px solid var(--line);padding:10px 0}.term strong{display:block;font-size:15px}.term span{font-size:14px;color:var(--muted)}footer{border-top:1px solid var(--line);padding:26px 0 36px;color:var(--muted);font-size:13px;line-height:1.8}footer p+p{margin-top:9px}.skip{position:absolute;top:-80px;left:15px;background:white;padding:10px;z-index:9}.skip:focus{top:10px}.print-button{font-size:13px;background:transparent;padding:5px 10px}noscript{display:block;background:var(--gold);padding:20px}.toast{font-size:13px;margin-top:8px;color:var(--blue);min-height:22px}[hidden]{display:none!important}
+@media(min-width:1150px){.cells{grid-template-columns:repeat(6,minmax(0,1fr))}}
+@media(max-width:1000px){.wrap{padding:0 26px}.page-layout{grid-template-columns:170px minmax(0,1fr);gap:24px}.hero{gap:30px}.hero h1{font-size:57px}.lab-settings{padding:16px}.method-bound{font-size:12px}.methods button{font-size:12px}.sidebar a,.section-link{font-size:13px;padding:9px}.lab-scene{padding:20px}}
+@media(max-width:760px){.hero{grid-template-columns:1fr;padding:40px 0;gap:26px}.hero h1{font-size:60px}.hero-art{max-width:520px}.page-layout{display:block}.sidebar{position:static;display:flex;gap:5px;flex-wrap:wrap;margin-bottom:28px}.sidebar a,.section-link{width:auto;font-size:13px;border:1px solid var(--line);background:white;margin:0}.sidebar .nav-heading,.side-note{display:none}.concept-pair{grid-template-columns:1fr}.sidebar .section-link{max-width:100%}.methods button{font-size:13px;padding:10px 3px}.section-card{padding:24px}.toplinks{gap:14px}.lab-settings{gap:10px}}
+@media(max-width:480px){.wrap{padding:0 16px}.hero h1{font-size:48px;letter-spacing:-2px}.topline{padding:18px 0}.brand{font-size:13px}.toplinks a:first-child{display:none}.hero{padding-top:32px}.dek{font-size:17px}.hero-art{padding:15px}.art-caption{font-size:12px}.section-top{display:block}.section-top .badge{display:inline-block;margin-top:12px}.methods{grid-template-columns:1fr 1fr}.methods button{font-size:14px}.n-label{gap:10px}.n-label input{width:120px}.lab-scene{padding:20px 13px}.cells{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.cell .val{font-size:21px}.cell .idx{font-size:11px}.cell small{font-size:11px}.player,.event{padding:15px}.speed{width:100%;margin:5px 0 0}.metric{padding:13px 10px}.metric span{font-size:11px}.metric strong{font-size:21px}.register{padding:15px 21px}.rolling{gap:10px}.glossary{grid-template-columns:1fr}.section-card{padding:22px 19px}.node-content pre{font-size:12px}.call-comparison{gap:9px}.call-card{padding:15px}.call-card strong{font-size:23px}.hero-links{gap:17px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}}
+@media print{body{background:#fff;font-size:11pt}.wrap{max-width:none;padding:0}.sidebar,.toplinks,.hero-links,.player,.lab-settings,.methods,.copy-code,.print-button,.answers,.toast{display:none!important}.page-layout{display:block}.hero{padding:20px 0;gap:20px}.hero h1{font-size:38px}.hero-art{max-width:350px}.hero .dek{font-size:14px}.section-card{margin-top:20px;padding:20px;border-color:#ccc;break-inside:avoid}.extra-section{margin-top:25px}.lab,.code-panel,.concept{break-inside:avoid;box-shadow:none}.python{font-size:10px;white-space:pre-wrap}.python .line{min-width:0;white-space:pre-wrap}.table-scroll{overflow:visible}table{min-width:0;font-size:11px}th,td{padding:9px}.hero-art,.code-panel,.cell,.note{print-color-adjust:exact;-webkit-print-color-adjust:exact}footer{margin-top:25px}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to tutorial</a>
+<div class="wrap">
+<header class="topline"><div class="brand"><span class="brandmark" aria-hidden="true">dp</span>THE ALGORITHM NOTEBOOK</div><div class="toplinks"><a href="#reading">Read the lesson</a><a href="https://www.hello-algo.com/chapter_dynamic_programming/intro_to_dynamic_programming/" target="_blank" rel="noopener">Hello Algo source</a></div></header>
+<section class="hero" aria-labelledby="page-title">
+<div><div class="eyebrow">Dynamic programming / 动态规划</div><h1 id="page-title">From recursion<span>to reuse.</span></h1><p class="dek">One staircase. Four ways to think. Learn how saving a small answer changes everything.</p><div class="hero-links"><a class="cta" href="#lab">Explore the staircase</a><a href="#reading">Start with the idea</a></div><div class="meta"><span>Beginner friendly</span><span>Python examples</span><span>Works offline</span></div></div>
+<div class="hero-art"><svg viewBox="0 0 450 280" role="img" aria-label="A five-step staircase with route counts 1, 2, 3, 5, and 8. The last two counts add to give 8."><defs><marker id="tip" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#3355ce"/></marker></defs><path d="M25 246 H87 V213 H158 V180 H229 V147 H300 V114 H371 V81 H427 V246 Z" fill="#dfe6ff" stroke="#aebff0" stroke-width="2"/><g fill="#526078" font-family="system-ui,sans-serif" font-size="13" text-anchor="middle"><text x="122" y="235">stair 1</text><text x="193" y="202">stair 2</text><text x="264" y="169">stair 3</text><text x="335" y="136">stair 4</text><text x="400" y="103">stair 5</text></g><g font-family="ui-monospace,monospace" font-size="24" font-weight="700" text-anchor="middle"><text x="122" y="198" fill="#667391">1</text><text x="193" y="165" fill="#667391">2</text><text x="264" y="132" fill="#3355ce">3</text><text x="335" y="99" fill="#3355ce">5</text><text x="400" y="66" fill="#17243b">8</text></g><path d="M270 109 Q310 15 387 44" fill="none" stroke="#3355ce" stroke-width="2" stroke-dasharray="5 5" marker-end="url(#tip)"/><path d="M341 78 Q355 40 385 47" fill="none" stroke="#3355ce" stroke-width="2" marker-end="url(#tip)"/><rect x="22" y="25" width="167" height="42" rx="9" fill="white"/><text x="105" y="52" text-anchor="middle" fill="#3355ce" font-family="ui-monospace,monospace" font-size="19">dp[5] = 5 + 3</text></svg><div class="art-caption"><span>Last move: climb 1 or 2 stairs</span><strong>5 stairs · 8 routes</strong></div></div>
+</section>
+<div class="page-layout">
+<nav class="sidebar" aria-label="Tutorial contents"><div class="nav-heading">In this notebook</div><a class="lab-link" href="#lab">Interactive lab</a>            <button class="section-link" data-target="sec-1">1 The staircase problem</button>
+            <button class="section-link" data-target="sec-2">2 Brute-force search</button>
+            <button class="section-link" data-target="sec-3">3 Memoization</button>
+            <button class="section-link" data-target="sec-4">4 Bottom-up tabulation</button>
+            <button class="section-link" data-target="sec-5">5 Rolling variables</button>
+            <button class="section-link" data-target="sec-6">6 Apply the pattern</button><a href="#comparison">Compare approaches</a><a href="#practice">Check your understanding</a><a href="#glossary">English / 中文 glossary</a><p class="side-note">Based on Hello Algo §14.1.<br>Learn the recurrence once, then watch four implementations use it.<br><br><button class="print-button" id="print">Print lesson</button></p></nav>
+<main class="main" id="main">
+<section id="lab" aria-labelledby="lab-title"><div class="section-top"><div><div class="eyebrow">Try it yourself</div><h2 id="lab-title">One problem, four approaches.</h2><p>Choose a method, then step through the calculation.</p></div><span class="badge">dp[i] = dp[i−1] + dp[i−2]</span></div>
+<div class="lab"><div class="methods" role="group" aria-label="Algorithm method"><button data-method="brute" aria-pressed="false">Brute force</button><button data-method="memo" aria-pressed="false">Memoization</button><button data-method="table" aria-pressed="true">DP table</button><button data-method="rolling" aria-pressed="false">Rolling variables</button></div>
+<div class="lab-settings"><label class="n-label" for="stairs">Stairs <input id="stairs" type="range" min="1" max="12" value="5"><output id="stairs-value" for="stairs">5</output></label><span id="method-bound" class="method-bound">Time O(n) · Space O(n)</span></div>
+<div class="lab-scene"><div class="scene-heading"><strong id="scene-title">Build the answer from the bottom.</strong><span id="scene-state">Initial states</span></div><div id="scene"></div><div id="stack" class="stack-row" hidden></div></div>
+<div class="event" role="status" aria-live="polite" aria-atomic="true"><div class="event-tag" id="event-tag">Initial states</div><p id="event-text"></p></div>
+<div class="player"><div class="player-buttons"><button id="reset">Reset</button><button id="back">Back</button><button class="primary" id="play" aria-pressed="false">Play</button><button id="next">Next</button><button id="finish">Show result</button><label class="speed" for="speed">Speed <select id="speed"><option value="1500">Slow</option><option value="850" selected>Normal</option><option value="300">Fast</option></select></label></div><div class="timeline"><input id="timeline" type="range" min="0" max="1" value="0" aria-label="Calculation step"><output id="step-count" for="timeline"></output></div></div>
+<div class="metrics"><div class="metric"><span id="metric-label">States known</span><strong id="metric-work">2</strong></div><div class="metric"><span id="reuse-label">Additions</span><strong id="metric-reuse">0</strong></div><div class="metric"><span>Answer at target</span><strong id="metric-result">—</strong></div></div></div>
+<div class="code-panel"><div class="code-top"><span id="code-file">climb_table.py</span><button id="copy-code" class="copy-code">Copy Python</button></div><pre class="python" id="python" aria-label="Python implementation"></pre></div><p class="code-note">The highlighted line matches the current event. Displayed Python takes a positive integer n; the lab runs an equivalent JavaScript trace.</p><p id="copy-status" class="toast" role="status" aria-live="polite"></p>
+</section>
+<section class="extra-section" aria-labelledby="tree-title"><div class="eyebrow">See the repeated work</div><h2 id="tree-title">The same question appears twice.</h2><div class="concept-pair"><div class="concept"><h3>Recursion tree for n = 5</h3><svg class="mini-tree" viewBox="0 0 380 270" role="img" aria-label="Recursion tree for state 5. State 3 appears twice and state 2 appears three times."><g stroke="#c5cfdf" stroke-width="2" fill="none"><path d="M190 32 L105 98 M190 32 L292 98 M105 98 L58 170 M105 98 L158 170 M292 98 L250 170 M292 98 L338 170 M58 170 L30 238 M58 170 L91 238"/></g><g fill="#edf1ff" stroke="#3355ce" stroke-width="2"><circle cx="58" cy="170" r="23"/><circle cx="292" cy="98" r="23"/></g><g fill="#fff" stroke="#aebcd1" stroke-width="1.5"><circle cx="190" cy="32" r="23"/><circle cx="105" cy="98" r="23"/><circle cx="158" cy="170" r="23"/><circle cx="250" cy="170" r="23"/><circle cx="338" cy="170" r="23"/><circle cx="30" cy="238" r="23"/><circle cx="91" cy="238" r="23"/></g><g text-anchor="middle" dominant-baseline="central" fill="#17243b" font-family="ui-monospace,monospace" font-size="17"><text x="190" y="32">5</text><text x="105" y="98">4</text><text x="292" y="98">3</text><text x="58" y="170">3</text><text x="158" y="170">2</text><text x="250" y="170">2</text><text x="338" y="170">1</text><text x="30" y="238">2</text><text x="91" y="238">1</text></g></svg><p class="tree-note">Each circle is a call to solve a stair count. The blue 3s are the same subproblem. Memoization expands the first one and reuses its answer at the second.</p></div><div class="concept"><h3>Eight routes, nine calls</h3><p>For five stairs, there are eight valid move sequences. A brute-force recursive count makes nine function calls. The number of calls and the number of routes measure different things.</p><div class="route-example"><span>1 + 1 + 1 + 1 + 1</span><span>2 + 1 + 1 + 1</span><span>1 + 2 + 1 + 1</span><span>1 + 1 + 2 + 1</span><span>1 + 1 + 1 + 2</span><span>2 + 2 + 1</span><span>2 + 1 + 2</span><span>1 + 2 + 2</span></div><p>In the lab, switch between brute force and memoization at n = 9. Compare call counts and watch a cache hit skip an entire branch.</p></div></div></section>
+<div id="reading">          <section class="section-card copyable" id="sec-1">
+            <div class="section-badge">1</div>
+            <div class="section-header">
+              <h2>
+                The staircase problem
+              </h2>
+
+              <p class="section-subtitle">A small counting problem makes the whole idea visible.</p>
+            </div>
+
+            <div class="nodes">
+              <article class="node open">
+                <div class="node-header">
+                  <div class="node-header-main">
+                    <span class="node-kind-pill trunk">Trunk</span>
+                    <span class="node-title">What are we counting?</span>
+                  </div>
+                  <span class="chevron">▶</span>
+                </div>
+                <div class="node-content">
+                  <p class="copyable">You have n stairs and may climb either one or two stairs per move. How many different sequences of moves reach exactly stair n? Order matters: 1 then 2 and 2 then 1 are different routes. For three stairs, the routes are 1 + 1 + 1, 1 + 2, and 2 + 1. So the answer is 3. We count routes, rather than finding the fewest moves.</p>
+                </div>
+              </article>
+              <article class="node open">
+                <div class="node-header">
+                  <div class="node-header-main">
+                    <span class="node-kind-pill trunk">Trunk</span>
+                    <span class="node-title">Define the state</span>
+                  </div>
+                  <span class="chevron">▶</span>
+                </div>
+                <div class="node-content">
+                  <p class="copyable">Let <strong>dp[i]</strong> mean the number of routes that end exactly at stair i. A state is the information needed to identify a smaller problem. Here, that information is just the stair number i.</p>
+                </div>
+              </article>
+              <article class="node open">
+                <div class="node-header">
+                  <div class="node-header-main">
+                    <span class="node-kind-pill trunk">Trunk</span>
+                    <span class="node-title">Look at the last move</span>
+                  </div>
+                  <span class="chevron">▶</span>
+                </div>
+                <div class="node-content">
+                  <p class="copyable">Every route to stair i ends with either a one-stair move from i − 1 or a two-stair move from i − 2. These two groups do not overlap, and together they contain every route. Add their counts:</p>
+                  <pre class="copyable"><code>dp[i] = dp[i − 1] + dp[i − 2]   for i ≥ 3
+dp[1] = 1
+dp[2] = 2</code></pre>
+                  <p class="copyable">For five stairs: dp[5] = dp[4] + dp[3] = 5 + 3 = 8. The staircase sequence starts 1, 2, 3, 5, 8, 13. It is shifted by one position compared with Fibonacci starting 0, 1.</p>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <section class="section-card copyable" id="sec-2">
+            <div class="section-badge">2</div>
+            <div class="section-header">
+              <h2>
+                Brute-force search
+              </h2>
+
+              <p class="section-subtitle">First make the recurrence work. Then notice the repeated work.</p>
+            </div>
+
+            <div class="nodes">
+              <article class="node open">
+                <div class="node-header">
+                  <div class="node-header-main">
+                    <span class="node-kind-pill trunk">Trunk</span>
+                    <span class="node-title">Enumerate choices with backtracking</span>
+                  </div>
+                  <span class="chevron">▶</span>
+                </div>
+                <div class="node-content">
+                  <p class="copyable">Start at stair 0. Try a move of one stair, then a move of two stairs. If a move would go past n, skip it. When a route reaches exactly n, count it once. This is a depth-first exploration of possible routes.</p>
+                </div>
+              </article>
+              <article class="node open">
+                <div class="node-header">
+                  <div class="node-header-main">
+                    <span class="node-kind-pill trunk">Trunk</span>
+                    <span class="node-title">Recursively count smaller problems</span>
+                  </div>
+                  <span class="chevron">▶</span>
+                </div>
+                <div class="node-content">
+                  <p class="copyable">Instead of carrying every route, recursively ask for the counts at n − 1 and n − 2. Return 1 or 2 when the problem reaches a known base case. The formula is correct, but the recursion recomputes identical states. For example, solving state 5 asks for states 4 and 3. Solving state 4 asks for states 3 and 2. State 3 is now solved twice. These are <strong>overlapping subproblems</strong>.</p>
+                </div>
+              </article>
+              <article class="node open">
+                <div class="node-header">
+                  <div class="node-header-main">
+                    <span class="node-kind-pill trunk">Trunk</span>
+                    <span class="node-title">Why does it get slow?</span>
+                  </div>
+                  <span class="chevron">▶</span>
+                </div>
+                <div class="node-content">
+                  <p class="copyable">Each non-base call branches into two calls. The conventional upper bound is <strong>O(2ⁿ) time</strong>; the tighter growth rate is Θ(φⁿ), where φ is about 1.618. The deepest active call chain is O(n), so auxiliary space is O(n), even though the complete recursion tree has exponentially many calls.</p>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <section class="section-card copyable" id="sec-3">
+            <div class="section-badge">3</div>
+            <div class="section-header">
+              <h2>
+                Memoization
+              </h2>
+
+              <p class="section-subtitle">Keep the recursive questions. Remember their answers.</p>
+            </div>
+
+            <div class="nodes">
+              <article class="node open">
+                <div class="node-header">
+                  <div class="node-header-main">
+                    <span class="node-kind-pill trunk">Trunk</span>
+                    <span class="node-title">Check, compute, store</span>
+                  </div>
+                  <span class="chevron">▶</span>
+                </div>
+                <div class="node-content">
+                  <p class="copyable">Before solving state i, look in a cache. If its answer is there, return it immediately. Otherwise solve its two dependencies, add their answers, and store the result under i. A cache hit still supplies a value to the parent calculation. It skips repeated exploration; it does not remove a valid group of routes.</p>
+                </div>
+              </article>
+              <article class="node open">
+                <div class="node-header">
+                  <div class="node-header-main">
+                    <span class="node-kind-pill trunk">Trunk</span>
+                    <span class="node-title">Top down</span>
+                  </div>
+                  <span class="chevron">▶</span>
+                </div>
+                <div class="node-content">
+                  <p class="copyable">Begin with the target n and recursively descend to smaller problems. As calls return, their answers build larger answers. Each non-base state is expanded once. The cache and recursion stack together require <strong>O(n) space</strong>, and the work is <strong>O(n) time</strong>. The examples check base cases before looking in the cache. Base-case calls may repeat; they are already constant-time answers. The repeated branching work is what memoization removes.</p>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <section class="section-card copyable" id="sec-4">
+            <div class="section-badge">4</div>
+            <div class="section-header">
+              <h2>
+                Bottom-up tabulation
+              </h2>
+
+              <p class="section-subtitle">Change the order: answer the small questions first.</p>
+            </div>
+
+            <div class="nodes">
+              <article class="node open">
+                <div class="node-header">
+                  <div class="node-header-main">
+                    <span class="node-kind-pill trunk">Trunk</span>
+                    <span class="node-title">Build the DP table</span>
+                  </div>
+                  <span class="chevron">▶</span>
+                </div>
+                <div class="node-content">
+                  <p class="copyable">Set dp[1] = 1 and dp[2] = 2. Compute dp[3], then dp[4], continuing to dp[n]. When a state is reached, both dependencies are ready. Each new state needs one addition.</p>
+                </div>
+              </article>
+              <article class="node open">
+                <div class="node-header">
+                  <div class="node-header-main">
+                    <span class="node-kind-pill trunk">Trunk</span>
+                    <span class="node-title">The vocabulary</span>
+                  </div>
+                  <span class="chevron">▶</span>
+                </div>
+                <div class="node-content">
+                  <p class="copyable"><strong>State:</strong> the stair index i. <strong>DP table:</strong> the array holding answers. <strong>Initial states:</strong> the known values for stairs 1 and 2. <strong>State transition:</strong> the rule dp[i] = dp[i − 1] + dp[i − 2]. <strong>Evaluation order:</strong> increasing i. Memoization and tabulation are both commonly described as dynamic programming. This chapter uses the bottom-up method as its explicit DP implementation.</p>
+                </div>
+              </article>
+              <article class="node open">
+                <div class="node-header">
+                  <div class="node-header-main">
+                    <span class="node-kind-pill trunk">Trunk</span>
+                    <span class="node-title">Time and space</span>
+                  </div>
+                  <span class="chevron">▶</span>
+                </div>
+                <div class="node-content">
+                  <p class="copyable">There are n states, with constant work per transition: <strong>O(n) time</strong> and <strong>O(n) space</strong>. The loop avoids a recursive call stack. For n = 1 or n = 2, return immediately before creating or indexing the table.</p>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <section class="section-card copyable" id="sec-5">
+            <div class="section-badge">5</div>
+            <div class="section-header">
+              <h2>
+                Rolling variables
+              </h2>
+
+              <p class="section-subtitle">A state needs only its two immediate predecessors.</p>
+            </div>
+
+            <div class="nodes">
+              <article class="node open">
+                <div class="node-header">
+                  <div class="node-header-main">
+                    <span class="node-kind-pill trunk">Trunk</span>
+                    <span class="node-title">Keep the necessary history</span>
+                  </div>
+                  <span class="chevron">▶</span>
+                </div>
+                <div class="node-content">
+                  <p class="copyable">Before computing stair i, let a = dp[i − 2] and b = dp[i − 1]. Compute their sum, then move the window forward. Python's simultaneous assignment evaluates both right-hand expressions before replacing either variable.</p>
+                  <pre class="copyable"><code>a, b = b, a + b</code></pre>
+                  <p class="copyable">After the update, a holds the old b and b holds dp[i]. For i = 3, (a, b) changes from (1, 2) to (2, 3). For i = 4, it becomes (3, 5).</p>
+                </div>
+              </article>
+              <article class="node open">
+                <div class="node-header">
+                  <div class="node-header-main">
+                    <span class="node-kind-pill trunk">Trunk</span>
+                    <span class="node-title">What do we gain and lose?</span>
+                  </div>
+                  <span class="chevron">▶</span>
+                </div>
+                <div class="node-content">
+                  <p class="copyable">The algorithm still performs O(n) work, but retains only two answer values: <strong>O(1) auxiliary space</strong> under the usual fixed-size arithmetic model. It returns the final count without preserving every earlier answer. Keep a table if later work needs that history. Python integers grow as the count increases. Strict bit-complexity analysis also charges for bigger integers and additions; the usual introductory bounds here count arithmetic operations and stored values.</p>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <section class="section-card copyable" id="sec-6">
+            <div class="section-badge">6</div>
+            <div class="section-header">
+              <h2>
+                Apply the pattern
+              </h2>
+
+              <p class="section-subtitle">Write the meaning before writing the loop.</p>
+            </div>
+
+            <div class="nodes">
+              <article class="node open">
+                <div class="node-header">
+                  <div class="node-header-main">
+                    <span class="node-kind-pill trunk">Trunk</span>
+                    <span class="node-title">A reusable checklist</span>
+                  </div>
+                  <span class="chevron">▶</span>
+                </div>
+                <div class="node-content">
+                  <ol class="copyable">
+                    <li>Define precisely what each state represents.</li>
+                    <li>Identify the smallest answers you already know.</li>
+                    <li>Derive a transition that covers all valid possibilities without double counting.</li>
+                    <li>Choose an order that computes dependencies first, or memoize recursive calls.</li>
+                    <li>Return the target state and consider which earlier values must remain in memory.</li>
+                  </ol>
+                </div>
+              </article>
+              <article class="node open">
+                <div class="node-header">
+                  <div class="node-header-main">
+                    <span class="node-kind-pill trunk">Trunk</span>
+                    <span class="node-title">Common mistakes</span>
+                  </div>
+                  <span class="chevron">▶</span>
+                </div>
+                <div class="node-content">
+                  <p class="copyable">Do not mix this problem with ordinary Fibonacci base values. Do not replace a before calculating a + b unless you saved the old a. Do not add counts for groups that overlap. Do not assume every DP problem minimizes or maximizes something: this one counts routes.</p>
+                </div>
+              </article>
+              <article class="node open">
+                <div class="node-header">
+                  <div class="node-header-main">
+                    <span class="node-kind-pill trunk">Trunk</span>
+                    <span class="node-title">Input convention</span>
+                  </div>
+                  <span class="chevron">▶</span>
+                </div>
+                <div class="node-content">
+                  <p class="copyable">Following the linked chapter, every example here takes a positive integer n. The interactive lab uses 1–12 stairs. An optional extension can define dp[0] = 1 for the empty route, but the displayed implementations use dp[1] = 1 and dp[2] = 2.</p>
+                </div>
+              </article>
+            </div>
+          </section></div>
+<section class="extra-section" id="comparison"><div class="eyebrow">Make the tradeoff visible</div><h2>What changes with each approach?</h2><div class="table-scroll"><table><caption style="text-align:left;padding:14px 17px;font-size:14px;color:var(--muted)">Climbing stairs with moves of size 1 or 2</caption><thead><tr><th scope="col">Approach</th><th scope="col">Direction</th><th scope="col">Time</th><th scope="col">Extra space</th><th scope="col">Stores</th></tr></thead><tbody><tr><td>Brute-force recursion</td><td>Top down</td><td>O(2ⁿ)</td><td>O(n)</td><td>Call stack</td></tr><tr><td>Memoization</td><td>Top down</td><td>O(n)</td><td>O(n)</td><td>Cache + call stack</td></tr><tr><td>Tabulation</td><td>Bottom up</td><td>O(n)</td><td>O(n)</td><td>Full DP table</td></tr><tr><td>Rolling variables</td><td>Bottom up</td><td>O(n)</td><td>O(1)</td><td>Two previous answers</td></tr></tbody></table></div><div class="call-comparison"><div class="call-card"><span>Brute-force calls at current n</span><strong id="compare-brute">9</strong></div><div class="call-card"><span>Memoized calls at current n</span><strong id="compare-memo">7</strong></div></div><p class="note">These exact call counts include base cases and cache hits; memoization checks the base cases before its cache. Complexity uses the usual arithmetic-operation model. The brute-force O(2ⁿ) bound is an upper bound.</p></section>
+<section class="extra-section" id="practice"><div class="eyebrow">Pause and predict</div><h2>Check your understanding.</h2><div class="quiz-grid">
+<article class="question" data-question="0"><h3>1. If dp[4] = 5 and dp[5] = 8, what is dp[6]?</h3><div class="answers" role="group" aria-label="Question 1 answers"><button data-answer="0" aria-pressed="false">8</button><button data-answer="1" aria-pressed="false">13</button><button data-answer="2" aria-pressed="false">40</button></div><p class="feedback" role="status" aria-live="polite">Choose an answer to see the reasoning.</p></article>
+<article class="question" data-question="1"><h3>2. Why can the DP table be replaced by two variables?</h3><div class="answers" role="group" aria-label="Question 2 answers"><button data-answer="0" aria-pressed="false">Only two previous states are needed</button><button data-answer="1" aria-pressed="false">There are only two possible routes</button><button data-answer="2" aria-pressed="false">Recursion stores the other states</button></div><p class="feedback" role="status" aria-live="polite">Choose an answer to see the reasoning.</p></article>
+<article class="question" data-question="2"><h3>3. Does memoization remove the recursion stack?</h3><div class="answers" role="group" aria-label="Question 3 answers"><button data-answer="0" aria-pressed="false">Yes</button><button data-answer="1" aria-pressed="false">No</button></div><p class="feedback" role="status" aria-live="polite">Choose an answer to see the reasoning.</p></article>
+</div><details class="note"><summary>Challenge: allow moves of 1 or 3 stairs</summary><p>Define ways[0] = 1 for the empty route and ways[k] = 0 for k &lt; 0. Then ways[i] = ways[i − 1] + ways[i − 3] for i ≥ 1. The counts for stairs 0–6 are 1, 1, 1, 2, 3, 4, 6. This is an added exercise, beyond the source chapter.</p></details></section>
+<section class="extra-section" id="glossary"><div class="eyebrow">A small vocabulary</div><h2>Connect the terms.</h2><div class="glossary"><div class="term"><strong>Dynamic programming · 动态规划</strong><span>Build answers using stored subproblem results.</span></div><div class="term"><strong>State · 状态</strong><span>A precise description of one subproblem.</span></div><div class="term"><strong>Overlapping subproblems · 重叠子问题</strong><span>Different branches ask for the same smaller answer.</span></div><div class="term"><strong>Memoization · 记忆化搜索</strong><span>Cache answers as recursive calls solve them.</span></div><div class="term"><strong>State transition · 状态转移方程</strong><span>The rule connecting a state to its dependencies.</span></div><div class="term"><strong>Rolling variables · 滚动变量</strong><span>Retain just the values needed for the next state.</span></div></div></section>
+<noscript>Enable JavaScript for the interactive lab and quiz. The full written lesson, diagrams, and comparison table can be read without it.</noscript>
+</main></div>
+<footer id="source"><p>Adapted from <a href="https://www.hello-algo.com/chapter_dynamic_programming/intro_to_dynamic_programming/" target="_blank" rel="noopener">Hello Algo, §14.1: 初探动态规划</a> by krahets and contributors. Original source copyright © 2026 krahets. Source and this adaptation are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener license">CC BY-NC-SA 4.0</a>, provided without warranties.</p><p>Changes: English explanations, redrawn diagrams, interactive traces, rewritten Python examples, comparison metrics, glossary, and exercises. This is an independent learning adaptation.</p></footer>
+</div>
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+const METHODS = {
+ brute: {title:'Watch the same states get revisited.',bounds:'Time O(2ⁿ) · Space O(n)',file:'climb_recursive.py',code:`def climb(n):
+    if n <= 2:
+        return n
+    left = climb(n - 1)
+    right = climb(n - 2)
+    return left + right`},
+ memo: {title:'A cached answer skips repeated branching.',bounds:'Time O(n) · Space O(n)',file:'climb_memo.py',code:`def climb(n):
+    cache = {}
+    def solve(i):
+        if i <= 2:
+            return i
+        if i in cache:
+            return cache[i]
+        left = solve(i - 1)
+        right = solve(i - 2)
+        cache[i] = left + right
+        return cache[i]
+    return solve(n)`},
+ table: {title:'Build the answer from the bottom.',bounds:'Time O(n) · Space O(n)',file:'climb_table.py',code:`def climb(n):
+    if n <= 2:
+        return n
+    dp = [0] * (n + 1)
+    dp[1], dp[2] = 1, 2
+    for i in range(3, n + 1):
+        dp[i] = dp[i - 1] + dp[i - 2]
+    return dp[n]`},
+ rolling: {title:'Move a two-value window forward.',bounds:'Time O(n) · Space O(1)',file:'climb_rolling.py',code:`def climb(n):
+    if n <= 2:
+        return n
+    a, b = 1, 2
+    for i in range(3, n + 1):
+        a, b = b, a + b
+    return b`}
+};
+function framesFor(method,n) {
+ if (!Number.isInteger(n)||n<1||n>12||!METHODS[method]) throw new RangeError('Choose a method and 1–12 stairs.');
+ const frames=[],values=Array(n+1).fill(null),visits=Array(n+1).fill(0),cache={},stack=[];
+ let calls=0,hits=0,adds=0,a=1,b=2,current=0;
+ const save=(kind,text,line,deps=[])=>frames.push({kind,text,line,deps:[...deps],values:[...values],visits:[...visits],cache:{...cache},stack:[...stack],calls,hits,adds,a,b,current});
+ if(method==='brute'||method==='memo') {
+  const memo=method==='memo';
+  save('Ready',`Start by asking for the number of routes to stair ${n}.`,memo?11:0);
+  function solve(i){
+   calls++;visits[i]++;current=i;stack.push(i);
+   save('Function call',`Call ${memo?'solve':'climb'}(${i}). ${visits[i]>1?`State ${i} has now been requested ${visits[i]} times.`:'This is the first request for this state.'}`,memo?2:0);
+   let result;
+   if(i<=2){result=i;values[i]=result;save('Base case',`Stair ${i} has ${i} ${i===1?'route':'routes'}. Return this known answer.`,memo?4:2)}
+   else if(memo && Object.hasOwn(cache,i)){result=cache[i];hits++;save('Cache hit',`Reuse cache[${i}] = ${result}. Return it without exploring its children again.`,6)}
+   else {
+    save('First dependency',`To solve stair ${i}, first ask for stair ${i-1}.`,memo?7:3,[i-1]);
+    const left=solve(i-1);current=i;
+    save('Second dependency',`The first count is ${left}. Now ask for stair ${i-2}.`,memo?8:4,[i-2]);
+    const right=solve(i-2);current=i;result=left+right;values[i]=result;adds++;
+    if(memo) cache[i]=result;
+    save(memo?'Store answer':'Add answers',`${left} + ${right} = ${result} routes to stair ${i}.${memo?` Save cache[${i}] for later requests.`:''}`,memo?9:5,[i-1,i-2]);
+   }
+   stack.pop();current=stack.at(-1)||i;
+   save('Return',`Return ${result} routes from state ${i}${stack.length?` to state ${current}`:''}.`,memo?(i<=2?4:10):(i<=2?2:5));
+   return result;
+  }
+  const result=solve(n);current=n;
+  save('Complete',`${n} ${n===1?'stair':'stairs'}: ${result} ${result===1?'route':'routes'}. ${calls} ${calls===1?'call':'calls'}, ${adds} ${adds===1?'addition':'additions'}${memo?`, and ${hits} cache ${hits===1?'hit':'hits'}`:''}.`,memo?11:5);
+ } else if(n<=2) {
+  current=n;values[n]=n;a=n;b=n;
+  save('Base case',`n = ${n}, so return ${n} immediately. No table or rolling loop is needed.`,2);
+ } else if(method==='table') {
+  values[1]=1;values[2]=2;
+  save('Initial states','Set dp[1] = 1 and dp[2] = 2. These are known without a calculation.',4);
+  for(let i=3;i<=n;i++) {
+   current=i;save('Read dependencies',`For stair ${i}, read dp[${i-1}] = ${values[i-1]} and dp[${i-2}] = ${values[i-2]}.`,6,[i-1,i-2]);
+   values[i]=values[i-1]+values[i-2];adds++;
+   save('Write answer',`dp[${i}] = ${values[i-1]} + ${values[i-2]} = ${values[i]}. The answer is now stored.`,6,[i-1,i-2]);
+  }
+  save('Complete',`Return dp[${n}] = ${values[n]}. Each new state was computed once.`,7);
+ } else {
+  current=2;save('Initial window','Start with a = dp[1] = 1 and b = dp[2] = 2. Only two values are retained.',3);
+  for(let i=3;i<=n;i++) {
+   current=i;save('Read window',`Before stair ${i}: a = dp[${i-2}] = ${a}, b = dp[${i-1}] = ${b}. Add the old values.`,5);
+   const oldA=a,oldB=b;[a,b]=[b,a+b];adds++;
+   save('Roll forward',`a becomes ${oldB}; b becomes ${oldA} + ${oldB} = ${b}. Now b holds dp[${i}].`,5);
+  }
+  save('Complete',`Return b = ${b}. The algorithm retained two values throughout the loop.`,6);
+ }
+ return frames;
+}
+const state={method:'table',n:5,index:0,frames:[],playing:false,timer:null};
+const escapeHTML=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
+function render(){
+ const f=state.frames[state.index],m=METHODS[state.method],recursive=['brute','memo'].includes(state.method),rolling=state.method==='rolling';
+ document.querySelectorAll('[data-method]').forEach(el=>el.setAttribute('aria-pressed',String(el.dataset.method===state.method)));
+ $('scene-title').textContent=m.title;$('scene-state').textContent=f.current?`State ${f.current}`:'Initial states';$('method-bound').textContent=m.bounds;
+ if(rolling){
+  const base=state.n<=2,after=['Roll forward','Complete'].includes(f.kind),i=f.current;
+  const aIndex=f.kind==='Initial window'?1:after?i-1:i-2;
+  const bIndex=f.kind==='Initial window'?2:after?i:i-1;
+  $('scene').innerHTML=base?`<div class="rolling"><div class="register"><small>Base answer</small><strong>${state.n}</strong><p>Return n immediately</p></div></div>`:`<div class="rolling"><div class="register"><small>a</small><strong>${f.a}</strong><p>dp[${aIndex}]</p></div><span class="roll-plus" aria-hidden="true">+</span><div class="register"><small>b</small><strong>${f.b}</strong><p>dp[${bIndex}]</p></div></div><p class="tree-note">These are the algorithm’s only two retained answer values. The window shifts after each addition.</p>`;
+ }else{
+  $('scene').innerHTML='<div class="cells">'+Array.from({length:state.n},(_,k)=>{
+   const i=k+1,v=f.values[i],known=v!==null,detail=recursive?`${f.visits[i]} ${f.visits[i]===1?'call':'calls'}${Object.hasOwn(f.cache,i)?' · cached':''}`:known?'stored':'waiting';
+   const classes=['cell',known?'known':'',f.deps.includes(i)?'dep':'',f.current===i?'current':''].join(' ');
+   return `<div class="${classes}"><span class="idx">dp[${i}]</span><span class="val">${known?v:'?'}</span><small>${detail}</small></div>`;
+  }).join('')+'</div><div class="legend"><span><i class="key"></i>Known answer</span><span><i class="key read"></i>Dependency</span><span><i class="key now"></i>Current state</span></div>'+(recursive?'<p class="tree-note" style="margin-top:12px">The cells summarize answers observed by this visualizer. '+(state.method==='memo'?'Only entries marked “cached” are reused by the algorithm.':'Brute force keeps no cache, so it recomputes states even when a value is shown here.')+'</p>':'');
+ }
+ $('stack').hidden=!recursive;$('stack').innerHTML=recursive?'<strong>Call stack</strong> '+(f.stack.map(i=>`<span class="stack-chip">${state.method==='memo'?'solve':'climb'}(${i})</span>`).join('')||'<span>empty</span>'):'';
+ $('event-tag').textContent=f.kind;$('event-text').textContent=f.text;
+ $('code-file').textContent=m.file;$('python').innerHTML=m.code.split('\n').map((line,i)=>`<span class="line${i===f.line?' on':''}">${escapeHTML(line)||' '}</span>`).join('');
+ $('timeline').max=state.frames.length-1;$('timeline').value=state.index;$('timeline').disabled=state.frames.length===1;
+ $('step-count').textContent=`${state.index+1} / ${state.frames.length}`;
+ $('back').disabled=state.index===0;$('next').disabled=state.index===state.frames.length-1;$('finish').disabled=state.index===state.frames.length-1;
+ $('play').textContent=state.playing?'Pause':state.index===state.frames.length-1?'Replay':'Play';$('play').setAttribute('aria-pressed',String(state.playing));$('play').disabled=state.frames.length===1;
+ $('metric-label').textContent=recursive?'Function calls':rolling?'Retained values':'States known';
+ $('metric-work').textContent=recursive?f.calls:rolling?(state.n<=2?1:2):f.values.filter(v=>v!==null).length;
+ $('reuse-label').textContent=state.method==='memo'?'Cache hits':'Additions';$('metric-reuse').textContent=state.method==='memo'?f.hits:f.adds;
+ const target=rolling?(state.n<=2?state.n:f.current===state.n&&['Roll forward','Complete'].includes(f.kind)?f.b:null):f.values[state.n];
+ $('metric-result').textContent=target===null?'—':target;
+}
+function pause(){if(state.timer!==null) clearTimeout(state.timer);state.timer=null;state.playing=false}
+function seek(index){pause();state.index=Math.max(0,Math.min(state.frames.length-1,Number(index)));render()}
+function schedule(){state.timer=setTimeout(()=>{state.timer=null;if(!state.playing)return;state.index++;if(state.index>=state.frames.length-1)pause();render();if(state.playing)schedule()},Number($('speed').value))}
+function play(){if(state.playing){pause();render();return}if(state.frames.length===1)return;if(state.index===state.frames.length-1)state.index=0;state.playing=true;render();schedule()}
+function rebuild(){pause();state.frames=framesFor(state.method,state.n);state.index=0;$('stairs-value').value=state.n;$('stairs-value').textContent=state.n;
+ $('compare-brute').textContent=framesFor('brute',state.n).at(-1).calls;$('compare-memo').textContent=framesFor('memo',state.n).at(-1).calls;render()}
+document.querySelectorAll('[data-method]').forEach(el=>el.addEventListener('click',()=>{state.method=el.dataset.method;rebuild()}));
+$('stairs').addEventListener('input',()=>{state.n=Number($('stairs').value);rebuild()});
+$('next').addEventListener('click',()=>seek(state.index+1));$('back').addEventListener('click',()=>seek(state.index-1));$('reset').addEventListener('click',()=>seek(0));$('finish').addEventListener('click',()=>seek(state.frames.length-1));$('play').addEventListener('click',play);$('timeline').addEventListener('input',()=>seek($('timeline').value));
+$('speed').addEventListener('change',()=>{if(state.playing){clearTimeout(state.timer);schedule()}});
+document.addEventListener('visibilitychange',()=>{if(document.hidden){pause();render()}});
+document.querySelectorAll('.section-link').forEach(btn=>btn.addEventListener('click',()=>$(btn.dataset.target).scrollIntoView({block:'start'})));
+$('print').addEventListener('click',()=>window.print());
+$('copy-code').addEventListener('click',async()=>{try{if(!navigator.clipboard)throw new Error('unavailable');await navigator.clipboard.writeText(METHODS[state.method].code);$('copy-status').textContent='Python copied.'}catch{$('copy-status').textContent='Select the Python example and copy it with your keyboard.'}});
+const quiz=[{answer:1,why:'dp[6] = dp[5] + dp[4] = 8 + 5 = 13. The final move comes from stair 5 or stair 4.'},{answer:0,why:'Each new count uses only the two immediately preceding counts. Keep those two and discard older ones.'},{answer:1,why:'Memoization still uses recursive calls. Its cache and call stack each take O(n) space here.'}];
+document.querySelectorAll('.question').forEach(q=>q.querySelectorAll('[data-answer]').forEach(btn=>btn.addEventListener('click',()=>{const item=quiz[Number(q.dataset.question)],correct=Number(btn.dataset.answer)===item.answer;q.querySelectorAll('[data-answer]').forEach(b=>b.setAttribute('aria-pressed',String(b===btn)));const feedback=q.querySelector('.feedback');feedback.className='feedback'+(correct?' correct':'');feedback.textContent=(correct?'Correct. ':'Try again. ')+item.why})));
+window.DPTutorial={framesFor,methods:METHODS,getState:()=>({method:state.method,n:state.n,index:state.index,playing:state.playing,frame:state.frames[state.index],length:state.frames.length})};
+rebuild();
+</script>
+</body>
+</html>
